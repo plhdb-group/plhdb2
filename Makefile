@@ -7,7 +7,7 @@
 CLUSTER_PARENT=/srv/apps/root/var/lib/
 
 # The directory holding the PG database cluster
-CLUSTER_DIR=pgsql
+CLUSTER_DIR=pgsql/data
 
 # The user:group that the PG daemon runs as
 POSTGRES=postgres:postgres
@@ -22,8 +22,8 @@ cluster_parent: ${CLUSTER_PARENT}
 
 cluster_dir: cluster_parent
 	if [ \! -d ${CLUSTER_DIR} ] ; then \
-	  mkdir ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
-	  ${CHOWN} ${POSTGRES} ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
+	  mkdir -p ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
+	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
 	fi
 
 cluster: cluster_dir
