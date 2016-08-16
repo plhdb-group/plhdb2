@@ -16,6 +16,9 @@
 #    along with Babase.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Karl O. Pinc <kop@meme.com>
+#
+# Bugs:
+#   Can't test if the cluster exists before making the db.
 
 # The directory holding the PG database cluster's home dir
 # It's a good idea for this to be an absolute path.
@@ -47,3 +50,6 @@ cluster: cluster_dir
 	printf 'initdb --locale=C ${CLUSTER_PARENT}/${CLUSTER_DIR}' \
 	  | sudo su - postgres
 
+
+databases: makedatabases
+	sh makedatabases

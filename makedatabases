@@ -1,0 +1,231 @@
+#!/bin/bash
+# Copyright (C) 2011, 2012, 2015, 2016 The Meme Factory, Inc.,
+#   http://www.meme.com/
+# Copyright (C) 2003, 2004, 2005, 2008, 2011 Karl O. Pinc
+#
+#    This file is part of PLHDB2.
+#
+#    PLDHB2 is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Babase.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Creates empty plhdb database(s), secures postgresql, and creates superuser.
+#
+# Karl O. Pinc <kop@meme.com>
+#
+# Remarks:
+#
+# Creates the postgresql user 'plhdb_admin' who owns all the databases
+# and is a superuser able to create other users but not databases.
+# As pldhdb_admin owns the databases only he can create/drop tables etc.
+# The user posgresql remains and can create users and databases.
+
+# Constants
+#export SERVERHOST=localhost
+# Use Unix socket
+export SERVERHOST=/tmp
+export PGSERVERHOST=/tmp
+
+# SQL generation functions
+
+make_schemas_sql () {
+#
+# Make all the schemas for a database and assign privilges.
+#
+# Syntax: make_schemas_sql db
+
+export db="$1"
+cat <<-EOF
+
+--
+-- Setup all the schemas for $db and assign privileges.
+--
+
+-- The public schema is not needed.
+DROP SCHEMA public;
+	  
+-- The plhdb schema where the production system lives.
+
+CREATE SCHEMA plhdb;
+
+GRANT USAGE ON SCHEMA plhdb TO plhdb_editors
+                                , plhdb_readers;
+
+-- The sandbox schema.
+-- Used by the scientists to extend plhdb.
+
+CREATE SCHEMA sandbox;
+
+GRANT ALL PRIVILEGES ON SCHEMA sandbox TO plhdb_editors;
+GRANT USAGE ON SCHEMA sandbox TO plhdb_readers;
+
+-- Set the schema search path.
+ALTER DATABASE $db SET SEARCH_PATH TO
+    plhdb
+  , sandbox
+  , '\$user';
+
+EOF
+}
+
+
+install_tablefunc () {
+#
+# Install tablefunc module
+#
+# Syntax: install_tablefunc database
+#
+# Input:
+#  database   Name of the database in which to install module.
+#
+# Remarks:
+
+# Parse args
+db=$1
+
+# Grant permissions.
+psql -U plhdb_admin -h $SERVERHOST $db <<EOF
+
+CREATE EXTENSION tablefunc SCHEMA plhdb;
+
+EOF
+}
+
+make_roles_sql () {
+#
+# Make the roles for the cluster
+
+cat <<-EOF
+
+-- Create the plhdb_admin superuser.
+CREATE ROLE plhdb_admin 
+  WITH ENCRYPTED PASSWORD 'foo' LOGIN CREATEDB SUPERUSER;
+-- No password yet, as it's a hassle for the script.
+-- CREATE ROLE plhdb_admin LOGIN CREATEDB SUPERUSER;
+
+--
+-- Make the groups we'll want.
+--
+
+-- The writers group can change things and read things.
+CREATE ROLE plhdb_editors;
+
+-- The readers group can only view the data.
+CREATE ROLE plhdb_readers;
+
+EOF
+}
+
+create_database_sql () {
+#
+# Make code to make a db
+#
+# Syntax: create_database_sql db
+#
+# Input:
+#   db  The database to create
+#
+
+# Parse args
+db=$1
+
+cat <<-EOF
+
+-- Create the databases.
+CREATE DATABASE $db;
+
+-- We use european date formatting, not us.
+ALTER DATABASE $db SET DATESTYLE='European';
+
+-- Default all times to Kenyan times.
+ALTER DATABASE $db SET TIMEZONE='Africa/Nairobi';
+EOF
+}
+
+#
+# Tell the user what password he needs.
+#
+echo
+echo WARNING: If this goes bad it could destroy your
+echo template1 database.  You might want to press
+echo CTRL-C now if you "don't" have a backup.
+echo
+echo If you blow any of password entries, just re-run
+echo this script and enter the password for the 'part(s)'
+echo you got wrong.
+echo
+echo Creating databases.
+echo
+echo When prompted for a password please enter the
+echo "password for the database user 'postgres'."
+echo "(With the default pg_hba file you won't need a password"
+echo "for the 'postgres' user, which is bad.)"
+
+#
+# Setup users and groups
+#
+
+#DEBUG# cat <<-EOF
+psql -U postgres -h $PGSERVERHOST template1 <<-EOF
+
+--
+-- Make the groups we'll want.
+--
+$(make_roles_sql)
+
+EOF
+
+#
+# Now do work as the plhdb_admin user to make the databases.
+#
+
+#
+# Tell the user what password he needs.
+#
+echo
+echo When prompted for a password please enter the
+echo "password for the database user 'plhdb_admin'"
+echo which is now: foo
+
+#DEBUG# cat <<-EOF
+export PGPASSWORD=foo
+psql -U plhdb_admin -h $SERVERHOST template1 <<-EOF
+
+$(create_database_sql plhdb)
+$(create_database_sql plhdb_test)
+$(create_database_sql plhdb_copy)
+
+-- The plhdb superuser cannot create more databases.
+ALTER ROLE plhdb_admin WITH NOCREATEDB;
+
+\c plhdb
+$(make_schemas_sql plhdb)
+\c plhdb_test
+$(make_schemas_sql plhdb)
+\c plhdb_copy
+$(make_schemas_sql plhdb)
+
+EOF
+
+# Add crosstab support
+install_tablefunc plhdb
+install_tablefunc plhdb_test
+install_tablefunc plhdb_copy
+
+#
+# Tell the user to secure the system.
+#
+echo The plhdb_admin Postgresql user needs a password
+echo "to login.  Change it (as the postgres user) with the command:"
+echo
+echo '   ' psql -U postgres -h $PGSERVERHOST -d plhdb '\'
+echo "    " -c '"ALTER ROLE plhdb_admin WITH ENCRYPTED PASSWORD' "'foo';"'"'
