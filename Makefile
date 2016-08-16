@@ -1,4 +1,4 @@
-# Copyright (C) 2016 The Meme Factory, Inc.
+# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
 #
 #    This file is part of PLHDB2.
 #
@@ -14,6 +14,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Babase.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Karl O. Pinc <kop@meme.com>
 
 # The directory holding the PG database cluster's home dir
 # It's a good idea for this to be an absolute path.
