@@ -19,6 +19,12 @@
 #
 # Bugs:
 #   Can't test if the cluster exists before making the db.
+#   Can't test if plhdb_postgres_backup is installed.
+#   Grody defaults due to Duke's non-standard setup.
+#   Shouldn't install plhdb_postgres_backup in this file.
+
+# Where binaries go
+BIN=/srv/apps/root/usr/local/bin
 
 # The directory holding the PG database cluster's home dir
 # It's a good idea for this to be an absolute path.
@@ -28,6 +34,9 @@ CLUSTER_PARENT=/srv/apps/root/var/lib
 
 # The directory holding the PG database cluster
 CLUSTER_DIR=pgsql/data
+
+# The directory where database dumps are kept
+BACKUP_DIR=pgsql/backups
 
 # The user:group that the PG daemon runs as
 POSTGRES=postgres:postgres
@@ -54,3 +63,18 @@ cluster: cluster_dir
 
 databases: makedatabases
 	sh makedatabases
+
+backup_dir: cluster_parent
+	if [ \! -d ${BACKUP_DIR} ] ; then \
+	  mkdir -p ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
+	  chmod g=,o= ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
+	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
+	fi
+
+bin_dir: ${BIN}
+	mkdir -p ${BIN}
+
+.PHONY: install_plhdb_postgres_backup
+install_plhdb_postgres_backup: backup_dir bin_dir
+	cp ../bin/plhdb_postgres_backup ${BIN}
+	chmod a+x ${BIN}/plhdb_postgres_backup

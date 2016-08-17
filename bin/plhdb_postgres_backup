@@ -1,0 +1,218 @@
+#! /bin/bash
+# Copyright (C) 2004-2006 Hunter Matthews <thm@duke.edu>
+# Copyright (C) 2006,2009 Karl O. Pinc <kop@meme.com>
+# Copyright (C) 2012, 2015, 2016 The Meme Factory, Inc., http://www.meme.com/
+# Distributed under the terms of the GNU General Public License, version 2.0.
+#
+# Shell script to automate the backups of all the databases managed by 
+# postgres on this machine.
+#
+# Syntax: plhdb_postgres_backup pg_data_path
+#
+# Args:
+#   pg_data_path  Path to the direcory containing the "data" directory
+#                 of the pg database cluster.  (The "data" dir is -D value
+#                 of initdb.)
+#                 Something like '/var/lib/pgsql/9.1'.
+#
+# The general outline of a restore procedure to recover from scratch
+# is as follows (this is untested):
+#
+# # Initialize constants
+# PG_DATA=/var/lib/pgsql/data
+# PG_BACKUP_DIR=/var/lib/pgsql/backups
+#
+# # Initialize cluster with the correct character encoding, etc.
+# # (Unless any database requires international characters
+# #  use ASCII encoding and collating (at minimum) or performance
+# #  will suffer.  Collation is an unchageable cluster wide setting
+# #  and can seriously affect performance.  Encoding can vary by db.)
+# mkdir -p $PG_DATA
+# chown postgres:postgres $PG_DATA
+# chmod go-rwx $PG_DATA
+# su -l postgres \
+#    -c 'initdb --encoding C --locale C --pgdata $PG_DATA'
+#
+# # Restore the postgres configuration files.
+# cd $PG_BACKUP_DIR/conf
+# cp -p postgresql.conf pg_hba.conf server.{crt,key,req} $PG_DATA/
+#
+# # Start the server
+# /etc/init.d/posgresql start
+#
+# # Restore everything but the data itself.
+# # (Users/groups and per-database settings are not saved by pg_dump.)
+# cd $PG_BACKUP_DIR/data
+# su -l postgres -c 'psql < framework.sql'
+#
+# Restore the data in each database.
+# cd $PG_BACKUP_DIR/data
+# for f in $(ls *.custom) ; do
+#   su -l posgres -c "pg_restore --data-only --dbname $(basename $f .custom) \
+#      --disable-triggers $f"
+# done
+
+# Global defaults/options
+PG_ADMIN=postgres
+SYSLOG_PRIORITY=local6
+PROGRAM=$(basename $0)
+DEBUG=0
+
+# Parse command line.
+PG_DATA="$1"/data
+
+OLD_PG_BACKUP_DIR=/srv/apps/root/var/lib/pgsql/backups/plhdb_cluster
+PG_BACKUP_DIR=$OLD_PG_BACKUP_DIR.new
+PGB_CONF_DIR=$PG_BACKUP_DIR/data   ;# Unix stuff -- config files and logs
+PGB_DATA_DIR=$PG_BACKUP_DIR/data   ;# Database content
+
+# Helper function to get access to the db as admin.
+accessdb()
+{
+    # if pg_hba gives root access you just need
+    # $1
+    # otherwise this will work with the default pg_hba.conf
+    # when the user "postgres" is $PG_ADMIN.
+    #su -c "$1" $PG_ADMIN
+    # This is run as the postgres (${PG_ADMIN}) user so, just execute.
+    $1
+}
+
+# Simple debug function
+debug()
+{
+    if [ "$DEBUG" = "1" ] ; then
+        echo DEBUG $*
+    fi
+}
+
+# Send some information to syslog
+syslog()
+{
+    SYSLOG_LEVEL=$1
+    shift
+    logger -p ${SYSLOG_PRIORITY}.${SYSLOG_LEVEL} -t $PROGRAM "$*"
+}
+
+# Make sure database dump output files can't be read and restored by everybody.
+secure_file()
+{
+    touch $1
+    chmod go= $1
+}
+
+# Startup Code
+syslog info "starting postgres backups"
+
+# Clear out any partial backups leftover should this script abort.
+rm -rf $PG_BACKUP_DIR
+mkdir -p $PG_BACKUP_DIR $PGB_CONF_DIR $PGB_DATA_DIR
+
+# Backup the posgresql configuration, logs, et-al.
+if [ -e $PG_DATA/pg_log ] ; then
+  PG_LOG=pg_log
+else
+  PG_LOG=
+fi
+for f in $PG_LOG $(find $PG_DATA -maxdepth 1 -type f -o -type l) ; do
+  f=$(basename $f)
+  rsync -Lrpogt $PG_DATA/$f $PGB_CONF_DIR
+  if [ "$?" != "0" ] ; then
+      syslog crit "CRITICAL Failed to backup $f (a config or log)."
+  else
+      syslog debug "Backed up $f (a config or log)."
+  fi
+done
+
+# Backup all the users and groups. (Sometimes it's convenient to
+# have them all by themselves.)
+secure_file $PGB_DATA_DIR/roles.sql
+accessdb "pg_dumpall -U $PG_ADMIN -g" > $PGB_DATA_DIR/roles.sql
+if [ "$?" != "0" ] ; then
+    syslog crit 'CRITICAL Failed to backup roles.sql (users and groups).'
+else
+    syslog debug 'Backed up roles.sql (users and groups).'
+fi
+
+# Backup the meta-information about the databases.
+secure_file $PGB_DATA_DIR/metadata.txt
+accessdb "psql -U $PG_ADMIN --echo-queries" > $PGB_DATA_DIR/metadata.txt <<EOF
+select pg_database.*
+     , pg_authid.rolname as owner
+     , pg_tablespace.spcname
+  from pg_database
+       join pg_authid
+            on (pg_authid.oid = pg_database.datdba)
+       join pg_tablespace
+            on (pg_tablespace.oid = pg_database.dattablespace)
+  order by pg_database.datname;
+
+select pg_tablespace.* pg_authid, rolname as owner
+  from pg_tablespace
+       join pg_authid on (pg_authid.oid = pg_tablespace.spcowner)
+  order by pg_tablespace.spcname;
+EOF
+if [ "$?" != "0" ] ; then
+    syslog crit 'CRITICAL Failed to backup metadata.txt (db metadata).'
+else
+    syslog debug 'Backed up roles.sql (users and groups).'
+fi
+
+# Backup everything in the cluster but the data itself.
+secure_file $PGB_DATA_DIR/framework.sql
+accessdb "pg_dumpall -U $PG_ADMIN -s" > $PGB_DATA_DIR/framework.sql
+if [ "$?" != "0" ] ; then
+    syslog crit \
+        'CRITICAL Failed to backup framework.sql (everything but the data).'
+else
+    syslog debug 'Backed up framework.sql (everything but the data).'
+fi
+
+# Now backup each database independantly
+# We do this instead of a simple pg_dumpall to
+# a) catch BLOBs
+# b) get a format that works better with pg_restore
+# c) get a nice, automatically compressed format
+for database in $(accessdb "psql -l -t -d template1 -U $PG_ADMIN" \
+                  | cut -f1 -d'|') ; do
+    if [ $database = "template0" ] ; then
+        continue  # we cannot backup or restore this database
+    fi
+
+    # actually dump the database to a pg_dump "custom" file format...
+    syslog debug "Attempting to backup database $database."
+    secure_file $PGB_DATA_DIR/$database.custom
+    accessdb "pg_dump -Fc -U $PG_ADMIN $database" \
+        > $PGB_DATA_DIR/$database.custom
+    if [ $? != 0 ] ; then
+        syslog crit "CRITICAL Failed to backup database $database."
+    else
+        syslog debug "Backed up database $database."
+    fi
+
+done
+
+# Rotate out the old backup.
+# Since we're not running lvm snapshots before remote backup keep the
+# old backup around until the next time.
+DATED_PG_BACKUP_DIR=$OLD_PG_BACKUP_DIR.old
+rm -rf $DATED_PG_BACKUP_DIR
+
+mv $OLD_PG_BACKUP_DIR $DATED_PG_BACKUP_DIR \
+  || syslog crit "unable to mv the old backup before removal"
+
+#mv $PG_BACKUP_DIR $OLD_PG_BACKUP_DIR \
+#  && rm -rf $DATED_PG_BACKUP_DIR
+mv $PG_BACKUP_DIR $OLD_PG_BACKUP_DIR
+
+if [ $? != 0 ] ; then
+  syslog crit "unable to rotate out the old backup"
+else
+  syslog debug "rotated out the old backup"
+fi
+
+# Shutdown code 
+syslog info "postgres backups complete"
+
+
+## END OF LINE ##
