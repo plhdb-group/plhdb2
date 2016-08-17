@@ -24,7 +24,7 @@
 # It's a good idea for this to be an absolute path.
 #CLUSTER_PARENT=/var/lib
 # Duke is "different"
-CLUSTER_PARENT=/srv/apps/root/var/lib/
+CLUSTER_PARENT=/srv/apps/root/var/lib
 
 # The directory holding the PG database cluster
 CLUSTER_DIR=pgsql/data
