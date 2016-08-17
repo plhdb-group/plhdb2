@@ -43,6 +43,7 @@ cluster_parent: ${CLUSTER_PARENT}
 cluster_dir: cluster_parent
 	if [ \! -d ${CLUSTER_DIR} ] ; then \
 	  mkdir -p ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
+	  chmod g=,o= ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
 	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
 	fi
 
