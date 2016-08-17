@@ -146,8 +146,8 @@ CREATE DATABASE $db;
 -- We use european date formatting, not us.
 ALTER DATABASE $db SET DATESTYLE='European';
 
--- Default all times to Kenyan times.
-ALTER DATABASE $db SET TIMEZONE='Africa/Nairobi';
+-- Default all times to US/Eastern times.
+ALTER DATABASE $db SET TIMEZONE='US/Eastern';
 EOF
 }
 
