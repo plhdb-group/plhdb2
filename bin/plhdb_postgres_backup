@@ -15,6 +15,8 @@
 #                 of initdb.)
 #                 Something like '/var/lib/pgsql/9.1'.
 #
+# Remarks:
+#
 # The general outline of a restore procedure to recover from scratch
 # is as follows (this is untested):
 #
@@ -51,6 +53,10 @@
 #   su -l posgres -c "pg_restore --data-only --dbname $(basename $f .custom) \
 #      --disable-triggers $f"
 # done
+#
+# Bugs:
+#   Should fail and do nothing if postgresql is not running.
+
 
 # Global defaults/options
 PG_ADMIN=postgres
