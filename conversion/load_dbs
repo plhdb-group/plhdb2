@@ -1,0 +1,43 @@
+#!/bin/sh
+# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+#
+#    This file is part of PLHDB2.
+#
+#    PLDHB2 is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Babase.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Karl O. Pinc <kop@meme.com>
+#
+# Remarks:
+#   More or less, one-off program.
+#
+# Bugs:
+#  The comment on the plhdb_demo db does not restore.  We don't care.
+
+ADMIN=plhdb_admin
+
+loaddb() {
+  db=$1
+  newdb=old_$db
+
+  printf "drop database if exists $newdb;\n" \
+    | psql -U $ADMIN template1
+
+  createdb -U $ADMIN $newdb "Copy of old $db db before conversion."
+
+  dumpfile=/tmp/$db.custom
+  pg_restore --no-privileges --no-owner -U $ADMIN -d $newdb $dumpfile
+}
+
+loaddb plhdb
+loaddb plhdb_demo
