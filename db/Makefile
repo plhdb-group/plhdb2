@@ -23,6 +23,9 @@
 #   Grody defaults due to Duke's non-standard setup.
 #   Shouldn't install plhdb_postgres_backup in this file.
 
+# initdb to run.
+INITDB=/usr/pgsql-9.5/bin/initdb
+
 # Where binaries go
 BIN=/srv/apps/root/usr/local/bin
 
@@ -33,7 +36,8 @@ BIN=/srv/apps/root/usr/local/bin
 CLUSTER_PARENT=/srv/apps/root/var/lib
 
 # The directory holding the PG database cluster
-CLUSTER_DIR=pgsql/data
+#CLUSTER_DIR=pgsql/data
+CLUSTER_DIR=pgsql/9.5/data
 
 # The directory where database dumps are kept
 BACKUP_DIR=pgsql/backups
@@ -57,7 +61,7 @@ cluster_dir: cluster_parent
 	fi
 
 cluster: cluster_dir
-	printf 'initdb --locale=C ${CLUSTER_PARENT}/${CLUSTER_DIR}' \
+	printf '${INITDB} --locale=C ${CLUSTER_PARENT}/${CLUSTER_DIR}' \
 	  | sudo su - postgres
 
 
