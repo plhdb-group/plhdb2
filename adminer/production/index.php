@@ -7,9 +7,9 @@ function adminer_object() {
       global $drivers;
       ?>
       <input type="hidden" name="auth[driver]" value="pgsql" >
+      <input type="hidden" name="auth[server]" value="" >
       <input type="hidden" name="auth[permanent]" value="1" >
 <table cellspacing="0">
-   <tr><th><?php echo lang('Server'); ?><td><input name="auth[server]" value="<?php echo h(SERVER); ?>" title="hostname[:port]" placeholder="localhost" autocapitalize="off">
    <tr><th><?php echo lang('Username'); ?><td><input name="auth[username]" id="username" value="<?php echo h($_GET["username"]); ?>" autocapitalize="off">
    <tr><th><?php echo lang('Password'); ?><td><input type="password" name="auth[password]">
    <tr><th><?php echo lang('Database'); ?><td><input name="auth[db]" value="<?php echo h($_GET["db"])==''?'plhdb':h($_GET["db"]); ?>" placeholder="plhdb" autocapitalize="off">
@@ -25,6 +25,12 @@ function adminer_object() {
       # Supply custom title
       return 'PLHDB via Adminer';
     }
+
+    function credentials() {
+      # Prevent user from supplying a different server.
+      return array('localhost', $_GET["username"], get_password());
+    }
+
   }
   
   return new AdminerSoftware;
