@@ -8,7 +8,6 @@ function adminer_object() {
       ?>
       <input type="hidden" name="auth[driver]" value="pgsql" >
 <table cellspacing="0">
-   <tr><th><?php echo lang('System'); ?><td><?php echo html_select("auth[driver]", $drivers, DRIVER, "loginDriver(this);"); ?>
    <tr><th><?php echo lang('Server'); ?><td><input name="auth[server]" value="<?php echo h(SERVER); ?>" title="hostname[:port]" placeholder="localhost" autocapitalize="off">
    <tr><th><?php echo lang('Username'); ?><td><input name="auth[username]" id="username" value="<?php echo h($_GET["username"]); ?>" autocapitalize="off">
    <tr><th><?php echo lang('Password'); ?><td><input type="password" name="auth[password]">
