@@ -14,9 +14,7 @@ function adminer_object() {
    <tr><th><?php echo lang('Database'); ?><td><input name="auth[db]" value="<?php echo h($_GET["db"]); ?>" autocapitalize="off">
 </table>
 <script type="text/javascript">
- var username = document.getElementById('username');
- focus(username);
-#      username.form['auth[driver]'].onchange();
+ focus(document.getElementById('username'));
 </script>
 <?php
     echo "<p><input type='submit' value='" . lang('Login') . "'>\n";
