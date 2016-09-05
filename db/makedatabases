@@ -224,8 +224,8 @@ GRANT USAGE ON SCHEMA plhdb TO demo_user;
 GRANT USAGE ON SCHEMA sandbox TO demo_user;
 CREATE SCHEMA demo_user;
 GRANT USAGE ON SCHEMA demo_user TO plhdb_editors
-                                   , plhdb_readers
-                                   , demo_user;
+                                 , plhdb_readers
+                                 , demo_user;
 ALTER DATABASE plhdb_demo SET SEARCH_PATH TO
     plhdb
   , sandbox
