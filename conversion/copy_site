@@ -20,9 +20,53 @@
 #
 # Remarks:
 #   Run this in whatever directory you wish to save the mirrored content.
+#   Use the "merged" result.
+#   Any files in "merged" ending in ".backup" must be manually merged
+#   or otherwise resolved.  They are different in the 2 versions.
 #
 # Don't seem to need the following:
 #   --convert-links
 #   --reject --reject-regex
 #   --exclude-directories
 wget  --no-check-certificate --mirror --page-requisites https://plhdb.org/
+wget  --no-check-certificate --page-requisites https://demo.plhdb.org/
+cp -a plhdb.org merged
+rsync --backup --suffix '.backup' --recursive demo.plhdb.org/ merged
+for f in $(find merged/ -name '*.backup') ; do
+  if cmp -s $f $(dirname $f)/$(basename --suffix .backup $f) ; then
+    rm $f
+  fi
+done
+
+# Keep the demo site home page
+mv merged/index.html merged/demopage.html
+mv merged/index.html.backup merged/index.html
+
+# Tundra, the backup has unix eol
+mv merged/js/dijit/themes/tundra/tundra.css.backup \
+   merged/js/dijit/themes/tundra/tundra.css
+
+# The backup has unix eol
+mv merged/js/dijit/themes/dijit.css.backup \
+   merged/js/dijit/themes/dijit.css
+
+# The demo site has "compiled" code. (Referenced only in it's index.html.)
+mv merged/js/dijit/dijit.js merged/js/dijit/dijitcode.js
+mv merged/js/dijit/dijit.js.backup merged/js/dijit/dijit.js
+
+# The demo site has "compiled" code.  (Referenced only in it's index.html.)
+# Because we don't know the version numbers of either we keep both
+# copies.
+mv merged/js/dojo/dojo.js merged/js/dojo/dojocompiled.js
+mv merged/js/dojo/dojo.js.backup merged/js/dojo/dojo.js
+
+# The css is slightly different.  Don't bother trying to merge
+# the commen elements.  (Referenced only in the demo site's index.html.)
+mv merged/css/plhdb.css merged/css/plhdbdemo.css
+mv merged/css/plhdb.css.backup merged/css/plhdb.css
+
+# The "logo" for the demo site says "Demo". (Again referenced only on
+# the demo site's index.html.)
+mv merged/images/plhdb_logo.jpg merged/images/plhdb_demo_logo.jpg
+mv merged/images/plhdb_logo.jpg.backup merged/images/plhdb_logo.jpg
+
