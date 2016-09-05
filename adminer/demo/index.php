@@ -15,10 +15,6 @@ function adminer_object() {
       <input type="hidden" name="auth[server]" value="" >
       <input type="hidden" name="auth[permanent]" value="1" >
       <input type="hidden" name="auth[db]" value="plhdb_demo">
-<table cellspacing="0">
-   <tr><th><?php echo lang('Username'); ?><td><input name="auth[username]" id="username" value="<?php echo h($_GET["username"]); ?>" autocapitalize="off">
-   <tr><th><?php echo lang('Password'); ?><td><input type="password" name="auth[password]">
-</table>
 <script type="text/javascript">
  focus(document.getElementById('username'));
 </script>
@@ -33,7 +29,7 @@ function adminer_object() {
 
     function credentials() {
       # Prevent user from supplying a different server.
-      return array('localhost', $_GET["username"], get_password());
+      return array('localhost', 'demo_user', 'DEMOPASSWORD');
     }
 
     function database() {
