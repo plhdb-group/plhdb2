@@ -1,4 +1,9 @@
 <?php
+# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+#
+# Licensed under the same terms as the Adminer software itself.
+# See the adminer/LICENSE file included with PLHDBv2 for more details.
+
 function adminer_object() {
   
   class AdminerSoftware extends Adminer {
