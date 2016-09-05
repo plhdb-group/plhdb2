@@ -145,6 +145,11 @@ cat <<-EOF
 -- Create the databases.
 CREATE DATABASE $db;
 
+-- Secure connection to the new db
+REVOKE CONNECT ON DATABASE $db FROM PUBLIC;
+GRANT CONNECT ON DATABASE $db TO plhdb_editors
+                               , plhdb_readers;
+
 -- We use european date formatting, not us.
 ALTER DATABASE $db SET DATESTYLE='European';
 
@@ -220,6 +225,9 @@ $(make_schemas_sql plhdb)
 $(make_schemas_sql plhdb)
 
 -- Establish permissions in the plhdb_demo db for the demo_user user.
+GRANT CONNECT ON DATABASE plhdb_demo TO  plhdb_editors
+                                       , plhdb_readers
+                                       , demo_user;
 GRANT USAGE ON SCHEMA plhdb TO demo_user;
 GRANT USAGE ON SCHEMA sandbox TO demo_user;
 CREATE SCHEMA demo_user;
