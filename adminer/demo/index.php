@@ -14,10 +14,10 @@ function adminer_object() {
       <input type="hidden" name="auth[driver]" value="pgsql" >
       <input type="hidden" name="auth[server]" value="" >
       <input type="hidden" name="auth[permanent]" value="1" >
+      <input type="hidden" name="auth[db]" value="plhdb_demo">
 <table cellspacing="0">
    <tr><th><?php echo lang('Username'); ?><td><input name="auth[username]" id="username" value="<?php echo h($_GET["username"]); ?>" autocapitalize="off">
    <tr><th><?php echo lang('Password'); ?><td><input type="password" name="auth[password]">
-   <tr><th><?php echo lang('Database'); ?><td><input name="auth[db]" value="<?php echo h($_GET["db"])==''?'plhdb':h($_GET["db"]); ?>" placeholder="plhdb" autocapitalize="off">
 </table>
 <script type="text/javascript">
  focus(document.getElementById('username'));
@@ -34,6 +34,11 @@ function adminer_object() {
     function credentials() {
       # Prevent user from supplying a different server.
       return array('localhost', $_GET["username"], get_password());
+    }
+
+    function database() {
+      # Prevent user from supplying a different db.
+      return 'plhdb_demo';
     }
 
   }
