@@ -35,6 +35,9 @@ loaddb() {
 
   createdb -U $ADMIN $newdb "Copy of old $db db before conversion."
 
+  printf "revoke connect on database $newdb from public;\n" \
+    | psql -U $ADMIN template1
+
   dumpfile=/tmp/$db.custom
   pg_restore --no-privileges --no-owner -U $ADMIN -d $newdb $dumpfile
 }
