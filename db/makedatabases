@@ -112,6 +112,8 @@ CREATE ROLE plhdb_admin
 -- No password yet, as it's a hassle for the script.
 -- CREATE ROLE plhdb_admin LOGIN CREATEDB SUPERUSER;
 
+CREATE ROLE demo_user LOGIN;
+
 --
 -- Make the groups we'll want.
 --
@@ -197,12 +199,13 @@ echo "password for the database user 'plhdb_admin'"
 echo which is now: foo
 
 #DEBUG# cat <<-EOF
-export PGPASSWORD=foo
+#export PGPASSWORD=foo
 psql -U plhdb_admin -h $SERVERHOST template1 <<-EOF
 
 $(create_database_sql plhdb)
 $(create_database_sql plhdb_test)
 $(create_database_sql plhdb_copy)
+$(create_database_sql plhdb_demo)
 
 -- The plhdb superuser cannot create more databases.
 ALTER ROLE plhdb_admin WITH NOCREATEDB;
@@ -213,6 +216,21 @@ $(make_schemas_sql plhdb)
 $(make_schemas_sql plhdb)
 \c plhdb_copy
 $(make_schemas_sql plhdb)
+\c plhdb_demo
+$(make_schemas_sql plhdb)
+
+-- Establish permissions in the plhdb_demo db for the demo_user user.
+GRANT USAGE ON SCHEMA plhdb TO demo_user;
+GRANT USAGE ON SCHEMA sandbox TO demo_user;
+CREATE SCHEMA demo_user;
+GRANT USAGE ON SCHEMA demo_user TO plhdb_editors
+                                   , plhdb_readers
+                                   , demo_user;
+ALTER DATABASE plhdb_demo SET SEARCH_PATH TO
+    plhdb
+  , sandbox
+  , demo_user;
+
 
 EOF
 
@@ -220,6 +238,7 @@ EOF
 install_tablefunc plhdb
 install_tablefunc plhdb_test
 install_tablefunc plhdb_copy
+install_tablefunc plhdb_demo
 
 #
 # Tell the user to secure the system.
@@ -229,3 +248,12 @@ echo "to login.  Change it (as the postgres user) with the command:"
 echo
 echo '   ' psql -U postgres -h $PGSERVERHOST -d plhdb '\'
 echo "    " -c '"ALTER ROLE plhdb_admin WITH ENCRYPTED PASSWORD' "'foo';"'"'
+echo
+echo "The demo_user user needs a password, set it (as the postgres) user"
+echo "with the command:"
+echo
+echo '   ' psql -U postgres -h $PGSERVERHOST -d plhdb '\'
+echo "    " -c '"ALTER ROLE demo_user WITH ENCRYPTED PASSWORD' "'foo';"'"'
+echo
+echo "You will also need to edit the adminer/demo/index.php file after"
+echo "installation and specify the demo user's password therein."
