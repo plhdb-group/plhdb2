@@ -199,7 +199,7 @@ echo "password for the database user 'plhdb_admin'"
 echo which is now: foo
 
 #DEBUG# cat <<-EOF
-#export PGPASSWORD=foo
+export PGPASSWORD=foo
 psql -U plhdb_admin -h $SERVERHOST template1 <<-EOF
 
 $(create_database_sql plhdb)
