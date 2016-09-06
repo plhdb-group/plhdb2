@@ -29,7 +29,8 @@ function adminer_object() {
 
     function credentials() {
       # Prevent user from supplying a different server.
-      return array('localhost', 'demo_user', 'DEMOPASSWORD');
+      require "/srv/apps/root/var/www/includes/demopassword.php";
+      return array('localhost', 'demo_user', DEMOPASSWORD);
     }
 
     function database() {
