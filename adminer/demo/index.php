@@ -42,4 +42,4 @@ function adminer_object() {
   return new AdminerSoftware;
 }
 
-include "/srv/apps/root/var/www/includes/adminer-current";
+require "/srv/apps/root/var/www/includes/adminer-current";
