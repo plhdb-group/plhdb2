@@ -88,8 +88,8 @@ data of this type is to make comparative analyses that can shed light on the pop
 the social and ecological adaptations that have shaped both human and nonhuman primate evolution. Records in the database include mortality and fertility schedules across multiple primate taxa. The data are searchable and can be downloaded 
 into  csv format.</p>
 
-<h2>About the demo site and example database</h2>
-<p>To illustrate how the system work, we created a demo site with an example dataset, representing a subset of the actual database. Please visit our <a href="http://demo.plhdb.org">demo site</a> 
+<h2>About the demo page and example database</h2>
+<p>To illustrate how the system work, we created a demo page with an example dataset, representing a subset of the actual database. Please visit our <a href="/demopage">demo page</a> 
 for details</p> 
 <h2>Technology</h2>
 <ul>
