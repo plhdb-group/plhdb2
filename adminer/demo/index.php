@@ -24,7 +24,7 @@ function adminer_object() {
 
     function name() {
       # Supply custom title
-      return 'PLHDB via Adminer';
+      return 'PLHDB Demo via Adminer';
     }
 
     function credentials() {
