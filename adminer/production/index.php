@@ -41,4 +41,4 @@ function adminer_object() {
   return new AdminerSoftware;
 }
 
-require "/srv/apps/root/var/www/includes/adminer-current";
+require $_SERVER['DOCUMENT_ROOT'] . "/../includes/adminer-current";

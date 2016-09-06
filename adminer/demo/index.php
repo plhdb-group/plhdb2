@@ -29,7 +29,7 @@ function adminer_object() {
 
     function credentials() {
       # Prevent user from supplying a different server.
-      require "/srv/apps/root/var/www/includes/demopassword.php";
+      require $_SERVER['DOCUMENT_ROOT'] . "/../includes/demopassword.php";
       return array('localhost', 'demo_user', DEMOPASSWORD);
     }
 
@@ -43,4 +43,4 @@ function adminer_object() {
   return new AdminerSoftware;
 }
 
-require "/srv/apps/root/var/www/includes/adminer-current";
+require $_SERVER['DOCUMENT_ROOT'] . "/../includes/adminer-current";
