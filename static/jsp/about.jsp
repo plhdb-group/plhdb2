@@ -89,7 +89,7 @@ the social and ecological adaptations that have shaped both human and nonhuman p
 into  csv format.</p>
 
 <h2>About the demo page and example database</h2>
-<p>To illustrate how the system work, we created a demo page with an example dataset, representing a subset of the actual database. Please visit our <a href="/demopage">demo page</a> 
+<p>To illustrate how the system works, we created a demo page with an example dataset, representing a subset of the actual database. Please visit our <a href="/demopage">demo page</a> 
 for details</p> 
 
 <h2>PLHDB version 2</h2>
