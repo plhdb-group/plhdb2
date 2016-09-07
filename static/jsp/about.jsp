@@ -94,7 +94,7 @@ for details</p>
 
 <h2>PLHDB version 2</h2>
 
-<h3>Technology</h3>
+<h3>Technologies</h3>
 <ul>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 9.5</a></li>
 <li>Database Interface: <a href="https://www.adminer.org/">Adminer</a></li>
@@ -108,7 +108,7 @@ Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>
 
 <h2>PLHDB version 1</h2>
 
-<h3>Technology</h3>
+<h3>Technologies</h3>
 <ul>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 8.3</a></li>
 <li>Database ORM : <a href="https://www.hibernate.org/">Hibernate</a></li>
