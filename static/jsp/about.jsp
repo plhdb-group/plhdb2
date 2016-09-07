@@ -91,7 +91,16 @@ into  csv format.</p>
 <h2>About the demo page and example database</h2>
 <p>To illustrate how the system work, we created a demo page with an example dataset, representing a subset of the actual database. Please visit our <a href="/demopage">demo page</a> 
 for details</p> 
-<h2>Technology</h2>
+
+<h2>Technology, PLHDB version 2</h2>
+<ul>
+<li>Database: <a href="http://www.postgresql.org/">PostgreSQL 9.5</a></li>
+<li>Database Interface: <a href="https://www.adminer.org/">Adminer</a></li>
+<li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
+</ul>
+
+
+<h2>Technology, PLHDB version 1</h2>
 <ul>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 8.3</a></li>
 <li>Database ORM : <a href="https://www.hibernate.org/">Hibernate</a></li>
@@ -106,6 +115,8 @@ for details</p>
 </li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
 </ul>
+
+
 <h2>Source Code</h2>
 <p>
 Source code is available on <a href="http://github.com/NESCent/plhdb">GitHub</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. 
