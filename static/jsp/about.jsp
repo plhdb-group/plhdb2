@@ -94,21 +94,25 @@ for details</p>
 
 <h2>PLHDB version 2</h2>
 
-<h3>Technologies</h3>
+<ul>
+<li>Technologies
 <ul>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 9.5</a></li>
 <li>Database Interface: <a href="https://www.adminer.org/">Adminer</a></li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
 </ul>
+</li>
 
-<h3>Source Code</h3>
-<p>
-Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>.
-</p> 
+<li>Source Code
+<ul>
+<li>Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>.</li>
+</ul>
+</li>
+</ul>
 
 <h2>PLHDB version 1</h2>
-
-<h3>Technologies</h3>
+<ul>
+<li>Technologies
 <ul>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 8.3</a></li>
 <li>Database ORM : <a href="https://www.hibernate.org/">Hibernate</a></li>
@@ -123,11 +127,14 @@ Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>
 </li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
 </ul>
+</li>
 
-<h3>Source Code</h3>
-<p>
-Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>.
-</p> 
+<li>Source Code
+<ul>
+<li>Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>.</li>
+</ul>
+</li>
+</ul>
 
 
 <h2>Licensing</h2>
