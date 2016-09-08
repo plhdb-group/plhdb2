@@ -17,7 +17,7 @@ function adminer_object() {
 <table cellspacing="0">
    <tr><th><?php echo lang('Username'); ?></th><td><input name="auth[username]" id="username" value="<?php echo in_array("username",$_GET)?h($_GET["username"]):""; ?>" autocapitalize="off"></td></tr>
    <tr><th><?php echo lang('Password'); ?></th><td><input type="password" name="auth[password]"></td></tr>
-   <tr><th><?php echo lang('Database'); ?></th><td><input name="auth[db]" value="<?php echo h($_GET["db"])==''?'plhdb':h($_GET["db"]); ?>" placeholder="plhdb" autocapitalize="off"></td></tr>
+   <tr><th><?php echo lang('Database'); ?></th><td><input name="auth[db]" value="<?php echo in_array("db",$_GET)&&h($_GET["db"])!=''?h($_GET["db"]):'plhdb'; ?>" placeholder="plhdb" autocapitalize="off"></td></tr>
 </table>
 <script type="text/javascript">
  focus(document.getElementById('username'));
