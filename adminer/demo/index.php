@@ -14,7 +14,7 @@ function adminer_object() {
       <input type="hidden" name="auth[driver]" value="pgsql" >
       <input type="hidden" name="auth[server]" value="" >
       <input type="hidden" name="auth[permanent]" value="1" >
-      <input type="hidden" name="auth[db]" value="plhdb_demo">
+      <input type="hidden" name="auth[db]" value="plhdb_demo" >
 <script type="text/javascript">
  focus(document.getElementById('username'));
 </script>
