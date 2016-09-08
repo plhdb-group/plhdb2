@@ -15,9 +15,9 @@ function adminer_object() {
       <input type="hidden" name="auth[server]" value="" >
       <input type="hidden" name="auth[permanent]" value="1" >
 <table cellspacing="0">
-   <tr><th><?php echo lang('Username'); ?><td><input name="auth[username]" id="username" value="<?php echo h($_GET["username"]); ?>" autocapitalize="off">
-   <tr><th><?php echo lang('Password'); ?><td><input type="password" name="auth[password]">
-   <tr><th><?php echo lang('Database'); ?><td><input name="auth[db]" value="<?php echo h($_GET["db"])==''?'plhdb':h($_GET["db"]); ?>" placeholder="plhdb" autocapitalize="off">
+   <tr><th><?php echo lang('Username'); ?></th><td><input name="auth[username]" id="username" value="<?php echo h($_GET["username"]); ?>" autocapitalize="off"></td></tr>
+   <tr><th><?php echo lang('Password'); ?></th><td><input type="password" name="auth[password]"></td></tr>
+   <tr><th><?php echo lang('Database'); ?></th><td><input name="auth[db]" value="<?php echo h($_GET["db"])==''?'plhdb':h($_GET["db"]); ?>" placeholder="plhdb" autocapitalize="off"></td></tr>
 </table>
 <script type="text/javascript">
  focus(document.getElementById('username'));
