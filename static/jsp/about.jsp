@@ -105,7 +105,8 @@ for details</p>
 
 <li>Source Code
 <ul>
-<li>Source code is available at <a href="http://github.com/NESCent/plhdb">GitHub</a>.</li>
+<li>Source code is available at <a href="https://github.com/plhdb-group/plhdb2
+">GitHub</a>.</li>
 </ul>
 </li>
 </ul>
