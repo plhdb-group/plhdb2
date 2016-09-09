@@ -80,7 +80,7 @@ backup_dir: cluster_parent
 	fi
 
 .PHONY: bin_dir
-bin_dir: ${BIN}
+bin_dir:
 	mkdir -p ${BIN}
 
 .PHONY: install_plhdb_postgres_backup
