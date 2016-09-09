@@ -53,6 +53,7 @@ all:
 
 cluster_parent: ${CLUSTER_PARENT}
 
+.PHONY: cluster_dir
 cluster_dir: cluster_parent
 	if [ \! -d ${CLUSTER_DIR} ] ; then \
 	  mkdir -p ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
@@ -60,14 +61,17 @@ cluster_dir: cluster_parent
 	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
 	fi
 
+.PHONY: cluster
 cluster: cluster_dir
 	printf '${INITDB} --locale=C ${CLUSTER_PARENT}/${CLUSTER_DIR}' \
 	  | sudo su - postgres
 
 
+.PHONY: databases
 databases: makedatabases
 	sh makedatabases
 
+.PHONY: backup_dir
 backup_dir: cluster_parent
 	if [ \! -d ${BACKUP_DIR} ] ; then \
 	  mkdir -p ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
@@ -75,6 +79,7 @@ backup_dir: cluster_parent
 	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
 	fi
 
+.PHONY: bin_dir
 bin_dir: ${BIN}
 	mkdir -p ${BIN}
 
