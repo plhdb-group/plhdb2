@@ -57,16 +57,16 @@ DROP SCHEMA public;
 
 CREATE SCHEMA plhdb;
 
-GRANT USAGE ON SCHEMA plhdb TO plhdb_editors
-                                , plhdb_readers;
+GRANT USAGE ON SCHEMA plhdb TO plhdb_managers
+                                , plhdb_users;
 
 -- The sandbox schema.
 -- Used by the scientists to extend plhdb.
 
 CREATE SCHEMA sandbox;
 
-GRANT ALL PRIVILEGES ON SCHEMA sandbox TO plhdb_editors;
-GRANT USAGE ON SCHEMA sandbox TO plhdb_readers;
+GRANT ALL PRIVILEGES ON SCHEMA sandbox TO plhdb_managers;
+GRANT USAGE ON SCHEMA sandbox TO plhdb_users;
 
 -- Set the schema search path.
 ALTER DATABASE $db SET SEARCH_PATH TO
@@ -118,11 +118,12 @@ CREATE ROLE demo_user LOGIN;
 -- Make the groups we'll want.
 --
 
--- The writers group can change things and read things.
-CREATE ROLE plhdb_editors;
+-- The managers group can change things and read things.
+CREATE ROLE plhdb_managers;
 
--- The readers group can only view the data.
-CREATE ROLE plhdb_readers;
+-- The users group can only view the data, except for study data.
+-- The study data is controlled by the row-level permission system.
+CREATE ROLE plhdb_users;
 
 EOF
 }
@@ -147,8 +148,8 @@ CREATE DATABASE $db;
 
 -- Secure connection to the new db
 REVOKE CONNECT ON DATABASE $db FROM PUBLIC;
-GRANT CONNECT ON DATABASE $db TO plhdb_editors
-                               , plhdb_readers;
+GRANT CONNECT ON DATABASE $db TO plhdb_managers
+                               , plhdb_users;
 
 -- We use european date formatting, not us.
 ALTER DATABASE $db SET DATESTYLE='European';
@@ -225,14 +226,14 @@ $(make_schemas_sql plhdb)
 $(make_schemas_sql plhdb)
 
 -- Establish permissions in the plhdb_demo db for the demo_user user.
-GRANT CONNECT ON DATABASE plhdb_demo TO  plhdb_editors
-                                       , plhdb_readers
+GRANT CONNECT ON DATABASE plhdb_demo TO  plhdb_managers
+                                       , plhdb_users
                                        , demo_user;
 GRANT USAGE ON SCHEMA plhdb TO demo_user;
 GRANT USAGE ON SCHEMA sandbox TO demo_user;
 CREATE SCHEMA demo_user;
-GRANT USAGE ON SCHEMA demo_user TO plhdb_editors
-                                 , plhdb_readers
+GRANT USAGE ON SCHEMA demo_user TO plhdb_managers
+                                 , plhdb_users
                                  , demo_user;
 ALTER DATABASE plhdb_demo SET SEARCH_PATH TO
     plhdb
