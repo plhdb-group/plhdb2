@@ -87,3 +87,8 @@ bin_dir:
 install_plhdb_postgres_backup: backup_dir bin_dir
 	cp ../bin/plhdb_postgres_backup ${BIN}
 	chmod a+x ${BIN}/plhdb_postgres_backup
+
+.PHONY: clean
+clean:
+	make -C tables clean
+	make -C include clean
