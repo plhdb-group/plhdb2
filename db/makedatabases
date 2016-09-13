@@ -119,8 +119,13 @@ CREATE ROLE plhdb_admin
   WITH ENCRYPTED PASSWORD 'foo' LOGIN CREATEDB SUPERUSER;
 - No password yet, as it's a hassle for the script.
 -- CREATE ROLE plhdb_admin LOGIN CREATEDB SUPERUSER;
+COMMENT ON ROLE plhdb_admin IS
+  'Role (user) used by system build tools to construct system.';
 
 CREATE ROLE demo_user LOGIN;
+COMMENT ON ROLE demo_user IS
+  'Role (user) used when connecting the public at large '
+  'to the demo database.';
 
 --
 -- Make the groups we'll want.
@@ -128,10 +133,14 @@ CREATE ROLE demo_user LOGIN;
 
 -- The managers group can change things and read things.
 CREATE ROLE plhdb_managers;
+COMMENT ON ROLE plhdb_managers IS
+  'Role (group) who''s members have "system manager" access.';
 
 -- The users group can only view the data, except for study data.
 -- The study data is controlled by the row-level permission system.
 CREATE ROLE plhdb_users;
+COMMENT ON ROLE plhdb_users IS
+  'Role (group) who''s members have "study user" access.';
 
 EOF
 }
