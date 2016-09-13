@@ -18,6 +18,7 @@ dnl
 dnl Karl O. Pinc <kop@meme.com>
 dnl
 
+include(`copyright.m4')
 include(`tablemacros.m4')
 include(`grants.m4')
 
