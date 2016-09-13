@@ -40,7 +40,7 @@ function adminer_object() {
 
     function navigation($missing) {
       # Add "back" link
-      echo '<h1><a href="/demopage">PLHDB Demo Page</a></h1>';
+      echo '<h1><a href="/demopage.html">PLHDB Demo Page</a></h1>';
       parent::navigation($missing);
     }
 
