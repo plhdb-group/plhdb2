@@ -250,11 +250,11 @@ ALTER ROLE plhdb_admin WITH NOCREATEDB;
 \c plhdb
 $(make_schemas_sql plhdb)
 \c plhdb_test
-$(make_schemas_sql plhdb)
+$(make_schemas_sql plhdb_test)
 \c plhdb_copy
-$(make_schemas_sql plhdb)
+$(make_schemas_sql plhdb_copy)
 \c plhdb_demo
-$(make_schemas_sql plhdb)
+$(make_schemas_sql plhdb_demo)
 
 -- Establish permissions in the plhdb_demo db for the demo_user user.
 GRANT CONNECT ON DATABASE plhdb_demo TO  plhdb_managers
