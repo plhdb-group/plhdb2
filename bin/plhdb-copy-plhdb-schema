@@ -1,0 +1,118 @@
+#!/bin/bash
+# Copyright (C) 2011, 2014, 2015, 2016 The Meme Factory, Inc.
+#               http://www.meme.com/
+# Copyright (C) 2008, 2011 Karl O. Pinc  <kop@meme.com>
+#
+#    This file is part of PLHDB.
+#
+#    PLHDB is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PLHDB.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Copy the plhdb schema and related schemas from one db to another.
+#
+# Karl O. Pinc <kop@meme.com>
+#
+# Syntax: plhdb-copy-plhdb-schema [-f] adminuser fromdb todb
+#
+# Input: fromdb  Database to copy.
+#        todb    Database to copy into.
+#
+# Remarks:
+
+# The schemas to copy
+SCHEMAS='plhdb'
+
+usage () {
+cat - <<EOF
+Syntax: plhdb-copy-plhdb-schema [-f] adminuser fromdb todb
+        plhdb-copy-plhdb-schema -h
+
+Input: adminuser Administrative username used to do the copy.
+       fromdb    Database to copy.
+       todb      Database to copy into.
+       -h        Show this help.
+       -f        (force) (optional) Allow todb to be the production database.
+EOF
+}
+
+drop_statements() {
+  for schema in $SCHEMAS; do
+    printf "DROP SCHEMA %s CASCADE;\n" $schema
+  done
+}
+
+grant_statements() {
+  for schema in $SCHEMAS; do
+    printf "GRANT USAGE ON SCHEMA %s TO GROUP plhdb_managers\n" $schema
+    printf '                          , GROUP plhdb_users;\n'
+  done
+}
+
+schema_args() {
+  for schema in $SCHEMAS; do
+    printf "\x2D\x2Dschema=%s " $schema
+  done
+}
+
+# Parse command line.
+
+if [ "$1" = '-h' ] ; then
+  usage
+  exit 0
+fi
+
+if [ "$1" = '-f' ] ; then
+  prod=y
+  shift
+else
+  prod=n
+fi
+
+A_ADMINUSER=$1
+FROMDB=$2
+TODB=$3
+
+if [ -z "$FROMDB" -o -z "$TODB" ] ; then
+  echo "$0: not enough arguments" >&2
+  usage
+  exit 1
+fi
+
+if [ $TODB = plhdb -a prod != n ] ; then
+  echo "$0: -f is required to copy into the plhdb database" >&2
+  exit 1
+fi
+
+# Erase the target schemas in the target db.
+# Release disk to the OS.
+psql --output=/dev/null -U $A_ADMINUSER --dbname "$TODB" <<EOF
+SET client_min_messages TO WARNING;
+$(drop_statements)
+VACUUM FULL;
+EOF
+
+# Copy the target schemas.
+pg_dump --format=c \
+        --compress=0 \
+        $(schema_args) \
+        -U $A_ADMINUSER \
+        "$FROMDB" \
+  | pg_restore -U $A_ADMINUSER --dbname="$TODB"
+
+# Restore permissions on the plhdb schema
+# Collect stats for the query planner.
+psql --output=/dev/null -U $A_ADMINUSER --dbname "$TODB" <<EOF
+SET client_min_messages TO WARNING;
+$(grant_statements)
+VACUUM ANALYZE;
+EOF
