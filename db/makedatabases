@@ -60,6 +60,9 @@ CREATE SCHEMA plhdb;
 GRANT USAGE ON SCHEMA plhdb TO plhdb_managers
                                 , plhdb_users;
 
+COMMENT ON SCHEMA plhdb IS
+  'Official PLHDB tables, views, etc.';
+
 -- The sandbox schema.
 -- Used by the scientists to extend plhdb.
 
@@ -67,6 +70,11 @@ CREATE SCHEMA sandbox;
 
 GRANT ALL PRIVILEGES ON SCHEMA sandbox TO plhdb_managers;
 GRANT USAGE ON SCHEMA sandbox TO plhdb_users;
+
+COMMENT ON SCHEMA sandbox IS
+  'Shared area for plhdb working group to experiment with new tables, etc.; '
+  'database objects shared amongst group members in the same fashion as '
+  'those database objects in the "plhdb" schema.';
 
 -- Set the schema search path.
 ALTER DATABASE $db SET SEARCH_PATH TO
@@ -109,7 +117,7 @@ cat <<-EOF
 -- Create the plhdb_admin superuser.
 CREATE ROLE plhdb_admin 
   WITH ENCRYPTED PASSWORD 'foo' LOGIN CREATEDB SUPERUSER;
--- No password yet, as it's a hassle for the script.
+- No password yet, as it's a hassle for the script.
 -- CREATE ROLE plhdb_admin LOGIN CREATEDB SUPERUSER;
 
 CREATE ROLE demo_user LOGIN;
@@ -209,9 +217,23 @@ export PGPASSWORD=foo
 psql -U plhdb_admin -h $SERVERHOST template1 <<-EOF
 
 $(create_database_sql plhdb)
+COMMENT ON DATABASE plhdb IS
+  'Production database of the PLHDB group.';
+
 $(create_database_sql plhdb_test)
+COMMENT ON DATABASE plhdb_test IS
+  'An occasionally erased and re-created copy of the production PLHDB '
+  'database.  Used for data manipulation experiments by PLHDB group members '
+  'and related testing.';
+
 $(create_database_sql plhdb_copy)
+COMMENT ON DATABASE plhdb_copy IS
+  'Version of the PLHDB database used for software development.';
+
 $(create_database_sql plhdb_demo)
+COMMENT ON DATABASE plhdb_demo IS
+  'A small and possibly fictional subset of sample PLHDB data made publicly '
+  'accessable to demonstrate the PLHDB system.';
 
 -- The plhdb superuser cannot create more databases.
 ALTER ROLE plhdb_admin WITH NOCREATEDB;
