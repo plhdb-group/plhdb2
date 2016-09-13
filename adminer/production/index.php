@@ -36,6 +36,12 @@ function adminer_object() {
       return array('localhost', $_GET["username"], get_password());
     }
 
+    function navigation($missing) {
+      # Add "back" link
+      echo '<h1><a href="/">PLHDB Home</a></h1>';
+      parent::navigation($missing);
+    }
+
   }
   
   return new AdminerSoftware;
