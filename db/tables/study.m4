@@ -26,6 +26,8 @@ CREATE TABLE study (
   study_oid SERIAL PRIMARY KEY
 , name VARCHAR(32) NOT NULL
   empty_string_check(`name')
+  CONSTRAINT "NAME may not be 'plh_allstudies'"
+             CHECK(name <> 'plh_allstudies')
 , id VARCHAR(12) NOT NULL
   empty_string_check(`id')
 , owners VARCHAR(128)
@@ -50,8 +52,8 @@ COMMENT ON COLUMN study.study_oid IS
   'Unique row identifier.';
 
 COMMENT ON COLUMN study.name IS
-  'The name of the study. This may be a descriptive or an encoded '
-  'and must be unique if not NULL.';
+  'The name of the study. This may be a descriptive or encoded, '
+  'must be unique if not NULL, and may not be ''plh_allstudies''.';
 
 COMMENT ON COLUMN study.id IS
   'A short identifier commonly used to refer to the study.  This need '
