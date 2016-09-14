@@ -21,6 +21,7 @@ dnl
 include(`copyright.m4')
 include(`tablemacros.m4')
 include(`grants.m4')
+include(`constants.m4')
 
 CREATE TABLE study (
   study_oid SERIAL PRIMARY KEY
