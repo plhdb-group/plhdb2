@@ -42,6 +42,11 @@ function adminer_object() {
       parent::navigation($missing);
     }
 
+    function selectLimitProcess() {
+      # Default to no limit on query results.
+      return (isset($_GET["limit"]) ? $_GET["limit"] : "");
+    }
+
   }
   
   return new AdminerSoftware;
