@@ -36,6 +36,9 @@ define(`plh_insert', `insert')
 define(`plh_edit',   `edit')
 define(`plh_all',    `all')
 
+dnl The study that means "all studies"
+define(`plh_allstudies', `all')
+
 dnl Turn output back on
 divert`'dnl
 dnl
