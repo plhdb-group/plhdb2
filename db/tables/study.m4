@@ -25,12 +25,12 @@ include(`constants.m4')
 
 CREATE TABLE study (
   study_oid SERIAL PRIMARY KEY
-, name VARCHAR(32) NOT NULL
+, name VARCHAR(32)
   empty_string_check(`name')
-  CONSTRAINT "NAME may not be 'plh_allstudies'"
-             CHECK(name <> 'plh_allstudies')
 , id VARCHAR(12) NOT NULL
   empty_string_check(`id')
+  CONSTRAINT "Id may not be 'plh_allstudies'"
+             CHECK(id <> 'plh_allstudies')
 , owners VARCHAR(128)
   empty_string_check(`owners')
 , taxon_oid INT NOT NULL
@@ -54,11 +54,12 @@ COMMENT ON COLUMN study.study_oid IS
 
 COMMENT ON COLUMN study.name IS
   'The name of the study. This may be a descriptive or encoded, '
-  'must be unique if not NULL, and may not be ''plh_allstudies''.';
+  'must be unique if not NULL.';
 
 COMMENT ON COLUMN study.id IS
   'A short identifier commonly used to refer to the study.  This need '
-  'not be a number, but must be unique, and is required.';
+  'not be a number, but must be unique, may not be ''plh_allstudies'', '
+  'and is required.';
 
 COMMENT ON COLUMN study.owners IS
   'The owners of the observational data that this study gave rise to.  '
