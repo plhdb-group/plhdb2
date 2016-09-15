@@ -19,6 +19,8 @@
 # Karl O. Pinc <kop@meme.com>
 #
 # Remarks:
+#   Copies the old website as static content.
+#
 #   Run this in whatever directory you wish to save the mirrored content.
 #   Use the "merged" result.
 #   Any files in "merged" ending in ".backup" must be manually merged
