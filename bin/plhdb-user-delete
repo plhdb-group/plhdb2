@@ -46,11 +46,18 @@ export A_USER=$2
 if [ -z "$ADMIN" ] ; then
 psql -h localhost -U $A_ADMINUSER -d plhdb_copy <<EOF
 -- We start in plhdb_copy
+begin;
+delete from permission where username = '$A_USER';
 drop schema $A_USER cascade;
+commit;
 \c plhdb_test
+begin;
+delete from permission where username = '$A_USER';
 drop schema $A_USER cascade;
+commit;
 \c plhdb
 begin;
+delete from permission where username = '$A_USER';
 drop schema $A_USER cascade;
 drop role $A_USER;
 commit;
