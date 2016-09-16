@@ -38,7 +38,7 @@ $(COPYRIGHT): $(COPYRIGHTSRC) $(DEPS)
 maketables.sql: $(SQLFILES) $(COPYRIGHT) $(DEPS)
 	cat $(COPYRIGHT) $(SQLFILES) > maketables.sql
 
-destroytables.sql: destroytables.sh $(COPYRIGHT) $(DEPS)
+destroytables.sql: *.m4 destroytables.sh $(COPYRIGHT) $(DEPS)
 	cat $(COPYRIGHT) > destroytables.sql
 	printf "%s" "$(INFILES:.m4=)" \
 	  | sh destroytables.sh >> destroytables.sql
