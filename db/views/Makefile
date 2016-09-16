@@ -45,7 +45,7 @@ destroyviews.sql: destroyviews.sh $(COPYRIGHT) $(DEPS)
 
 # Make any *.sql file from it's *.m4 file.
 %.sql: %.m4 $(COPYRIGHTSRC) ../include/constants.m4 $(DEPS)
-	m4 -I $(INCLUDE) -I include $< > $@
+	m4 -I $(INCLUDE) $< > $@
 
 .PHONY: install
 install: makeviews.sql $(DEPS)
