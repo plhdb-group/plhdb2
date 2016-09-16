@@ -25,4 +25,4 @@
 
 xargs -n 1 printf '%s\n' \
   | tac \
-  | xargs printf 'DROP VIEW %s CASCADE;\n'
+  | xargs printf 'DROP VIEW IF EXISTS %s CASCADE;\n'
