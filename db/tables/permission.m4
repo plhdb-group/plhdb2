@@ -34,7 +34,7 @@ CREATE TABLE permission (
 , study VARCHAR(12) NOT NULL
 , username NAME NOT NULL);
 
-grant_seq_priv(`permission', `permission_oid')
+grant_managers_seq_priv(`permission', `permission_oid')
 
 
 COMMENT ON TABLE permission IS
