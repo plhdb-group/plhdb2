@@ -22,6 +22,7 @@ include(`copyright.m4')
 include(`tablemacros.m4')
 include(`grants.m4')
 include(`constants.m4')
+include(`permission_comments.m4')
 
 CREATE TABLE permission (
   permission_oid SERIAL PRIMARY KEY
@@ -48,22 +49,7 @@ COMMENT ON TABLE permission IS
   'The combination of study and username must be unique.  '
   'When study is ''plh_allstudies'' the username must be unique.';
 
-COMMENT ON COLUMN permission.permission_oid IS
-  'Unique row identifier.';
-
-COMMENT ON COLUMN permission.access IS
-  'The type of access granted.  Must be one of: plh_search, plh_insert, '
-  'plh_edit, plh_all.  Higher permission levels include all lower '
-  'permissions.';
-
-COMMENT ON COLUMN permission.study IS
-  'The STUDY.Name of the study to which permission is granted or '
-  '''plh_allstudies'' if permission is granted to all studies.';
-
-COMMENT ON COLUMN permission.username IS
-  'The ROLE.rolname of the user to which permission is granted.  '
-  'HINT: See the "accounts" view for information on users.';
-
+comment_permission_columns(`permission')
 
 
 CREATE INDEX permission_username ON permission (username);
