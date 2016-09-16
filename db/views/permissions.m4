@@ -18,6 +18,8 @@
 -- Karl O. Pinc <kop@meme.com>
 --
 
+include(`permission_comments.m4')
+
 -- In keeping with the notion of only allowing particular users to
 -- see particular studies, users are only allowed to see who has
 -- permission to those studies to which the user has (any) access.
@@ -41,3 +43,15 @@ CREATE OR REPLACE VIEW permissions AS
         OR EXISTS (SELECT 1
                      FROM user_permissions
                      WHERE permission.study = user_permissions.study));
+
+
+COMMENT ON VIEW permissions IS
+  'Contains at most one row per user per study, each row defining the '
+  'PLHDB permission level the study grants to the user.  '
+  'Users are allowed to see only permissions to those studies to which '
+  'the user has access.  '
+  'HINT: The contents of the underlying PERMISSION table is available '
+  'in an unfiltered form to PLHDB manager accounts.  '
+  'HINT: See also the ACCOUNTS and ACCESS_GROUPS views.';
+
+comment_permission_columns(`permissions')
