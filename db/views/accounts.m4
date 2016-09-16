@@ -19,8 +19,7 @@
 --
 
 -- Descriptions of accounts
--- (Roles that can login and have schemas with their name which have
--- a comment.  Note that the schema must be in the connected database.)
+-- (Roles that can login.)
 create or replace view accounts as
   select pg_roles.rolname as username
        , pg_shdescription.description as description
