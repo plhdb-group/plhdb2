@@ -74,7 +74,7 @@ reinstall: destroyviews.sql makeviews.sql
 
 # Reinstall outside of a transaction
 .PHONY: reinstallnolock
-reinstall: destroyviews makeviews.sql
+reinstall: destroyviews.sql makeviews.sql
 	( echo set client_min_messages TO WARNING\; ; \
 	  cat destroyviews.sql ; \
 	  cat makeviews.sql ; \
