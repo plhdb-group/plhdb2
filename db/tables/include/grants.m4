@@ -46,36 +46,79 @@ dnl
 
 dnl Grant privileges to managers on a table.
 dnl
+dnl Syntax: grant_managers_priv(tablename)
+changequote([,])
+define([grant_managers_priv],[
+GRANT SELECT ON $1 TO GROUP plhdb_managers;
+GRANT REFERENCES ON $1 TO GROUP plhdb_managers;
+GRANT INSERT ON $1 TO GROUP plhdb_managers;
+GRANT UPDATE ON $1 TO GROUP plhdb_managers;
+GRANT DELETE ON $1 TO GROUP plhdb_managers;
+])
+changequote(`,')
+
+
+dnl Grant privileges to users on a table.
+dnl
+
+dnl Syntax: grant_users_priv(tablename)
+changequote([,])
+define([grant_users_priv],[
+GRANT SELECT ON $1 TO GROUP plhdb_users;
+GRANT REFERENCES ON $1 TO GROUP plhdb_users;
+])
+changequote(`,')
+
+
+dnl Grant privileges on a table.
+dnl
 dnl This also prints the name of the table.  As every table has
 dnl priviliges granted on it we get to monitor progress this way.
 dnl
 dnl Syntax: grant_priv(tablename)
 changequote([,])
 define([grant_priv],[
-GRANT SELECT ON $1 TO GROUP plhdb_users;
-GRANT SELECT ON $1 TO GROUP plhdb_managers;
-GRANT REFERENCES ON $1 TO GROUP plhdb_users;
-GRANT REFERENCES ON $1 TO GROUP plhdb_managers;
-GRANT INSERT ON $1 TO GROUP plhdb_managers;
-GRANT UPDATE ON $1 TO GROUP plhdb_managers;
-GRANT DELETE ON $1 TO GROUP plhdb_managers;
+grant_managers_priv(`$1')
+grant_users_priv(`$1')
 SELECT '$1' AS done_with;
 ])
 changequote(`,')
 
 
-dnl Grant privliges to a table's sequence
+dnl Grant managers privileges to a table's sequence
+dnl
+dnl Syntax: grant_managers_seq_priv(tablename, idname)
+changequote([,])
+define([grant_managers_seq_priv],[
+grant_managers_priv(`$1')
+
+GRANT SELECT ON $1_$2_seq TO GROUP plhdb_managers;
+GRANT UPDATE ON $1_$2_seq TO GROUP plhdb_managers;
+])
+changequote(`,')
+
+
+dnl Grant users privileges to a table's sequence
+dnl
+dnl Syntax: grant_users_seq_priv(tablename, idname)
+changequote([,])
+define([grant_users_seq_priv],[
+grant_users_priv(`$1')
+
+GRANT SELECT ON $1_$2_seq TO GROUP plhdb_users;
+])
+changequote(`,')
+
+
+dnl Grant privileges to a table's sequence
 dnl
 dnl This also prints the name of the sequence.
 dnl
 dnl Syntax: grant_seq_priv(tablename, idname)
 changequote([,])
 define([grant_seq_priv],[
-grant_priv($1)
-
-GRANT SELECT ON $1_$2_seq TO GROUP plhdb_users;
-GRANT SELECT ON $1_$2_seq TO GROUP plhdb_managers;
-GRANT UPDATE ON $1_$2_seq TO GROUP plhdb_managers;
+grant_managers_priv(`$1')
+grant_users_priv(`$1')
 SELECT '$1_$2_seq' AS done_with;
 ])
 changequote(`,')
