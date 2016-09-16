@@ -50,7 +50,7 @@ emptytables.sql: emptytables.sh $(COPYRIGHT) $(DEPS)
 
 # Make any *.sql file from it's *.m4 file.
 %.sql: %.m4 include/grants.m4 $(COPYRIGHTSRC) \
-            ../include/constants.m4 include/tablemacros.m4 $(DEPS)
+            $(INCLUDE)/constants.m4 include/tablemacros.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include $< > $@
 
 .PHONY: install
