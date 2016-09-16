@@ -67,7 +67,7 @@ reinstall: destroytriggers maketriggers.sql
 
 # Reinstall outside of a transaction
 .PHONY: reinstallnolock
-reinstall: destroytriggers maketriggers.sql
+reinstallnolock: destroytriggers maketriggers.sql
 	( echo set client_min_messages TO WARNING\; ; \
 	  cat destroytriggers ; \
 	  cat maketriggers.sql ; \
