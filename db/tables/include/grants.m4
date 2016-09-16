@@ -44,7 +44,7 @@ dnl meaning to m4.
 dnl 
 
 
-dnl Grant privliges to a table.
+dnl Grant privileges to managers on a table.
 dnl
 dnl This also prints the name of the table.  As every table has
 dnl priviliges granted on it we get to monitor progress this way.
@@ -81,7 +81,7 @@ SELECT '$1_$2_seq' AS done_with;
 changequote(`,')
 
 
-dnl Grant privliges to a table which uses row-level security.
+dnl Grant privileges to a table which uses row-level security.
 dnl
 dnl This also prints the name of the table.  As every table has
 dnl priviliges granted on it we get to monitor progress this way.
