@@ -57,7 +57,7 @@ EOF
 # Site
 { psql -q --tuples-only -U plhdb_admin $fromdb <<\EOF
         SELECT FORMAT(
-            'INSERT INTO study (sid, name, owners, taxon_oid, site_oid) '
+            'INSERT INTO study (sid, name, owners, taxonid, site_oid) '
             'VALUES (%s, %s, %s, %s, %s);'
           , quote_literal(id)
           , CASE WHEN name IS NULL

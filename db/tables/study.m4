@@ -32,8 +32,8 @@ CREATE TABLE study (
   empty_string_check(`name')
 , owners VARCHAR(128)
   empty_string_check(`owners')
-, taxon_oid INT NOT NULL
-  CONSTRAINT "Taxon_OId on TAXON" REFERENCES taxon
+, taxonid INT NOT NULL
+  CONSTRAINT "TaxonId on TAXON" REFERENCES taxon
 , site_oid INT NOT NULL
   CONSTRAINT "Site_OId on SITE" REFERENCES site);
 
@@ -60,7 +60,7 @@ COMMENT ON COLUMN study.owners IS
   'This may be a single person, an organization, or a (comma-delimited) '
   'list of such.';
 
-COMMENT ON COLUMN study.taxon_oid IS
+COMMENT ON COLUMN study.taxonid IS
   'The row identifier of the taxon for the individuals that were or are '
   'being observed in this study.';
 
