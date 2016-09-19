@@ -29,13 +29,13 @@ create or replace view accounts as
     where pg_roles.rolcanlogin;
 
 COMMENT ON VIEW accounts IS
-  'One row per PostgreSQL role which can login.  '
-  'The purpose of this view is to provide a description of accounts.';
+'One row per PostgreSQL role which can login.  The purpose of this
+view is to provide a description of accounts.';
 
 COMMENT ON COLUMN accounts.username IS
-  'The login name.';
+'The login name.';
 
 COMMENT ON COLUMN accounts.description IS
-  'The comment supplied upon account creation which purportedly describes '
-  'the account.';
+'The comment supplied upon account creation which purportedly
+describes the account.';
 
