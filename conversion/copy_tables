@@ -27,9 +27,9 @@ sourcedb=$1
 targetdb=$2
 
 copy_table() {
-  fromdb=$1
-  todb=$2
-  table=$3
+  local fromdb=$1
+  local todb=$2
+  local table=$3
 
   pg_dump -U plhdb_admin -Fc --data-only \
           --table=plhdb.$table --dbname=$fromdb \
