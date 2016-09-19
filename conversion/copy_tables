@@ -36,6 +36,20 @@ copy_table() {
     | pg_restore -U plhdb_admin --dbname $todb
 }
 
-for t in site taxon study ; do
+for t in site taxon ; do
   copy_table $sourcedb $targetdb $t
 done
+
+{ psql -q --tuples-only -U plhdb_admin $fromdb <<\EOF
+        SELECT FORMAT(
+            'INSERT INTO study (sid, name, owners, taxon_oid, site_oid) '
+            'VALUES (%s, %s, %s, %s, %s);'
+          , quote_literal(id)
+          , CASE WHEN name IS NULL
+                   THEN 'NULL'
+                   ELSE '''' || quote_literal(name) || '''' END
+          , quote_literal(owners), taxon_oid, site_oid)
+          FROM plhdb.study;
+EOF
+} \
+  | psql -q -U plhdb_admin $todb

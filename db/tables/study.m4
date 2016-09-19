@@ -24,13 +24,12 @@ include(`grants.m4')
 include(`constants.m4')
 
 CREATE TABLE study (
-  study_oid SERIAL PRIMARY KEY
+  sid VARCHAR(12) PRIMARY KEY
+  empty_string_check(`sid')
+  CONSTRAINT "SId may not be 'plh_allstudies'"
+             CHECK(sid <> 'plh_allstudies')
 , name VARCHAR(32)
   empty_string_check(`name')
-, id VARCHAR(12) NOT NULL
-  empty_string_check(`id')
-  CONSTRAINT "Id may not be 'plh_allstudies'"
-             CHECK(id <> 'plh_allstudies')
 , owners VARCHAR(128)
   empty_string_check(`owners')
 , taxon_oid INT NOT NULL
@@ -38,7 +37,7 @@ CREATE TABLE study (
 , site_oid INT NOT NULL
   CONSTRAINT "Site_OId on SITE" REFERENCES site);
 
-grant_seq_priv(`study', `study_oid')
+grant_seq_priv(`study', `sid')
 
 
 COMMENT ON TABLE study IS
@@ -49,17 +48,12 @@ COMMENT ON TABLE study IS
   'the same taxon and the same site applies to all individuals within '
   'the study.';
 
-COMMENT ON COLUMN study.study_oid IS
-  'Unique row identifier.';
+COMMENT ON COLUMN study.sid IS
+  'Unique row identifier.  May not be ''plh_allstudies''.';
 
 COMMENT ON COLUMN study.name IS
   'The name of the study. This may be a descriptive or encoded, '
   'must be unique if not NULL.';
-
-COMMENT ON COLUMN study.id IS
-  'A short identifier commonly used to refer to the study.  This need '
-  'not be a number, but must be unique, may not be ''plh_allstudies'', '
-  'and is required.';
 
 COMMENT ON COLUMN study.owners IS
   'The owners of the observational data that this study gave rise to.  '
@@ -75,5 +69,4 @@ COMMENT ON COLUMN study.site_oid IS
   'conducted, and hence where the individuals have been observed.';
 
 
-CREATE UNIQUE INDEX study_id ON study (id);
 CREATE UNIQUE INDEX study_name ON study (name);

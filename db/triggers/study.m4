@@ -61,10 +61,9 @@ CREATE FUNCTION study_delete_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of STUDY'
-        , DETAIL = 'Key (Study_OId) = (' || OLD.study_oid
-                   || '): Value (Id) = (' || OLD.id
+        , DETAIL = 'Key (SId) = (' || OLD.sid
                    || '): PERMISSION rows exist with Study values '
-                   || 'which reference this STUDY.Id';
+                   || 'which reference this STUDY.SId';
     RETURN NULL;
   END IF;
 

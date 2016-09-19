@@ -104,10 +104,10 @@ CREATE FUNCTION permission_func ()
     END IF;
   ELSE
     -- Study is not plh_allstudies.
-    -- Study must then be a study id.
+    -- Study must then be a study.sid.
     PERFORM 1
       FROM study
-      WHERE study.id = NEW.study;
+      WHERE study.sid = NEW.study;
     IF NOT FOUND THEN
       RAISE EXCEPTION integrity_constraint_violation USING
             MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
@@ -115,7 +115,7 @@ CREATE FUNCTION permission_func ()
                    || '): Value (Username) = (' || NEW.username
                    || '): Value (Study) = (' || NEW.study
                    || '): PERMISSION.Study must be ''plh_allstudies'' '
-                   || 'or a STUDY.Id value';
+                   || 'or a STUDY.SId value';
       RETURN NULL;
     END IF;
   END IF;
