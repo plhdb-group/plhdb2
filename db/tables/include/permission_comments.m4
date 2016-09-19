@@ -27,17 +27,17 @@ COMMENT ON COLUMN $1.pid IS
   'Unique row identifier.';
 
 COMMENT ON COLUMN $1.access IS
-  'The type of access granted.  Must be one of: plh_search, plh_insert, '
-  'plh_edit, plh_all.  Higher permission levels include all lower '
-  'permissions.';
+'The type of access granted.  Must be one of: plh_search, plh_insert,
+plh_edit, plh_all.  Higher permission levels include all lower
+permissions.';
 
 COMMENT ON COLUMN $1.study IS
-  'The STUDY.Name of the study to which permission is granted or '
-  '''plh_allstudies'' if permission is granted to all studies.';
+'The STUDY.Name of the study to which permission is granted or
+''plh_allstudies'' if permission is granted to all studies.';
 
 COMMENT ON COLUMN $1.username IS
-  'The ROLE.rolname of the user to which permission is granted.  '
-  'HINT: See the "accounts" view for information on users.';
+'The ROLE.rolname of the user to which permission is granted.  
+HINT: See the "accounts" view for information on users.';
 })
 
 changequote(`,')

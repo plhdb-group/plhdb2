@@ -39,15 +39,18 @@ grant_managers_seq_priv(`permission', `pid')
 
 
 COMMENT ON TABLE permission IS
-  'Contains at most one row per user per study, each row defining the '
-  'PLHDB permission level the study grants to the user.  '
-  'HINT:  The contents of this table is accessible only to administrator '
-  'and PLHDB manager accounts; use the "permissions" view instead.'
-  'PLHDB permissions apply only to PLHDB manager and user '
-  'accounts, and managers may change any of them.  When a user has no '
-  'row for a study the user has no permissions to the study.  '
-  'The combination of study and username must be unique.  '
-  'When study is ''plh_allstudies'' the username must be unique.';
+
+'Contains at most one row per user per study, each row defining the
+PLHDB permission level the study grants to the user.  PLHDB
+permissions apply only to PLHDB manager and user accounts, and
+managers may change any of them.  When a user has no row for a study
+the user has no permissions to the study.  The combination of study
+and username must be unique.  When study is ''plh_allstudies'' the
+username must be unique.
+
+HINT: The contents of this table is accessible only to administrator
+and PLHDB manager accounts; use the "permissions" view instead.';
+
 
 comment_permission_columns(`permission')
 
