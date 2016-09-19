@@ -47,7 +47,7 @@ done
           , quote_literal(id)
           , CASE WHEN name IS NULL
                    THEN 'NULL'
-                   ELSE '''' || quote_literal(name) || '''' END
+                   ELSE quote_literal(name) END
           , quote_literal(owners), taxon_oid, site_oid)
           FROM plhdb.study;
 EOF
