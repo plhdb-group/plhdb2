@@ -40,10 +40,7 @@ COMMENT ON TABLE site IS
 geographic coordinates are designated to the entire site, not
 individually to observations (though that would seem desirable over
 the long term). It would also seem desirable to record the geographic
-area of the site as a polygon, rather than as a single point.
-
-HINT: The STUDYINFO view references this table; use of STUDYINFO may
-be preferred.';
+area of the site as a polygon, rather than as a single point.';
 
 COMMENT ON COLUMN site.siteid IS
 'Unique row identifier.';

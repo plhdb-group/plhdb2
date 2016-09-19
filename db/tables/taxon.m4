@@ -36,10 +36,7 @@ grant_seq_priv(`taxon', `taxonid')
 COMMENT ON TABLE taxon IS
 'One row per taxon studied.  For now, this is a very simplified taxon
 model with no identification of the taxonomy being used, and there can
-be only two names, one scientific and one common.
-
-HINT: The STUDYINFO view references this table; use of STUDYINFO may
-be preferred.';
+be only two names, one scientific and one common.';
 
 COMMENT ON COLUMN taxon.taxonid IS
 'Unique row identifier.';

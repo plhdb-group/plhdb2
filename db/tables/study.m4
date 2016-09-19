@@ -43,10 +43,7 @@ grant_seq_priv(`study', `sid')
 COMMENT ON TABLE study IS
 'One row per study.  The study within which the individuals have been
 observed.  At present, the same taxon and the same site applies to all
-individuals within the study.
-
-HINT: The STUDYINFO view references this table; use of STUDYINFO may
-be preferred.';
+individuals within the study.';
 
 
 COMMENT ON COLUMN study.sid IS
