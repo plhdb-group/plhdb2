@@ -34,23 +34,23 @@ grant_seq_priv(`taxon', `taxonid')
 
 
 COMMENT ON TABLE taxon IS
-  'One row per taxon studied.  '
-  'HINT:  The STUDYINFO view references this table; '
-  'use of STUDYINFO may be preferred.  '
-  'For now, this is a very simplified taxon model with no identification '
-  'of the taxonomy being used, and there can be only two names, one '
-  'scientific and one common.';
+'One row per taxon studied.  For now, this is a very simplified taxon
+model with no identification of the taxonomy being used, and there can
+be only two names, one scientific and one common.
+
+HINT: The STUDYINFO view references this table; use of STUDYINFO may
+be preferred.';
 
 COMMENT ON COLUMN taxon.taxonid IS
-  'Unique row identifier.';
+'Unique row identifier.';
 
 COMMENT ON COLUMN taxon.scientific_name IS
-  'The scientific name for the taxon, using for example the NCBI '
-  'or the ITIS taxonomies.';
+'The scientific name for the taxon, using for example the NCBI or the
+ITIS taxonomies.';
 
 COMMENT ON COLUMN taxon.common_name IS
-  'The common name for the taxon. This need not be the most common '
-  'or generally accepted name, but the common name used within the study.';
+'The common name for the taxon. This need not be the most common or
+generally accepted name, but the common name used within the study.';
 
 
 CREATE UNIQUE INDEX taxon_common_name ON taxon (common_name);
