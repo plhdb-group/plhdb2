@@ -41,32 +41,33 @@ grant_seq_priv(`study', `sid')
 
 
 COMMENT ON TABLE study IS
-  'One row per study.  '
-  'HINT:  The STUDYINFO view references this table; '
-  'use of STUDYINFO may be preferred.  '
-  'The study within which the individuals have been observed.  At present, '
-  'the same taxon and the same site applies to all individuals within '
-  'the study.';
+'One row per study.  The study within which the individuals have been
+observed.  At present, the same taxon and the same site applies to all
+individuals within the study.
+
+HINT: The STUDYINFO view references this table; use of STUDYINFO may
+be preferred.';
+
 
 COMMENT ON COLUMN study.sid IS
-  'Unique row identifier.  May not be ''plh_allstudies''.';
+'Unique row identifier.  May not be ''plh_allstudies''.';
 
 COMMENT ON COLUMN study.name IS
-  'The name of the study. This may be a descriptive or encoded, '
-  'must be unique if not NULL.';
+'The name of the study. This may be a descriptive or encoded, must be
+unique if not NULL.';
 
 COMMENT ON COLUMN study.owners IS
-  'The owners of the observational data that this study gave rise to.  '
-  'This may be a single person, an organization, or a (comma-delimited) '
-  'list of such.';
+'The owners of the observational data that this study gave rise to.
+This may be a single person, an organization, or a (comma-delimited)
+list of such.';
 
 COMMENT ON COLUMN study.taxonid IS
-  'The row identifier of the taxon for the individuals that were or are '
-  'being observed in this study.';
+'The row identifier of the taxon for the individuals that were or are
+being observed in this study.';
 
 COMMENT ON COLUMN study.siteid IS
-  'The row identifer of the site where this study was or is being '
-  'conducted, and hence where the individuals have been observed.';
+'The row identifer of the site where this study was or is being
+conducted, and hence where the individuals have been observed.';
 
 
 CREATE UNIQUE INDEX study_name ON study (name);
