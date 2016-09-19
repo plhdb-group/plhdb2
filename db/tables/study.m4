@@ -34,8 +34,8 @@ CREATE TABLE study (
   empty_string_check(`owners')
 , taxonid INT NOT NULL
   CONSTRAINT "TaxonId on TAXON" REFERENCES taxon
-, site_oid INT NOT NULL
-  CONSTRAINT "Site_OId on SITE" REFERENCES site);
+, siteid INT NOT NULL
+  CONSTRAINT "SiteId on SITE" REFERENCES site);
 
 grant_seq_priv(`study', `sid')
 
@@ -64,7 +64,7 @@ COMMENT ON COLUMN study.taxonid IS
   'The row identifier of the taxon for the individuals that were or are '
   'being observed in this study.';
 
-COMMENT ON COLUMN study.site_oid IS
+COMMENT ON COLUMN study.siteid IS
   'The row identifer of the site where this study was or is being '
   'conducted, and hence where the individuals have been observed.';
 
