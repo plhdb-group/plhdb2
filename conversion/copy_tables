@@ -41,7 +41,7 @@ for t in site ; do
 done
 
 # Taxon
-{ psql -q --tuples-only -U plhdb_admin $fromdb <<\EOF
+{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
         SELECT FORMAT(
             'INSERT INTO taxon (taxonid, scientific_name, common_name) '
             'VALUES (%s, %s, %s);'
@@ -52,10 +52,10 @@ done
           FROM plhdb.taxon;
 EOF
 } \
-  | psql -q -U plhdb_admin $todb
+  | psql -q -U plhdb_admin $targetdb
 
 # Study
-{ psql -q --tuples-only -U plhdb_admin $fromdb <<\EOF
+{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
         SELECT FORMAT(
             'INSERT INTO study (sid, name, owners, taxonid, site_oid) '
             'VALUES (%s, %s, %s, %s, %s);'
@@ -67,4 +67,4 @@ EOF
           FROM plhdb.study;
 EOF
 } \
-  | psql -q -U plhdb_admin $todb
+  | psql -q -U plhdb_admin $targetdb
