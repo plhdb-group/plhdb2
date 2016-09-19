@@ -23,7 +23,7 @@ dnl Comments on column definitions
 changequote({,})
 
 define({comment_permission_columns}, {dnl
-COMMENT ON COLUMN $1.permission_oid IS
+COMMENT ON COLUMN $1.pid IS
   'Unique row identifier.';
 
 COMMENT ON COLUMN $1.access IS

@@ -28,7 +28,7 @@ CREATE OR REPLACE VIEW permissions AS
     SELECT study
       FROM permission
       WHERE username = CURRENT_USER)
-  SELECT permission.permission_oid as permission_oid
+  SELECT permission.pid AS pid
        , permission.username AS username
        , permission.study    AS study
        , permission.access   AS access

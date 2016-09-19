@@ -25,7 +25,7 @@ include(`constants.m4')
 include(`permission_comments.m4')
 
 CREATE TABLE permission (
-  permission_oid SERIAL PRIMARY KEY
+  pid SERIAL PRIMARY KEY
 , access VARCHAR(10) NOT NULL
   CONSTRAINT "Access must be one of plh_search, plh_insert, plh_edit, plh_all"
              CHECK (access = 'plh_search'
@@ -35,7 +35,7 @@ CREATE TABLE permission (
 , study VARCHAR(12) NOT NULL
 , username NAME NOT NULL);
 
-grant_managers_seq_priv(`permission', `permission_oid')
+grant_managers_seq_priv(`permission', `pid')
 
 
 COMMENT ON TABLE permission IS

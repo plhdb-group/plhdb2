@@ -48,7 +48,7 @@ CREATE FUNCTION permission_func ()
   AS $$
   DECLARE
     this_username permission.username%TYPE;
-    this_oid permission.permission_oid%TYPE;
+    this_oid permission.pid%TYPE;
     this_count INT;
 
   BEGIN
@@ -60,7 +60,7 @@ CREATE FUNCTION permission_func ()
   -- Because this is not a constraint roles can go away.  So we
   -- check every row on PERMISSIONS on every insert or update to
   -- the table.  We are sure to report which Username value is the problem.
-  SELECT permission.username, permission.permission_oid
+  SELECT permission.username, permission.pid
     INTO this_username,       this_oid
     FROM permission
     WHERE NOT EXISTS (
@@ -71,13 +71,13 @@ CREATE FUNCTION permission_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
-        , DETAIL = 'Key (Permission_OId) = (' || this_oid
+        , DETAIL = 'Key (Pid) = (' || this_oid
                    || '): Value (Username) = (' || this_username
                    || '): PERMISSION.Username must be a PG_ROLES.Rolname '
                    || 'value of a role with login priviliges'
         , HINT = 'Problem discovered on ' || TG_OP
-                  || ' of PERMISSION with Key (Permission_OId) = ('
-                  || NEW.permission_oid
+                  || ' of PERMISSION with Key (Pid) = ('
+                  || NEW.pid
                   || '), Value (Username) = (' || NEW.username || ')';
     RETURN NULL;
   END IF;
@@ -91,7 +91,7 @@ CREATE FUNCTION permission_func ()
     IF this_count > 0 THEN
       RAISE EXCEPTION integrity_constraint_violation USING
             MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
-          , DETAIL = 'Key (Permission_OId) = (' || NEW.permission_oid
+          , DETAIL = 'Key (Pid) = (' || NEW.pid
                      || '): Value (Username) = (' || NEW.username
                      || '): Value (Study) = (' || NEW.study
                      || '): Study is ''plh_allstudies'' but there are '
@@ -111,7 +111,7 @@ CREATE FUNCTION permission_func ()
     IF NOT FOUND THEN
       RAISE EXCEPTION integrity_constraint_violation USING
             MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
-          , DETAIL = 'Key (Permission_OId) = (' || NEW.permission_oid
+          , DETAIL = 'Key (Pid) = (' || NEW.pid
                    || '): Value (Username) = (' || NEW.username
                    || '): Value (Study) = (' || NEW.study
                    || '): PERMISSION.Study must be ''plh_allstudies'' '
