@@ -28,11 +28,11 @@ create or replace view access_groups as
     where not pg_roles.rolcanlogin;
 
 COMMENT ON VIEW access_groups IS
-  'One row per PostgreSQL role which cannot login.  '
-  'These roles are used to grant PostgreSQL level permissions.';
+'One row per PostgreSQL role which cannot login.  These roles are used
+to grant PostgreSQL level permissions.';
 
 COMMENT ON COLUMN access_groups.groupname IS
-  'The name of the group.';
+'The name of the group.';
 
 COMMENT ON COLUMN access_groups.description IS
-  'A description of the purpose of the group.';
+'A description of the purpose of the group.';
