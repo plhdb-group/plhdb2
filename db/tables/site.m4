@@ -36,34 +36,34 @@ grant_seq_priv(`site', `siteid')
 
 
 COMMENT ON TABLE site IS
-  'One row per site where a study was or is being conducted.  '
-  'HINT:  The STUDYINFO view references this table; '
-  'use of STUDYINFO may be preferred.  '
-  'For now, geographic coordinates are designated to the entire site, '
-  'not individually to observations (though that would seem desirable '
-  'over the long term). It would also seem desirable to record the '
-  'geographic area of the site as a polygon, rather than as a single '
-  'point.';
+'One row per site where a study was or is being conducted.  For now,
+geographic coordinates are designated to the entire site, not
+individually to observations (though that would seem desirable over
+the long term). It would also seem desirable to record the geographic
+area of the site as a polygon, rather than as a single point.
+
+HINT: The STUDYINFO view references this table; use of STUDYINFO may
+be preferred.';
 
 COMMENT ON COLUMN site.siteid IS
-  'Unique row identifier.';
+'Unique row identifier.';
 
 COMMENT ON COLUMN site.name IS
-  'The name of the site, which must be unique. This may be a short '
-  'or a long name, depending on what the study uses.';
+'The name of the site, which must be unique. This may be a short or a
+long name, depending on what the study uses.';
 
 COMMENT ON COLUMN site.latitude IS
-  'The decimal latitude coordinate of the site, using positive and '
-  'negative sign to indicate N and S, respectively.';
+'The decimal latitude coordinate of the site, using positive and
+negative sign to indicate N and S, respectively.';
 
 COMMENT ON COLUMN site.longitude IS
-  'The decimal longitude coordinate of the site, using positive and '
-  'negative sign to indicate E and W, respectively.';
+'The decimal longitude coordinate of the site, using positive and
+negative sign to indicate E and W, respectively.';
 
 COMMENT ON COLUMN site.geodetic_datum IS
-  'The geodetic system on which the geo-coordinates are based.  '
-  'For geo-coordinates measured between 1984 and 2010 this will '
-  'typically be WGS84, which is the default value.';
+'The geodetic system on which the geo-coordinates are based.  For
+geo-coordinates measured between 1984 and 2010 this will typically be
+WGS84, which is the default value.';
 
 
 CREATE UNIQUE INDEX site_name ON site (name);
