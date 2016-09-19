@@ -36,9 +36,30 @@ copy_table() {
     | pg_restore -U plhdb_admin --dbname $todb
 }
 
-for t in site ; do
-  copy_table $sourcedb $targetdb $t
-done
+#for t in '' ; do
+#  copy_table $sourcedb $targetdb $t
+#done
+
+# Site
+{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
+        SELECT FORMAT(
+            'INSERT INTO site (siteid, name, latitude, longitude'
+            '                , geodetic_datum) '
+            'VALUES (%s, %s, %s, %s, %s);'
+          , site_oid, quote_literal(name)
+          , CASE WHEN latitude IS NULL
+                   THEN 'NULL'
+                   ELSE latitude::TEXT END
+          , CASE WHEN longitude IS NULL
+                   THEN 'NULL'
+                   ELSE longitude::TEXT END
+          , CASE WHEN geodetic_datum IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(geodetic_datum) END)
+          FROM plhdb.site;
+EOF
+} \
+  | psql -q -U plhdb_admin $targetdb
 
 # Taxon
 { psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF

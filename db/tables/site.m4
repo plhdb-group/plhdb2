@@ -24,7 +24,7 @@ include(`grants.m4')
 include(`constants.m4')
 
 CREATE TABLE site (
-  site_oid SERIAL PRIMARY KEY
+  siteid SERIAL PRIMARY KEY
 , name VARCHAR(64) NOT NULL
        empty_string_check(`name')
 , latitude NUMERIC(7,3)
@@ -32,7 +32,7 @@ CREATE TABLE site (
 , geodetic_datum VARCHAR(12) DEFAULT 'WGS84'
                  empty_string_check(`geodetic_datum'));
 
-grant_seq_priv(`site', `site_oid')
+grant_seq_priv(`site', `siteid')
 
 
 COMMENT ON TABLE site IS
@@ -45,7 +45,7 @@ COMMENT ON TABLE site IS
   'geographic area of the site as a polygon, rather than as a single '
   'point.';
 
-COMMENT ON COLUMN site.site_oid IS
+COMMENT ON COLUMN site.siteid IS
   'Unique row identifier.';
 
 COMMENT ON COLUMN site.name IS
