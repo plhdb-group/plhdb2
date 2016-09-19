@@ -54,7 +54,7 @@ EOF
 } \
   | psql -q -U plhdb_admin $todb
 
-# Site
+# Study
 { psql -q --tuples-only -U plhdb_admin $fromdb <<\EOF
         SELECT FORMAT(
             'INSERT INTO study (sid, name, owners, taxonid, site_oid) '
