@@ -55,6 +55,19 @@ define([empty_string_check], [           CONSTRAINT "$1: Cannot be empty or only
                 CHECK(btrim($1, E' \r\n\t\f\v') <> '')])dnl
 changequote(`,')dnl  See above.
 
+-- A column cannot begin or end with whitespace.
+--
+-- Syntax: no_whitespace_on_ends(col)
+--
+-- Input:
+--   col  Name of the column to check.
+--
+changequote([,])
+define([no_whitespace_on_ends], [           CONSTRAINT "$1: Cannot begin or end with whitespace characters"
+                CHECK($1 !~ E'^[ \r\n\t\f\v]'
+                      AND $1 !~ E'[ \r\n\t\f\v]$')])dnl
+changequote(`,')dnl  See above.
+
 -- Done defining macros.
 divert`'dnl
 
