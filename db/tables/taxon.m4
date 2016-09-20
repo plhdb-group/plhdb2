@@ -26,11 +26,11 @@ include(`constants.m4')
 CREATE TABLE taxon (
   taxonid SERIAL PRIMARY KEY
 , scientific_name VARCHAR(128) NOT NULL
-  empty_string_check(`scientific_name')
-  no_whitespace_on_ends(`scientific_name')
+  empty_string_check(`Scientific_Name')
+  no_whitespace_on_ends(`Scientific_Name')
 , common_name VARCHAR(64)
-  empty_string_check(`common_name')
-  no_whitespace_on_ends(`common_name'));
+  empty_string_check(`Common_Name')
+  no_whitespace_on_ends(`Common_Name'));
 
 grant_seq_priv(`taxon', `taxonid')
 
