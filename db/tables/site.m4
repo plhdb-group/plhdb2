@@ -27,10 +27,12 @@ CREATE TABLE site (
   siteid SERIAL PRIMARY KEY
 , name VARCHAR(64) NOT NULL
        empty_string_check(`name')
+       no_whitespace_on_ends(`name')
 , latitude NUMERIC(7,3)
 , longitude NUMERIC(7,3)
 , geodetic_datum VARCHAR(12) DEFAULT 'WGS84'
-                 empty_string_check(`geodetic_datum'));
+                 empty_string_check(`geodetic_datum')
+                 no_whitespace_on_ends(`geodetic_datum'));
 
 grant_seq_priv(`site', `siteid')
 
