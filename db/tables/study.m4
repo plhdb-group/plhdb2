@@ -26,15 +26,15 @@ include(`constants.m4')
 CREATE TABLE study (
   sid VARCHAR(12) PRIMARY KEY
   empty_string_check(`SId')
-  no_whitespace_on_ends(`SId')
+  sensible_whitespace(`SId')
   CONSTRAINT "SId may not be 'plh_allstudies'"
              CHECK(sid <> 'plh_allstudies')
 , name VARCHAR(32)
   empty_string_check(`Name')
-  no_whitespace_on_ends(`Name')
+  sensible_whitespace(`Name')
 , owners VARCHAR(128)
   empty_string_check(`Owners')
-  no_whitespace_on_ends(`Owners')
+  sensible_whitespace(`Owners')
 , taxonid INT NOT NULL
   CONSTRAINT "TaxonId on TAXON" REFERENCES taxon
 , siteid INT NOT NULL
