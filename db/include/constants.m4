@@ -39,6 +39,23 @@ define(`plh_all',    `all')
 dnl The study that means "all studies"
 define(`plh_allstudies', `all')
 
+dnl The BIOGRAPHY.BDDist meaning exact
+define(`plh_exactbd', `0')
+
+dnl BIOGRAPHY.BGQual
+define(`plh_bgcertain',   `C')
+define(`plh_bguncertain', `U')
+
+dnl BIOGRAPHY.FirstBorn
+define(`plh_fb_yes', `Y')
+define(`plh_fb_no',  `N')
+define(`plh_fb_unk', `U')
+
+dnl BIOGRAPHY.Sex
+define(`plh_male',    `M')
+define(`plh_female',  `F')
+define(`plh_unk_sex', `U')
+
 dnl Turn output back on
 divert`'dnl
 dnl
