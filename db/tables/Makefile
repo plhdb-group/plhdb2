@@ -20,7 +20,9 @@
 
 # The order tables are listed here is the order in which the tables
 # are created and the reverse order in which they are destroyed.
-INFILES := site.m4 taxon.m4 study.m4 permission.m4
+INFILES := site.m4 taxon.m4 study.m4 permission.m4 \
+           probability_type.m4 start_event.m4 end_event.m4 \
+           biography.m4
 SQLFILES := $(INFILES:.m4=.sql)
 TARGETS := $(SQLFILES) maketables.sql destroytables.sql emptytables.sql
 
