@@ -58,7 +58,7 @@ define({restrict_change},{
        AND NOT(has_table_privilege('$1', 'trigger')) THEN
       RAISE EXCEPTION insufficient_privilege USING
             MESSAGE = 'Error on ' || TG_OP || ' of $1'
-          , DETAIL = 'Value($2) = ($3): cannot_change_msg'
+          , DETAIL = 'Key($2) = ($3): cannot_change_msg'
           , HINT = 'restricted_hint_msg';
     END IF;
 })dnl
@@ -78,7 +78,7 @@ define({restrict_delete},{
      AND NOT(has_table_privilege('$1', 'trigger')) THEN
     RAISE EXCEPTION insufficient_privilege USING
           MESSAGE = 'Error on ' || TG_OP || ' of $1'
-        , DETAIL = 'Value($2) = ($3): cannot_delete_msg'
+        , DETAIL = 'Key($2) = ($3): cannot_delete_msg'
         , HINT = 'restricted_hint_msg';
   END IF;
 })dnl
