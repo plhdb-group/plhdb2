@@ -18,10 +18,22 @@
 #
 # Karl O. Pinc <kop@meme.com>
 #
-# Syntax: copy_tables fromdb todb
+# Syntax: copy_tables [--fix] fromdb todb
+#
+# Input:
+#   --fix   Fixup the data while copying (otherwise errors are reported)
+#   fromdb  Database to copy from
+#   todb    Database to copy into
 #
 # Remarks:
 #   Copies the database content.
+
+if [ "$1" = '--fix' ] ; then
+  fix=y
+  shift
+else
+  fix=n
+fi
 
 sourcedb=$1
 targetdb=$2
@@ -34,6 +46,116 @@ copy_table() {
   pg_dump -U plhdb_admin -Fc --data-only \
           --table=plhdb.$table --dbname=$fromdb \
     | pg_restore -U plhdb_admin --dbname $todb
+}
+
+make_sql() {
+cat - <<\EOF
+  BEGIN;
+    --
+    -- Cleanup biography before dumping it.
+    --
+
+    -- Copy table
+    SELECT *
+      INTO TEMP TABLE fixed_biography
+      FROM biography;
+    CREATE INDEX fb_anim_oid ON fixed_biography (anim_oid);
+EOF
+
+if [ "$fix" = "y" ] ; then
+    cat - <<\EOF
+      -- Apply "fixes" to the data.
+
+      -- departdate/departdateerror/bdmax problem.  (4 rows)
+      UPDATE fixed_biography
+        SET departdate = bdmax
+        WHERE departdate < bdmax
+              AND departdateerror = 0;
+
+      -- birthdate > bdmax (3 rows)
+      UPDATE fixed_biography
+        SET bdmax = birthdate
+        WHERE bdmax < birthdate;
+
+      -- bdmin > birthdate (3 rows)
+      UPDATE fixed_biography
+        SET bdmin = birthdate
+        WHERE bdmin > birthdate;
+
+      -- entrydate > departdate (1 row)
+      UPDATE fixed_biography
+        SET entrydate = departdate
+        WHERE departdate < entrydate;
+
+      -- birthdate > entrydate (1 row)  (One of the duplicates?)
+      UPDATE fixed_biography
+        SET birthdate = entrydate
+        WHERE entrydate < birthdate;
+EOF
+fi
+
+cat - <<\EOF
+    -- "Dump" data
+        SELECT FORMAT(
+            'INSERT INTO biography (bid'
+                                 ', studyid'
+                                 ', animid'
+                                 ', animname'
+                                 ', birthdate'
+                                 ', bdmin'
+                                 ', bdmax'
+                                 ', bddist'
+                                 ', birthgroup'
+                                 ', bgqual'
+                                 ', firstborn'
+                                 ', mombid'
+                                 ', sex'
+                                 ', entrydate'
+                                 ', entrytype'
+                                 ', departdate'
+                                 ', departtype'
+                                 ', departdateerror) '
+            'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s'
+                  ', %s, %s, %s, %s, %s, %s, %s, %s, %s);'
+          , b.anim_oid
+          , quote_literal(b.studyid)
+          , quote_literal(b.animid)
+          , CASE WHEN b.animname IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(TRIM(BOTH FROM b.animname)) END
+          , quote_literal(b.birthdate::TEXT)
+          , CASE WHEN b.bdmin IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(b.bdmin::TEXT) END
+          , CASE WHEN b.bdmax IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(b.bdmax::TEXT) END
+          , quote_literal(b.bddist)
+          , CASE WHEN b.birthgroup IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(TRIM(BOTH FROM b.birthgroup)) END
+          , CASE WHEN b.bgqual IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(b.bgqual) END
+          , CASE WHEN b.firstborn IS NULL
+                   THEN 'NULL'
+                   ELSE quote_literal(b.firstborn) END
+          , CASE WHEN m.anim_oid IS NULL
+                   THEN 'NULL'
+                   ELSE m.anim_oid::TEXT END
+          , quote_literal(b.sex)
+          , quote_literal(b.entrydate::TEXT)
+          , quote_literal(b.entrytype)
+          , quote_literal(b.departdate::TEXT)
+          , quote_literal(b.departtype)
+          , b.departdateerror)
+          FROM fixed_biography AS b
+               LEFT OUTER JOIN fixed_biography AS m
+                 ON (m.studyid = b.studyid
+                     AND m.animid = b.momid)
+          ORDER BY b.birthdate;
+  ROLLBACK;
+EOF
 }
 
 #for t in '' ; do
@@ -117,106 +239,6 @@ EOF
 
 
 # Biography
-{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
-  BEGIN;
-    --
-    -- Cleanup biography before dumping it.
-    --
-
-    -- Copy table
-    SELECT *
-      INTO TEMP TABLE fixed_biography
-      FROM biography;
-    CREATE INDEX fb_anim_oid ON fixed_biography (anim_oid);
-
-    -- Apply "fixes" to the data.
-
-    -- departdate/departdateerror/bdmax problem.  (4 rows)
-    UPDATE fixed_biography
-      SET departdate = bdmax
-      WHERE departdate < bdmax
-            AND departdateerror = 0;
-
-    -- birthdate > bdmax (3 rows)
-    UPDATE fixed_biography
-      SET bdmax = birthdate
-      WHERE bdmax < birthdate;
-
-    -- bdmin > birthdate (3 rows)
-    UPDATE fixed_biography
-      SET bdmin = birthdate
-      WHERE bdmin > birthdate;
-
-    -- entrydate > departdate (1 row)
-    UPDATE fixed_biography
-      SET entrydate = departdate
-      WHERE departdate < entrydate;
-
-    -- birthdate > entrydate (1 row)  (One of the duplicates?)
-    UPDATE fixed_biography
-      SET birthdate = entrydate
-      WHERE entrydate < birthdate;
-
-    -- "Dump" data
-        SELECT FORMAT(
-            'INSERT INTO biography (bid'
-                                 ', studyid'
-                                 ', animid'
-                                 ', animname'
-                                 ', birthdate'
-                                 ', bdmin'
-                                 ', bdmax'
-                                 ', bddist'
-                                 ', birthgroup'
-                                 ', bgqual'
-                                 ', firstborn'
-                                 ', mombid'
-                                 ', sex'
-                                 ', entrydate'
-                                 ', entrytype'
-                                 ', departdate'
-                                 ', departtype'
-                                 ', departdateerror) '
-            'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s'
-                  ', %s, %s, %s, %s, %s, %s, %s, %s, %s);'
-          , b.anim_oid
-          , quote_literal(b.studyid)
-          , quote_literal(b.animid)
-          , CASE WHEN b.animname IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(TRIM(BOTH FROM b.animname)) END
-          , quote_literal(b.birthdate::TEXT)
-          , CASE WHEN b.bdmin IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(b.bdmin::TEXT) END
-          , CASE WHEN b.bdmax IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(b.bdmax::TEXT) END
-          , quote_literal(b.bddist)
-          , CASE WHEN b.birthgroup IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(TRIM(BOTH FROM b.birthgroup)) END
-          , CASE WHEN b.bgqual IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(b.bgqual) END
-          , CASE WHEN b.firstborn IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(b.firstborn) END
-          , CASE WHEN m.anim_oid IS NULL
-                   THEN 'NULL'
-                   ELSE m.anim_oid::TEXT END
-          , quote_literal(b.sex)
-          , quote_literal(b.entrydate::TEXT)
-          , quote_literal(b.entrytype)
-          , quote_literal(b.departdate::TEXT)
-          , quote_literal(b.departtype)
-          , b.departdateerror)
-          FROM fixed_biography AS b
-               LEFT OUTER JOIN fixed_biography AS m
-                 ON (m.studyid = b.studyid
-                     AND m.animid = b.momid)
-          ORDER BY b.birthdate;
-  ROLLBACK;
-EOF
-} \
+make_sql \
+  | psql -q --tuples-only -U plhdb_admin $sourcedb \
   | psql -q -U plhdb_admin $targetdb
