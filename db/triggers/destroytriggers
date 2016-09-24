@@ -21,3 +21,6 @@
 DROP FUNCTION permission_func() CASCADE;
 
 DROP FUNCTION study_delete_func() CASCADE;
+
+DROP FUNCTION end_event_func() CASCADE;
+DROP FUNCTION end_event_delete_func() CASCADE;
