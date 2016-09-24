@@ -51,15 +51,44 @@ copy_table() {
 make_sql() {
 cat - <<\EOF
   BEGIN;
+
     --
     -- Cleanup biography before dumping it.
     --
 
-    -- Copy table
+    --  Get individuals existing only as moms for normal study individuals
+    -- (This just happens to the the query that "works".)
+    SELECT i.individual_oid AS anim_oid, study.id AS studyid , i.id AS animid
+      INTO TEMP TABLE momsonly
+      FROM plhdb.individual AS i
+           JOIN plhdb.study ON (study.study_oid = i.study_oid)
+      WHERE EXISTS
+        (SELECT 1
+           FROM biography AS b
+           WHERE i.id = b.momid
+                 AND NOT EXISTS
+                   (SELECT 1
+                      FROM biography AS m
+                      WHERE m.studyid = b.studyid
+                            AND m.animid = b.momid))
+        AND sex IS NULL;
+
+    -- Dump the mom's
+    SELECT FORMAT(
+      'INSERT INTO biography (bid, studyid, animid, sex, momonly)'
+      '  VALUES (%s, %s, %s, ''F'', TRUE);'
+         , anim_oid, quote_literal(studyid), quote_literal(animid))
+      FROM momsonly
+      ORDER BY studyid, animid;
+
+    --
+    -- Copy biography table
+    --
     SELECT *
       INTO TEMP TABLE fixed_biography
       FROM biography;
     CREATE INDEX fb_anim_oid ON fixed_biography (anim_oid);
+
 EOF
 
 if [ "$fix" = "y" ] ; then
@@ -105,6 +134,17 @@ EOF
 fi
 
 cat - <<\EOF
+
+    -- Remember which rows are "regular"
+    ALTER TABLE fixed_biography ADD COLUMN momonly BOOLEAN;
+    UPDATE fixed_biography SET momonly = FALSE;
+
+    -- Copy momonly rows into fixed_biography so that regular individuals
+    -- who reference them as mom's can get them.
+    INSERT INTO fixed_biography(anim_oid, studyid, animid, sex, momonly)
+      SELECT anim_oid, studyid, animid, 'F', TRUE
+        FROM momsonly;
+
     -- "Dump" data
         SELECT FORMAT(
             'INSERT INTO biography (bid'
@@ -164,6 +204,7 @@ cat - <<\EOF
                LEFT OUTER JOIN fixed_biography AS m
                  ON (m.studyid = b.studyid
                      AND m.animid = b.momid)
+          WHERE NOT(b.momonly)
           ORDER BY b.birthdate;
   ROLLBACK;
 EOF
