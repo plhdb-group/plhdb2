@@ -39,6 +39,9 @@ define(`plh_all',    `all')
 dnl The study that means "all studies"
 define(`plh_allstudies', `all')
 
+dnl The END_EVENT.Code meaning death
+define(`plh_death', `D')
+
 dnl The BIOGRAPHY.BDDist meaning exact
 define(`plh_exactbd', `0')
 
