@@ -91,6 +91,16 @@ if [ "$fix" = "y" ] ; then
       UPDATE fixed_biography
         SET birthdate = entrydate
         WHERE entrydate < birthdate;
+
+      -- bdmin is NULL (19 rows, study 5)
+      UPDATE fixed_biography
+        SET bdmin = birthdate
+        WHERE bdmin IS NULL;
+
+      -- bdmax is NULL (19 rows, study 5)
+      UPDATE fixed_biography
+        SET bdmax = birthdate
+        WHERE bdmax IS NULL;
 EOF
 fi
 
