@@ -38,7 +38,10 @@ COMMENT ON TABLE end_event IS
 'One row per kind of event which ends the interval of time during which
 the life of study individuals are tracked.  This table establishes
 a controlled vocabulary for the events which mark the end of
-observation.';
+observation.
+
+The "Code" of ''plh_death'' is special to the system, meaning "death".
+It''s row can only be modified by an administrative account.';
 
 COMMENT ON COLUMN end_event.code IS
 'A unique single character code for the end of observation type.  This
