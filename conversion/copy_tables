@@ -111,6 +111,7 @@ cat - <<\EOF
                                  ', studyid'
                                  ', animid'
                                  ', animname'
+                                 ', momonly'
                                  ', birthdate'
                                  ', bdmin'
                                  ', bdmax'
@@ -125,7 +126,7 @@ cat - <<\EOF
                                  ', departdate'
                                  ', departtype'
                                  ', departdateerror) '
-            'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s'
+            'VALUES (%s, %s, %s, %s, FALSE, %s, %s, %s, %s, %s'
                   ', %s, %s, %s, %s, %s, %s, %s, %s, %s);'
           , b.anim_oid
           , quote_literal(b.studyid)

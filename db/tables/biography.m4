@@ -23,6 +23,21 @@ include(`tablemacros.m4')
 include(`grants.m4')
 include(`constants.m4')
 
+dnl plpgsql fragment to allow NULL column content only when MomOnly is TRUE
+dnl
+dnl Syntax: null_only_when_momonly(colname)
+dnl
+dnl colname  The name of the column dependent on MomOnly vis NULL
+dnl
+changequote({,})
+define({null_only_when_momonly},{dnl
+   CONSTRAINT "$1 cannot be NULL unless MomOnly is TRUE"
+              CHECK(NOT(momonly)
+                    AND $1 IS NOT NULL)
+})dnl
+changequote(`,')dnl
+
+
 CREATE TABLE biography (
    bid SERIAL PRIMARY KEY
  , studyid VARCHAR(12) NOT NULL
@@ -34,19 +49,27 @@ CREATE TABLE biography (
  , animname VARCHAR(128)
    empty_string_check(`AnimName')
    sensible_whitespace(`AnimName')
- , birthdate DATE NOT NULL
+ , momonly BOOLEAN NOT NULL
+ , birthdate DATE
    CONSTRAINT "BirthDate <= EntryDate"
-              CHECK(birthdate <= entrydate)
- , bdmin DATE NOT NULL
+              CHECK(birthdate IS NULL
+                    OR birthdate <= entrydate)
+   null_only_when_momonly(`BirthDate')
+ , bdmin DATE
    CONSTRAINT "BDMin <= BirthDate"
-              CHECK(bdmin <= birthdate)
- , bdmax DATE NOT NULL
+              CHECK(bdmin IS NULL
+                    OR bdmin <= birthdate)
+   null_only_when_momonly(`BDMin')
+ , bdmax DATE
    CONSTRAINT "Birthdate <= BDMax"
-              CHECK(birthdate <= bdmax)
+              CHECK(bdmax IS NULL
+                    OR birthdate <= bdmax)
+   null_only_when_momonly(`BDMax')
    CONSTRAINT "BDMax <= DepartDate when DepartDateError = 0"
               CHECK(departdateerror <> 0
                     OR bdmax <= departdate)
- , bddist CHAR(1) NOT NULL
+ , bddist CHAR(1)
+   null_only_when_momonly(`BDDist')
    CONSTRAINT "BDDist must be a PROBABILITY_TYPE.Code value"
               REFERENCES probability_type
  , birthgroup VARCHAR(32)
@@ -74,19 +97,35 @@ CREATE TABLE biography (
               CHECK(sex = 'plh_male'
                     OR sex = 'plh_female'
                     OR sex = 'plh_unk_sex')
- , entrydate DATE NOT NULL
+   CONSTRAINT "Sex = 'plh_female' when MomOnly = TRUE"
+              CHECK(NOT(momonly)
+                    OR sex = 'plh_female')
+ , entrydate DATE
    CONSTRAINT "EntryDate <= DepartDate"
               CHECK(entrydate <= departdate)
- , entrytype VARCHAR(8) NOT NULL
+   null_only_when_momonly(`EntryDate')
+ , entrytype VARCHAR(8)
    CONSTRAINT "EntryType must be a START_EVENT.Code value"
               REFERENCES start_event
- , departdate DATE NOT NULL
- , departtype VARCHAR(8) NOT NULL
+   null_only_when_momonly(`EntryType')
+   CONSTRAINT "EntryType can be NULL only when EntryDate is NULL"
+              CHECK(entrydate IS NULL
+                    OR entrytype IS NOT NULL)
+ , departdate DATE
+   null_only_when_momonly(`DepartDate')
+ , departtype VARCHAR(8)
    CONSTRAINT "DepartType must be a END_EVENT.Code value"
               REFERENCES end_event
- , departdateerror DOUBLE PRECISION NOT NULL
+   CONSTRAINT "DepartType can be NULL only when DepartDate is NULL"
+              CHECK(departdate IS NULL
+                    OR departtype IS NOT NULL)
+ , departdateerror DOUBLE PRECISION
    CONSTRAINT "DepartDateError >= 0"
-              CHECK(departdateerror >= 0));
+              CHECK(departdateerror >= 0)
+   CONSTRAINT "DepartDateError can be NULL if and only if DepartDate is NULL"
+              CHECK((departdate IS NULL AND departdateerror IS NULL)
+                    OR (departdate IS NOT NULL
+                        AND departdateerror IS NOT NULL)));
 
 grant_seq_priv(`biography', `bid')
 
@@ -106,7 +145,11 @@ AnimName must either be NULL or unique per StudyId.
 BirthDate must be on or before EntryDate.
 BDMin must be NULL or on or before BirthDate.
 BDMax must be NULL or on or after BirthDate.
+Sex must be ''plh_female'' when MomOnly is TRUE.
 Entrydate must be on or before DepartDate.
+EntryType can be NULL only when EntryDate is also NULL.
+DepartType can be NULL only when DepartDate is also NULL.
+DepartDateError can be NULL if and only if DepartDate is also NULL.
 
 HINT: Use the BIOGRAPHIES view to get the mother''s AnimId.
 BIOGRAPHIES is identical to this table but has a column for the
@@ -132,20 +175,28 @@ COMMENT ON COLUMN biography.animname IS
 'The (long) name of the individual.  This value may be NULL when the
 individual has no long name.';
 
+COMMENT ON COLUMN biography.momonly IS
+'Whether or not the biography row records an individual who exists in
+the database only because they are known to be a mother of another
+individual in the database.  A boolean value.  Individuals who are
+"only mothers" (MomOnly = TRUE) have different requirements from
+normal study subjects as to what data must or must not be recorded in
+the database.  This value may not be NULL.';
+
 COMMENT ON COLUMN biography.birthdate IS
 'Birth date. Animal''s birthdate. The birthdate is either the exactly
 known date of birth or it is midpoint of the range of possible
-birthdates.  This value may not be NULL.';
+birthdates.  This value may be NULL only when MomOnly is TRUE.';
 
 COMMENT ON COLUMN biography.bdmin IS
 'Estimated earliest birth date. Must differ from Birthdate whenever
 earliest possible birth date is >7 days before Birthdate.  This value
-may not be NULL.';
+may be NULL only when MomOnly is TRUE.';
 
 COMMENT ON COLUMN biography.bdmax IS
 'Estimated latest birth date.  Must differ from Birthdate whenever
 latest possible birth date is >7 days after Birthdate.  This value may
-not be NULL.';
+be NULL only when MomOnly is TRUE.';
 
 COMMENT ON COLUMN biography.bddist IS
 'Probability distribution of the estimated birth date given BDMin,
