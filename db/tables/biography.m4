@@ -139,6 +139,14 @@ birth groups are recorded directly as an attribute, and hence are
 denormalized, but at present it is unclear which attributes other than
 a name a birth group would need to have.
 
+If BDDist is N (normal), construct the birth date probability
+distribution so that BDMin and BDMax represent + 2 standard deviations
+of Birthdate.  If U (uniform), the probability distribution is
+truncated at BDMin and BDMax with equal Birthdate probability within
+this range. Birthdate must be at the midpoint of BDMin and BDMax, or
+one of the 2 midpoint dates when there are an even number of days in
+the BDMin to BDMax interval, when BDDist is N. If Birthdate is at the
+midpoint of BDMin and BDMax, distribution may be N or U.
 
 AnimId must be unique per StudyId.
 AnimName must either be NULL or unique per StudyId.
@@ -202,12 +210,7 @@ COMMENT ON COLUMN biography.bddist IS
 'Probability distribution of the estimated birth date given BDMin,
 Birthdate, and BDMax.  The vocabularly for this column is defined by
 the PROBABILITY_TYPE table, which expected to define only normal (N)
-and uniform (U). If N, construct the probability distribution so that
-BDMin and BDMax represent + 2 standard deviations of Birthdate.  If U,
-the probability distribution is truncated at BDMin and BDMax with
-equal Birthdate probability within this range. If Birthdate is not at
-the midpoint of BDMin and BDMax, distribution must be U. If Birthdate
-is at the midpoint of BDMin and BDMax, distribution may be N or U.';
+and uniform (U).  This value may be NULL only when MomOnly is TRUE.';
 
 COMMENT ON COLUMN biography.birthgroup IS
 'The name or code or ID of the group within which the individual was
