@@ -37,12 +37,12 @@ CREATE TABLE biography (
  , birthdate DATE NOT NULL
    CONSTRAINT "BirthDate <= EntryDate"
               CHECK(birthdate <= entrydate)
- , bdmin DATE
+ , bdmin DATE NOT NULL
    CONSTRAINT "BDMin <= BirthDate"
-              CHECK(bdmin IS NULL OR bdmin <= birthdate)
- , bdmax DATE
+              CHECK(bdmin <= birthdate)
+ , bdmax DATE NOT NULL
    CONSTRAINT "Birthdate <= BDMax"
-              CHECK(bdmax IS NULL OR birthdate <= bdmax)
+              CHECK(birthdate <= bdmax)
    CONSTRAINT "BDMax <= DepartDate when DepartDateError = 0"
               CHECK(departdateerror <> 0
                     OR bdmax <= departdate)
@@ -140,12 +140,12 @@ birthdates.  This value may not be NULL.';
 COMMENT ON COLUMN biography.bdmin IS
 'Estimated earliest birth date. Must differ from Birthdate whenever
 earliest possible birth date is >7 days before Birthdate.  This value
-may be NULL when there is no estimated earliest birth date.';
+may not be NULL.';
 
 COMMENT ON COLUMN biography.bdmax IS
 'Estimated latest birth date.  Must differ from Birthdate whenever
 latest possible birth date is >7 days after Birthdate.  This value may
-be NULL when there is no estimated latest birth date.';
+not be NULL.';
 
 COMMENT ON COLUMN biography.bddist IS
 'Probability distribution of the estimated birth date given BDMin,
