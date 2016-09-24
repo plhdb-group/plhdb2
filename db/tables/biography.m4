@@ -32,8 +32,9 @@ dnl
 changequote({,})
 define({null_only_when_momonly},{dnl
    CONSTRAINT "$1 cannot be NULL unless MomOnly is TRUE"
-              CHECK(NOT(momonly)
-                    AND $1 IS NOT NULL)
+              CHECK(momonly
+                    OR (NOT(momonly)
+                        AND $1 IS NOT NULL))
 })dnl
 changequote(`,')dnl
 
