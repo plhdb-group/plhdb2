@@ -188,7 +188,7 @@ COMMENT ON COLUMN biography.momonly IS
 the database only because they are known to be a mother of another
 individual in the database.  A boolean value.  Individuals who are
 "only mothers" (MomOnly = TRUE) have different requirements from
-normal study subjects as to what data must or must not be recorded in
+typical study subjects as to what data must or must not be recorded in
 the database.  This value may not be NULL.';
 
 COMMENT ON COLUMN biography.birthdate IS
