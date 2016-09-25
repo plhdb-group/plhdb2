@@ -130,6 +130,11 @@ if [ "$fix" = "y" ] ; then
       UPDATE fixed_biography
         SET bdmax = birthdate
         WHERE bdmax IS NULL;
+
+      -- There's a male who's a mother
+      UPDATE fixed_biography
+        SET sex = 'F'
+        WHERE anim_oid = 13250;
 EOF
 fi
 
