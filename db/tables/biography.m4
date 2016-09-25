@@ -160,9 +160,18 @@ EntryType can be NULL only when EntryDate is also NULL.
 DepartType can be NULL only when DepartDate is also NULL.
 DepartDateError can be NULL if and only if DepartDate is also NULL.
 
+The combination of StudyId and AnimId must be unique.  Because niether
+of these columns may be NULL this combination can, instead of the Bid
+value, be used as a unique row identifier.
+
+The combination of StudyId and AnimName must be unique.  Because
+AnimName may be NULL this combination cannot be used as a unique row
+identifier.
+
 HINT: Use the BIOGRAPHIES view to get the mother''s AnimId.
-BIOGRAPHIES is identical to this table but has a column for the
-mother''s AnimId.';
+BIOGRAPHIES is identical to this table but for the additional
+column.';
+
 
 COMMENT ON COLUMN biography.bid IS
 'Unique row identifer, and hence the unique identifer of the
