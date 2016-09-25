@@ -34,6 +34,26 @@ dnl m4 includes
 include(`constants.m4')
 include(`globalmacros.m4')
 
+
+dnl Plpgsql fragment for preventing a column from changing.
+dnl
+dnl Syntax: cannot_change(table, column)
+dnl Variables required:
+dnl Restrictions: Must be used in a FOR EACH ROW update trigger function.
+changequote({,})
+define({cannot_change}, {
+  IF NEW.$2 <> OLD.$2 THEN
+    -- $2 has changed
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on UPDATE of $1'
+        , DETAIL =  'Value ($2) = (' || OLD.$2
+                    || '): $1.$2 cannot be changed';
+    RETURN NULL;
+  END IF;
+})
+changequote(`,')
+
+
 dnl Strings used in error messages
 dnl
 define(`cannot_change_msg', `This row has special meaning to PLHDB and may not 
