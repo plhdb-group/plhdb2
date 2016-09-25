@@ -294,3 +294,20 @@ EOF
 make_sql \
   | psql -q --tuples-only -U plhdb_admin $sourcedb \
   | psql -q -U plhdb_admin $targetdb
+
+# Femalefertilityinterval
+{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
+        SELECT FORMAT(
+            'INSERT INTO femalefertilityinterval '
+            '  (ffiid, bid, startdate, starttype, stopdate, stoptype) '
+            'VALUES (%s, %s, %s, %s, %s, %s);'
+          , interval_oid
+          , anim_oid
+          , quote_literal(startdate)
+          , quote_literal(starttype)
+          , quote_literal(stopdate)
+          , quote_literal(stoptype))
+          FROM femalefertilityinterval;
+EOF
+} \
+  | psql -q -U plhdb_admin $targetdb
