@@ -82,30 +82,8 @@ CREATE FUNCTION permission_func ()
     RETURN NULL;
   END IF;
 
-  IF NEW.study = 'plh_allstudies' THEN
-    -- When Study is plh_allstudies Username must be unique.
-    SELECT COUNT(*)
-      INTO this_count
-      FROM permission
-      WHERE permission.username = NEW.username
-            AND permission.study <> 'plh_allstudies';
-    IF this_count > 0 THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
-          , DETAIL = 'Key (Pid) = (' || NEW.pid
-                     || '): Value (Username) = (' || NEW.username
-                     || '): Value (Study) = (' || NEW.study
-                     || '): Study is ''plh_allstudies'' but there are '
-                     || this_count
-                     || ' other PERMISSION rows granting this account '
-                     || 'access to studies'
-          , HINT = 'Remove the account''s other permissions rows before '
-                   'granting permission to all studies';
-      RETURN NULL;
-    END IF;
-  ELSE
-    -- Study is not plh_allstudies.
-    -- Study must then be a study.sid.
+  IF NEW.study <> 'plh_allstudies' THEN
+    -- Study must be a study.sid.
     PERFORM 1
       FROM study
       WHERE study.sid = NEW.study;
@@ -118,21 +96,6 @@ CREATE FUNCTION permission_func ()
                    || '): PERMISSION.Study must be ''plh_allstudies'' '
                    || 'or a STUDY.SId value';
       RETURN NULL;
-    END IF;
-
-    -- There cannot be an existing row for all studies.
-    PERFORM 1
-      FROM permission
-      WHERE permission.study = 'plh_allstudies'
-            AND permission.username = NEW.username;
-    IF FOUND THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
-          , DETAIL = 'Key (Pid) = (' || NEW.pid
-                     || '): Value (Username) = (' || NEW.username
-                     || '): Value (Study) = (' || NEW.study
-                     || '): User has already been granted permission '
-                     || 'to all studies';
     END IF;
   END IF;
 
