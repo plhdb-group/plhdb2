@@ -28,6 +28,7 @@ dnl meaning to m4.
 dnl
 dnl Bugs:
 dnl
+include(`globalmacros.m4')dnl
 changequote([{[,]}])dnl m4 foolery so includes include only once.
 dnl                     Once the macro is in the text, change the quotes back
 ifdef([{[_tablemacros.m4]}], [{[changequote(`,')]}], [{[dnl

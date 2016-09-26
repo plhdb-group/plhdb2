@@ -41,7 +41,7 @@ changequote(`,')dnl
 
 CREATE TABLE biography (
    bid SERIAL PRIMARY KEY
- , studyid VARCHAR(12) NOT NULL
+ , studyid plh_studyid_type NOT NULL
    CONSTRAINT "StudyId must be a STUDY.Id value"
               REFERENCES study
  , animid VARCHAR(16) NOT NULL

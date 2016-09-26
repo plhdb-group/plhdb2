@@ -43,6 +43,11 @@ dnl objects.
 define(`plh_function_search_path', `plhdb, pg_temp')
 define(`plh_function_set_search_path', `SET search_path = plh_function_search_path')
 
+
+dnl The datatype of the study id.  We use this in too many places to
+dnl want to re-type it.
+define(`plh_studyid_type', `VARCHAR(12)')
+
 dnl Turn output back on
 divert`'dnl
 ]}])dnl End of ifdef over the whole file.

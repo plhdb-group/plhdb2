@@ -24,7 +24,7 @@ include(`grants.m4')
 include(`constants.m4')
 
 CREATE TABLE study (
-  sid VARCHAR(12) PRIMARY KEY
+  sid plh_studyid_type PRIMARY KEY
   empty_string_check(`SId')
   sensible_whitespace(`SId')
   CONSTRAINT "SId may not be 'plh_allstudies'"

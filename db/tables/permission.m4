@@ -32,7 +32,7 @@ CREATE TABLE permission (
                     OR access = 'plh_insert'
                     OR access = 'plh_edit'
                     OR access = 'plh_all')
-, study VARCHAR(12) NOT NULL
+, study plh_studyid_type NOT NULL
 , username NAME NOT NULL);
 
 grant_managers_seq_priv(`permission', `pid')
