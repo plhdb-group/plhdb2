@@ -39,4 +39,5 @@ install_www: build_www
 	cp -a www/* $(TARGET_WWW)/
 
 .PHONY: clean
-clean: rm -rf www
+clean:
+	rm -rf www
