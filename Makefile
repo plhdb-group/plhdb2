@@ -42,3 +42,4 @@ install_www: build_www
 clean:
 	rm -rf www
 	make -C db clean
+	make -C bin clean
