@@ -87,7 +87,8 @@ CREATE FUNCTION permission_func ()
     SELECT COUNT(*)
       INTO this_count
       FROM permission
-      WHERE permission.username = NEW.username;
+      WHERE permission.username = NEW.username
+            AND permission.study <> 'plh_allstudies';
     IF this_count > 0 THEN
       RAISE EXCEPTION integrity_constraint_violation USING
             MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
@@ -95,7 +96,7 @@ CREATE FUNCTION permission_func ()
                      || '): Value (Username) = (' || NEW.username
                      || '): Value (Study) = (' || NEW.study
                      || '): Study is ''plh_allstudies'' but there are '
-                     || this_count - 1
+                     || this_count
                      || ' other PERMISSION rows granting this account '
                      || 'access to studies'
           , HINT = 'Remove the account''s other permissions rows before '
