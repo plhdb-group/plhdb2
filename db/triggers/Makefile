@@ -37,7 +37,7 @@ maketriggers.sql: $(SQLFILES) $(COPYRIGHT) $(DEPS)
 	cat $(COPYRIGHT) $(SQLFILES) > maketriggers.sql
 
 # Make any *.sql file from it's *.m4 file.
-%.sql: %.m4 $(COPYRIGHTSRC) $(INCLUDE)/constants.m4 include/*.m4 $(DEPS)
+%.sql: %.m4 $(COPYRIGHTSRC) $(INCLUDE)/*.m4 include/*.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include $< > $@
 
 .PHONY: install

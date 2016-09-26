@@ -53,7 +53,7 @@ emptytables.sql: emptytables.sh $(COPYRIGHT) $(DEPS)
 # Make any *.sql file from it's *.m4 file.
 # No telling what includes will be used to depend on them all.
 %.sql: %.m4 include/*.m4 $(COPYRIGHTSRC) \
-            $(INCLUDE)/constants.m4 $(DEPS)
+            $(INCLUDE)/*.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include $< > $@
 
 .PHONY: install
