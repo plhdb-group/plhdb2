@@ -16,6 +16,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with PLHDB.  If not, see <http://www.gnu.org/licenses/>.
+include(`editwarning.m4')
+editwarning()
 #
 # Add a user to the database
 #

@@ -26,8 +26,8 @@ DEPS := Makefile
 
 all: $(TARGETS)
 
-plhdb-user-add: plhdb-user-add.m4 $(INCLUDE)/*.m4 $(DEPS)
-	m4 -I $(INCLUDE) plhdb-user-add.m4 > plhdb-user-add
+plhdb-user-add: plhdb-user-add.m4 $(INCLUDE)/*.m4 include/*.m4 $(DEPS)
+	m4 -I $(INCLUDE) -I include plhdb-user-add.m4 > plhdb-user-add
 
 .PHONY: clean
 clean:
