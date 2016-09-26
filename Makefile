@@ -41,3 +41,4 @@ install_www: build_www
 .PHONY: clean
 clean:
 	rm -rf www
+	make -C db clean
