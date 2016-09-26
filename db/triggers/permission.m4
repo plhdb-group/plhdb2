@@ -119,6 +119,21 @@ CREATE FUNCTION permission_func ()
                    || 'or a STUDY.SId value';
       RETURN NULL;
     END IF;
+
+    -- There cannot be an existing row for all studies.
+    PERFORM 1
+      FROM permission
+      WHERE permission.study = 'plh_allstudies'
+            AND permission.username = NEW.username;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on ' || TG_OP || ' of PERMISSION'
+          , DETAIL = 'Key (Pid) = (' || NEW.pid
+                     || '): Value (Username) = (' || NEW.username
+                     || '): Value (Study) = (' || NEW.study
+                     || '): User has already been granted permission '
+                     || 'to all studies';
+    END IF;
   END IF;
 
   RETURN NULL;
