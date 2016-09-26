@@ -51,6 +51,8 @@ db_setup_sql() {
 cat - <<EOF
 create schema $A_USER authorization $A_USER;
 comment on schema $A_USER is 'Area for the exclusive use of $A_DESCR';
+insert into permission (access, study, username)
+  values('plh_search', 'plh_allstudies', '$A_USER');
 EOF
 }
 
