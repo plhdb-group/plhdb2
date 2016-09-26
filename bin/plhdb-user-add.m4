@@ -16,6 +16,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with PLHDB.  If not, see <http://www.gnu.org/licenses/>.
+include(`constants.m4')
 include(`editwarning.m4')
 editwarning()
 #
@@ -44,6 +45,13 @@ echo '  adminuser The user to use to make the user'
 echo '  username  The username to add'
 echo '  group     The group in which to put the user'
 echo '  userdescr Description of the user, name and email'
+}
+
+db_setup_sql() {
+cat - <<EOF
+create schema $A_USER authorization $A_USER;
+comment on schema $A_USER is 'Area for the exclusive use of $A_DESCR';
+EOF
 }
 
 # Parse command line
@@ -87,18 +95,15 @@ begin;
 create user $A_USER password '$A_PASSWD';
 alter group $A_GROUP add user $A_USER;
 comment on role $A_USER is '$A_DESCR';
-create schema $A_USER authorization $A_USER;
-comment on schema $A_USER is 'Area for the exclusive use of $A_DESCR';
+$(db_setup_sql)
 commit;
 \c plhdb_test
 begin;
-create schema $A_USER authorization $A_USER;
-comment on schema $A_USER is 'Area for the exclusive use of $A_DESCR';
+$(db_setup_sql)
 commit;
 \c plhdb_copy
 begin;
-create schema $A_USER authorization $A_USER;
-comment on schema $A_USER is 'Area for the exclusive use of $A_DESCR';
+$(db_setup_sql)
 commit;
 \q
 EOF
