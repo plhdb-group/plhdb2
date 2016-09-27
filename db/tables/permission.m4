@@ -48,6 +48,11 @@ the user has no permissions to the study.  The combination of study
 and username must be unique.  When study is ''plh_allstudies'' the
 username must be unique.
 
+Adding a row to PERMISSION can only increase a user''s access.
+Permission is never taken away.  So, in case of conflict between
+permission granted to all studies and permission granted to a specific
+study the user has the more permissive of the two.
+
 HINT: The contents of this table is accessible only to administrator
 and PLHDB manager accounts; use the "permissions" view instead.';
 
