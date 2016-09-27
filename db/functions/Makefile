@@ -32,7 +32,7 @@ OTHERINFILES :=
 POLICYSQLFILES := $(POLICYINFILES:.m4=.sql)
 OTHERSQLFILES := $(OTHERINFILES:.m4=.sql)
 SQLFILES := $(POLICYSQLFILES) $(OTHERSQLFILES)
-TARGETS := $(SQLFILES) makefunctions.sql \
+TARGETS := $(SQLFILES) \
            makepolicyfunctions.sql destroypolicyfunctions.sql \
            makeotherfunctions.sql destroyotherfunctions.sql
 
@@ -118,7 +118,7 @@ destroy_policy: destroypolicyfunctions.sql
 	| psql $(PSQL_ARGS)
 
 .PHONY: destroy_other
-destroy: destroyotherfunctions.sql
+destroy_other: destroyotherfunctions.sql
 	( echo set client_min_messages TO WARNING\; ; \
 	  cat destroyotherfunctions.sql ; \
 	  echo 'VACUUM;' ; ) \
