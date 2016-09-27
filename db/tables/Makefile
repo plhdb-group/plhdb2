@@ -51,7 +51,7 @@ emptytables.sql: emptytables.sh $(COPYRIGHT) $(DEPS)
 	  | sh emptytables.sh >> emptytables.sql
 
 # Make any *.sql file from it's *.m4 file.
-# No telling what includes will be used to depend on them all.
+# No telling what includes will be used so depend on them all.
 %.sql: %.m4 include/*.m4 $(COPYRIGHTSRC) \
             $(INCLUDE)/*.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include $< > $@
