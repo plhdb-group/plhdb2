@@ -27,9 +27,19 @@ COMMENT ON COLUMN $1.pid IS
   'Unique row identifier.';
 
 COMMENT ON COLUMN $1.access IS
-'The type of access granted.  Must be one of: plh_search, plh_insert,
-plh_edit, plh_all.  Higher permission levels include all lower
-permissions.';
+'The type of access granted.  Must be one of:
+
+  plh_search
+    Can read study data
+
+  plh_insert
+    plh_search permissions + Can create new rows
+
+  plh_edit
+    plh_insert permissions + Can alter existing rows
+
+  plh_all
+  plh_edit permissions + Can delete existing rows';
 
 COMMENT ON COLUMN $1.study IS
 'The STUDY.Name of the study to which permission is granted or
