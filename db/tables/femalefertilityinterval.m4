@@ -51,6 +51,9 @@ fertility interval rows.
 
 StartDate must be on or before StopDate.
 
+Access rows in FEMALEFERTILITYINTERVALS is controlled, on a per-study
+basis, by the PERMISSION table.
+
 HINT: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
 columns.  FEMALEFERTILITYINTERVALS is identical to this table but for
 the additional columns.';

@@ -214,6 +214,9 @@ The combination of StudyId and AnimName must be unique.  Because
 AnimName may be NULL this combination cannot be used as a unique row
 identifier.
 
+Access rows in BIOGRAPHY is controlled, on a per-study basis, by the
+PERMISSION table.
+
 HINT: Use the BIOGRAPHIES view to get the mother''s AnimId.
 BIOGRAPHIES is identical to this table but for the additional
 column.';
