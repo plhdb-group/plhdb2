@@ -129,48 +129,7 @@ CREATE TABLE biography (
                         AND departdateerror IS NOT NULL)));
 
 grant_seq_priv(`biography', `bid')
-
 ALTER TABLE biography ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY all_access ON biography FOR ALL USING(
-  EXISTS(
-    SELECT 1
-      FROM permission
-      WHERE (permission.study = studyid
-             OR permission.study = 'plh_allstudies')
-            AND permission.username = CURRENT_USER
-            AND permission.access = 'plh_all'));
-
-CREATE POLICY search_access ON biography FOR SELECT USING(
-  EXISTS(
-    SELECT 1
-      FROM permission
-      WHERE (permission.study = studyid
-             OR permission.study = 'plh_allstudies')
-            AND permission.username = CURRENT_USER
-            AND (permission.access = 'plh_search'
-                 OR permission.access = 'plh_insert'
-                 OR permission.access = 'plh_edit')));
-
-CREATE POLICY insert_access ON biography FOR INSERT WITH CHECK(
-  EXISTS(
-    SELECT 1
-      FROM permission
-      WHERE (permission.study = studyid
-             OR permission.study = 'plh_allstudies')
-            AND permission.username = CURRENT_USER
-            AND (permission.access = 'plh_insert'
-                 OR permission.access = 'plh_edit')));
-
-CREATE POLICY edit_access ON biography FOR UPDATE USING(
-  EXISTS(
-    SELECT 1
-      FROM permission
-      WHERE (permission.study = studyid
-             OR permission.study = 'plh_allstudies')
-            AND permission.username = CURRENT_USER
-            AND permission.access = 'plh_edit'));
-
 
 
 COMMENT ON TABLE biography IS
