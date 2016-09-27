@@ -57,7 +57,7 @@ CREATE FUNCTION study_delete_func ()
 
   PERFORM 1
     FROM permission
-    WHERE permission.study = OLD.id;
+    WHERE permission.study = OLD.sid;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of STUDY'
