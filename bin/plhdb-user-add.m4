@@ -39,7 +39,9 @@ editwarning()
 usage () {
 echo 'Syntax: plhdb-user-add adminuser username group userdescr'
 echo '        plhdb-user-add -a adminuser username userdescr'
+echo '        plhdb-user-add -h'
 echo ''
+echo '  -h        Get this help'
 echo '  -a        Make the account an admin account'
 echo '  adminuser The user to use to make the user'
 echo '  username  The username to add'
@@ -63,6 +65,9 @@ if [ "$A_ADMINUSER" = '-a' ] ; then
   ADMIN='-a'
   shift
   A_ADMINUSER=$1
+elif [ "$A_ADMINUSER" = '-h' ] ; then
+  usage
+  exit 0
 fi
 export A_USER=$2
 export A_GROUP=$3
