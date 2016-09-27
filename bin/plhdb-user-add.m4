@@ -89,7 +89,7 @@ fi
 # Double any single quotes
 A_DESCR="${A_DESCR//\'/''}"
 
-export A_PASSWD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
+export A_PASSWD=$(head /dev/urandom | tr -dc A-NP-Za-kmz2-9 | head -c 10)
 
 if [ -z "$ADMIN" ] ; then
   psql -U $A_ADMINUSER -d plhdb <<EOF
