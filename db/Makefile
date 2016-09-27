@@ -91,30 +91,40 @@ install_plhdb_postgres_backup: backup_dir bin_dir
 .PHONY: install
 install:
 	make -C tables install
+	make -C policy install
 	make -C triggers install
 	make -C views install
+	make -C functions install_other
 
 .PHONY: reinstall
 reinstall:
 	make -C tables reinstall
+	make -C policy install
 	make -C triggers reinstall
 	make -C views reinstall
+	make -C functions reinstall_other
 
 .PHONY: reinstallnolock
 reinstallnolock:
 	make -C tables reinstall
+	make -C policy reinstallnolock
 	make -C triggers reinstallnolock
 	make -C views reinstallnolock
+	make -C functions reinstall_othernolock
 
 .PHONY: destroy
 destroy:
 	make -C triggers destroy
+	make -C policy destroy
 	make -C tables destroy
 	make -C views destroy
+	make -C functions destroy_other
 
 .PHONY: clean
 clean:
 	make -C tables clean
+	make -C policy clean
 	make -C include clean
 	make -C tables clean
 	make -C views clean
+	make -C functions clean
