@@ -77,7 +77,7 @@ if [ -z "$ADMIN" ] ; then
   fi
 else
   if [ -z "$A_DESCR" ] ; then
-    $A_DESCR="$A_GROUP"
+    A_DESCR="$A_GROUP"
     unset A_GROUP
   else
     echo "Too many arguments" >&2
