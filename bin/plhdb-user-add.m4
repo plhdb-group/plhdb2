@@ -122,5 +122,12 @@ comment on role $A_USER is 'Administrative account for $A_DESCR';
 EOF
 fi
 
+result=$?
+
 echo "The password for $A_USER is: $A_PASSWD"
 echo "Please have them change it!"
+
+if [ $result -ne 0 ] ; then
+  usage >&2
+  exit $result
+fi

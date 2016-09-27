@@ -73,3 +73,9 @@ psql -h localhost -U $A_ADMINUSER -d plhdb_copy <<EOF
 drop role $A_USER;
 EOF
 fi
+
+result=$?
+if [ $result -ne 0 ] ; then
+  usage >&2
+  exit $result
+fi
