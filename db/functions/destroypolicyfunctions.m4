@@ -24,3 +24,12 @@ DROP FUNCTION IF EXISTS biography_all_access(plh_studyid_type) CASCADE;
 DROP FUNCTION IF EXISTS biography_search_access(plh_studyid_type) CASCADE;
 DROP FUNCTION IF EXISTS biography_insert_access(plh_studyid_type) CASCADE;
 DROP FUNCTION IF EXISTS biography_edit_access(plh_studyid_type) CASCADE;
+
+DROP FUNCTION IF EXISTS
+     femalefertilityinterval_all_access(INT) CASCADE;
+DROP FUNCTION IF EXISTS
+     femalefertilityinterval_search_access(INT) CASCADE;
+DROP FUNCTION IF EXISTS
+     femalefertilityinterval_insert_access(INT) CASCADE;
+DROP FUNCTION IF EXISTS
+     femalefertilityinterval_edit_access(INT) CASCADE;
