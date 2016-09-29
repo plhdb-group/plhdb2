@@ -43,16 +43,16 @@ grant_row_level_priv(`femalefertilityinterval', `ffiid')
 
 
 COMMENT ON TABLE femalefertilityinterval IS
-'One row per observed fertility interval of a female animal.  Per
-individual, fertility intervals may not overlap.  Only BIOGRAPHY rows
-with Sex = ''plh_female'' may have related female fertility interval
-rows.  BIOGRAPHY rows with MomOnly = TRUE may not have related female
-fertility interval rows.
+'One row per observed fertility interval of a female animal.
 
+Access to rows in FEMALEFERTILITYINTERVALS is controlled, on a
+per-study basis, by the PERMISSION table.
+
+Per individual, fertility intervals may not overlap.
 StartDate must be on or before StopDate.
 
-Access rows in FEMALEFERTILITYINTERVALS is controlled, on a per-study
-basis, by the PERMISSION table.
+Only BIOGRAPHY rows with Sex = ''plh_female'' may have related female
+fertility interval rows.
 
 TIP: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
 columns.  FEMALEFERTILITYINTERVALS is identical to this table but for
