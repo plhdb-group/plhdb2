@@ -211,6 +211,12 @@ cat - <<\EOF
                      AND m.animid = b.momid)
           WHERE NOT(b.momonly)
           ORDER BY b.birthdate;
+
+    -- Update sequence.
+    SELECT 'DO $$ BEGIN
+              PERFORM SETVAL(''biography_bid_seq''
+                          , MAX(biography.bid))
+                FROM biography; END;$$';
   ROLLBACK;
 EOF
 }
@@ -220,7 +226,7 @@ EOF
 #done
 
 # Site
-{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
+{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb <<\EOF
         SELECT FORMAT(
             'INSERT INTO site (siteid, name, latitude, longitude'
             '                , geodetic_datum) '
@@ -236,12 +242,18 @@ EOF
                    THEN 'NULL'
                    ELSE quote_literal(geodetic_datum) END)
           FROM plhdb.site;
+
+        -- Update sequence.
+        SELECT 'DO $$ BEGIN
+                  PERFORM SETVAL(''site_siteid_seq''
+                              , MAX(site.siteid))
+                    FROM site; END;$$';
 EOF
 } \
-  | psql -q -U plhdb_admin $targetdb
+  | psql -q --tuples-only -U plhdb_admin $targetdb
 
 # Taxon
-{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
+{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb <<\EOF
         SELECT FORMAT(
             'INSERT INTO taxon (taxonid, scientific_name, common_name) '
             'VALUES (%s, %s, %s);'
@@ -250,12 +262,18 @@ EOF
                    THEN 'NULL'
                    ELSE quote_literal(common_name) END)
           FROM plhdb.taxon;
+
+        -- Update sequence.
+        SELECT 'DO $$ BEGIN
+                  PERFORM SETVAL(''taxon_taxonid_seq''
+                              , MAX(taxon.taxonid))
+                    FROM taxon; END;$$';
 EOF
 } \
-  | psql -q -U plhdb_admin $targetdb
+  | psql -q --tuples-only -U plhdb_admin $targetdb
 
 # Study
-{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
+{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb <<\EOF
         SELECT FORMAT(
             'INSERT INTO study (sid, name, owners, taxonid, siteid) '
             'VALUES (%s, %s, %s, %s, %s);'
@@ -267,17 +285,17 @@ EOF
           FROM plhdb.study;
 EOF
 } \
-  | psql -q -U plhdb_admin $targetdb
+  | psql -q --tuples-only -U plhdb_admin $targetdb
 
 # Hardcode the probablity_types, which come from the old cvterm table.
-psql -q -U plhdb_admin $targetdb <<EOF
+psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
 INSERT INTO probability_type (code, name)
   VALUES ('N', 'normal distribution')
        , ('U', 'uniform distribution');
 EOF
 
 # Hardcode the start events, which come from the old cvterm table.
-psql -q -U plhdb_admin $targetdb <<EOF
+psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
 INSERT INTO start_event (code, name)
   VALUES ('B', 'birth')
        , ('I', 'immigration into population')
@@ -286,7 +304,7 @@ INSERT INTO start_event (code, name)
 EOF
 
 # Hardcode the end events, which come from the old cvterm table.
-psql -q -U plhdb_admin $targetdb <<EOF
+psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
 INSERT INTO end_event (code, name)
   VALUES ('O', 'end of observation')
        , ('D', 'death')
@@ -297,11 +315,11 @@ EOF
 
 # Biography
 make_sql \
-  | psql -q --tuples-only -U plhdb_admin $sourcedb \
-  | psql -q -U plhdb_admin $targetdb
+  | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
+  | psql -q --tuples-only -U plhdb_admin $targetdb
 
 # Femalefertilityinterval
-{ psql -q --tuples-only -U plhdb_admin $sourcedb <<\EOF
+{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb <<\EOF
         SELECT FORMAT(
             'INSERT INTO femalefertilityinterval '
             '  (ffiid, bid, startdate, starttype, stopdate, stoptype) '
@@ -313,6 +331,12 @@ make_sql \
           , quote_literal(stopdate)
           , quote_literal(stoptype))
           FROM femalefertilityinterval;
+
+        -- Update sequence.
+        SELECT 'DO $$ BEGIN
+                  PERFORM SETVAL(''femalefertilityinterval_ffiid_seq''
+                              , MAX(femalefertilityinterval.ffiid))
+                    FROM femalefertilityinterval; END;$$';
 EOF
 } \
-  | psql -q -U plhdb_admin $targetdb
+  | psql -q --tuples-only -U plhdb_admin $targetdb
