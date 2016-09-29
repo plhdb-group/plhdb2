@@ -77,7 +77,7 @@ CREATE FUNCTION biography_func ()
                    || '): Value (BIOGRAPHY.AnimId of mother) = ('
                    || this_momid
                    || '): Value (BIOGRAPHY.Sex of mother) = (' || this_sex
-                   || '): The Sex value of the mother must be '
+                   || '): The Sex value of a mother must be '
                    || '''plh_female''.';
   END IF;
 
@@ -98,8 +98,8 @@ CREATE FUNCTION biography_func ()
                    || this_momid
                    || '): Value (BIOGRAPHY.StudyId of mother) = ('
                    || this_studyid
-                   || '): The StudyId value of the mother must be '
-                   || 'that of the offspring.';
+                   || '): The StudyId value of the offspring must be '
+                   || 'that of the mother.';
   END IF;
 
 
