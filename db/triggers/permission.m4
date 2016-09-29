@@ -24,16 +24,57 @@ include(`constants.m4')dnl
 include(`macros.m4')dnl
 
 
-dnl plpgsql fragment for BLAH
+dnl plpgsql fragment which revokes update and usage permission to
+dnl sequences if needed
 dnl
-dnl Syntax: BLAH(ARG)
-dnl
-dnl ARG   description
+dnl Syntax: test_to_revoke_update()
 dnl
 changequote({,})
-define({BLAH},{
+define({test_to_revoke_update},{
+      PERFORM 1
+        FROM permission
+        WHERE permission.username = OLD.username
+              AND permission.access <> 'plh_search';
+      IF NOT FOUND THEN
+        -- User has only search permission, if that.
+        EXECUTE 'REVOKE UPDATE '
+                  'ON SEQUENCE biography_bid_seq '
+                  'FROM ' || OLD.username || ';';
+        EXECUTE 'REVOKE UPDATE '
+                  'ON SEQUENCE biography_bid_seq '
+                  'FROM ' || OLD.username || ';';
+        EXECUTE 'REVOKE USAGE '
+                  'ON SEQUENCE biography_bid_seq '
+                  'FROM ' || OLD.username || ';';
+        EXECUTE 'REVOKE USAGE '
+                  'ON SEQUENCE biography_bid_seq '
+                  'FROM ' || OLD.username || ';';
+      END IF;
 })dnl
 changequote(`,')dnl
+
+
+dnl plpgsql fragment which grants update and usage permission to sequences
+dnl
+dnl Syntax: grant_update()
+dnl
+changequote({,})
+define({grant_update},{
+      EXECUTE 'GRANT UPDATE '
+                'ON SEQUENCE biography_bid_seq '
+                'TO ' || NEW.username || ';';
+      EXECUTE 'GRANT UPDATE '
+                'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+                'TO ' || NEW.username || ';';
+      EXECUTE 'GRANT USAGE '
+                'ON SEQUENCE biography_bid_seq '
+                'TO ' || NEW.username || ';';
+      EXECUTE 'GRANT USAGE '
+                'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+                'TO ' || NEW.username || ';';
+})dnl
+changequote(`,')dnl
+
 
 --  
 -- permission
@@ -44,6 +85,7 @@ SELECT 'permission_func' AS function;
 CREATE FUNCTION permission_func ()
   RETURNS trigger
   LANGUAGE plpgsql
+  SECURITY DEFINER
   plh_function_set_search_path
   AS $$
   DECLARE
@@ -55,6 +97,11 @@ CREATE FUNCTION permission_func ()
   -- Function for permission insert and update triggers
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
+
+  IF TG_OP = 'UPDATE' THEN
+    -- For sanity, can't change the username.
+    cannot_change(`PERMISSION', `UserName')
+  END IF;
 
   -- Username must be a role.
   -- Because this is not a constraint roles can go away.  So we
@@ -99,6 +146,67 @@ CREATE FUNCTION permission_func ()
     END IF;
   END IF;
 
+  -- Done with the validation.  Grant permissions to the table's sequences,
+  -- or revoke them.
+  IF TG_OP = 'INSERT' THEN
+    EXECUTE 'GRANT SELECT '
+              'ON SEQUENCE biography_bid_seq '
+              'TO ' || NEW.username || ';';
+    EXECUTE 'GRANT SELECT '
+              'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+              'TO ' || NEW.username || ';';
+    IF NEW.access <> 'plh_search' THEN
+      grant_update()
+    END IF;
+  ELSE  -- TG_OP = 'UPDATE'
+    -- UserName can't change, to make this easy.
+    IF NEW.access = 'plh_search' AND OLD.access <> 'plh_search' THEN
+      test_to_revoke_update()
+    ELSIF OLD.access = 'plh_search' AND NEW.access <> 'plh_search' THEN
+      -- Changing from search to something else.
+      grant_update()
+    END IF;
+  END IF;
+
+  RETURN NULL;
+  END;
+$$;
+
+
+SELECT 'permission_delete_func' AS function;
+CREATE FUNCTION permission_delete_func ()
+  RETURNS trigger
+  LANGUAGE plpgsql
+  SECURITY DEFINER
+  plh_function_set_search_path
+  AS $$
+  -- Function for permission delete trigger
+  --
+  -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
+
+  DECLARE
+
+  BEGIN
+
+  -- Does the user still need UPDATE to the sequences?
+  IF OLD.access <> 'plh_search' THEN
+    test_to_revoke_update()
+  END IF;
+
+  -- Does the user still need SELECT on the sequences?
+  PERFORM 1
+    FROM permission
+    WHERE permission.username = OLD.username;
+  IF NOT FOUND THEN
+    -- The user has no permissions.
+    EXECUTE 'REVOKE SELECT '
+              'ON SEQUENCE biography_bid_seq '
+              'FROM ' || OLD.username || ';';
+    EXECUTE 'REVOKE SELECT '
+              'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+              'FROM ' || OLD.username || ';';
+  END IF;
+
   RETURN NULL;
   END;
 $$;
@@ -109,3 +217,9 @@ CREATE TRIGGER permission_trigger
   AFTER INSERT OR UPDATE
   ON permission FOR EACH ROW
   EXECUTE PROCEDURE permission_func();
+
+SELECT 'permission_delete_trigger' AS trigger;
+CREATE TRIGGER permission_delete_trigger
+  AFTER DELETE
+  ON permission FOR EACH ROW
+  EXECUTE PROCEDURE permission_delete_func();

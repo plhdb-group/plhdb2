@@ -141,10 +141,6 @@ GRANT UPDATE ON $1 TO GROUP plhdb_users, plhdb_managers;
 GRANT DELETE ON $1 TO GROUP plhdb_users, plhdb_managers;
 SELECT '$1' AS done_with;
 
-GRANT SELECT ON $1_$2_seq TO GROUP plhdb_users, plhdb_managers;
-GRANT UPDATE ON $1_$2_seq TO GROUP plhdb_users, plhdb_managers;
-SELECT '$1_$2_seq' AS done_with;
-
 -- Sequence priviliges on tables protected with row level security
 -- are granted by trigger.
 ])
