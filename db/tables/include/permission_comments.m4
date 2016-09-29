@@ -46,7 +46,9 @@ COMMENT ON COLUMN $1.study IS
 ''plh_allstudies'' if permission is granted to all studies.';
 
 COMMENT ON COLUMN $1.username IS
-'The ROLE.rolname of the user to which permission is granted.  
+'The ROLE.rolname of the user to which permission is granted.  The
+value of this column cannot be changed.
+
 HINT: See the "accounts" view for information on users.';
 })
 

@@ -184,7 +184,7 @@ column.';
 
 COMMENT ON COLUMN biography.bid IS
 'Unique row identifer, and hence a unique identifer of the individual
-regardless of study.
+regardless of study.  The value of this column cannot be changed.
 
 HINT: Can be used to JOIN with FEMALEFERTILITYINTERVAL.BId.';
 
