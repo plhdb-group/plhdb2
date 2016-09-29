@@ -54,7 +54,7 @@ permission granted to all studies and permission granted to a specific
 study the user has the more permissive of the two.
 
 TIP: The contents of this table is accessible only to administrator
-and PLHDB manager accounts; use the "permissions" view instead.';
+and PLHDB manager accounts; use the PERMISSIONS view instead.';
 
 
 comment_permission_columns(`permission')
