@@ -143,7 +143,8 @@ a name a birth group would need to have.
 
 Individuals identifed as mothers (rows that have a BId value in the
 MomBId column of another BIOGRAPHY row) must have a ''plh_female''
-value for Sex.
+value for Sex.  Mothers and their offspring must have the same StudyId
+value.
 
 If BDDist is N (normal), construct the birth date probability
 distribution so that BDMin and BDMax represent + 2 standard deviations
