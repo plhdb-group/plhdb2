@@ -54,7 +54,7 @@ StartDate must be on or before StopDate.
 Access rows in FEMALEFERTILITYINTERVALS is controlled, on a per-study
 basis, by the PERMISSION table.
 
-HINT: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
+TIP: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
 columns.  FEMALEFERTILITYINTERVALS is identical to this table but for
 the additional columns.';
 
@@ -67,7 +67,7 @@ COMMENT ON COLUMN femalefertilityinterval.bid IS
 'Unique identifer of the individual for which the row records a
 fertility interval.
 
-HINT: Can be used to JOIN with BIOGRAPHY.BId.';
+TIP: Can be used to JOIN with BIOGRAPHY.BId.';
 
 COMMENT ON COLUMN femalefertilityinterval.startdate IS
 'Startdate for fertility surveillance.  Date on which surveillance of

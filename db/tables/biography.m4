@@ -177,7 +177,7 @@ identifier.
 Access rows in BIOGRAPHY is controlled, on a per-study basis, by the
 PERMISSION table.
 
-HINT: Use the BIOGRAPHIES view to get the mother''s AnimId.
+TIP: Use the BIOGRAPHIES view to get the mother''s AnimId.
 BIOGRAPHIES is identical to this table but for the additional
 column.';
 
@@ -186,13 +186,13 @@ COMMENT ON COLUMN biography.bid IS
 'Unique row identifer, and hence a unique identifer of the individual
 regardless of study.  The value of this column cannot be changed.
 
-HINT: Can be used to JOIN with FEMALEFERTILITYINTERVAL.BId.';
+TIP: Can be used to JOIN with FEMALEFERTILITYINTERVAL.BId.';
 
 COMMENT ON COLUMN biography.studyid IS
 'Identifier of the study for which the individual is observed.  This
 value may not be NULL.
 
-HINT: Can be used to JOIN with STUDY.Id.';
+TIP: Can be used to JOIN with STUDY.Id.';
 
 COMMENT ON COLUMN biography.animid IS
 'The identifier used by the study to denote the individual.  This
@@ -256,7 +256,7 @@ COMMENT ON COLUMN biography.mombid IS
 BIOGRAPHY.BId value.  This value may be NULL when the mother is
 unknown.
 
-HINT: The study''s code for the mother may be found in the MomId
+TIP: The study''s code for the mother may be found in the MomId
 column of the BIOGRAPHIES view.';
 
 COMMENT ON COLUMN biography.sex IS

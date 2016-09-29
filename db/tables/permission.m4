@@ -53,7 +53,7 @@ Permission is never taken away.  So, in case of conflict between
 permission granted to all studies and permission granted to a specific
 study the user has the more permissive of the two.
 
-HINT: The contents of this table is accessible only to administrator
+TIP: The contents of this table is accessible only to administrator
 and PLHDB manager accounts; use the "permissions" view instead.';
 
 
