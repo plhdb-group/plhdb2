@@ -140,10 +140,8 @@ birth groups are recorded directly as an attribute, and hence are
 denormalized, but at present it is unclear which attributes other than
 a name a birth group would need to have.
 
-Individuals identifed as mothers (rows that have a BId value in the
-MomBId column of another BIOGRAPHY row) must have a ''plh_female''
-value for Sex.  Mothers and their offspring must have the same StudyId
-value.
+Access to rows in BIOGRAPHY is controlled, on a per-study basis, by the
+PERMISSION table.
 
 If BDDist is N (normal), construct the birth date probability
 distribution so that BDMin and BDMax represent + 2 standard deviations
@@ -181,8 +179,10 @@ The combination of StudyId and AnimName must be unique.  Because
 AnimName may be NULL this combination cannot be used as a unique row
 identifier.
 
-Access rows in BIOGRAPHY is controlled, on a per-study basis, by the
-PERMISSION table.
+Individuals identifed as mothers (rows that have a BId value in the
+MomBId column of another BIOGRAPHY row) must have a ''plh_female''
+value for Sex.  Mothers and their offspring must have the same StudyId
+value.
 
 TIP: Use the BIOGRAPHIES view to get the mother''s AnimId.
 BIOGRAPHIES is identical to this table but for the additional
