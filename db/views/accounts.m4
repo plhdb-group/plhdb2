@@ -18,6 +18,8 @@
 -- Karl O. Pinc <kop@meme.com>
 --
 
+include(`grants.m4')
+
 -- Descriptions of accounts
 -- (Roles that can login.)
 create or replace view accounts as
@@ -27,6 +29,9 @@ create or replace view accounts as
            left outer join pg_shdescription
                 on (pg_shdescription.objoid = pg_roles.oid)
     where pg_roles.rolcanlogin;
+
+grant_priv(`accounts')
+
 
 COMMENT ON VIEW accounts IS
 'One row per PostgreSQL role which can login.  The purpose of this

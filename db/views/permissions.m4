@@ -18,6 +18,7 @@
 -- Karl O. Pinc <kop@meme.com>
 --
 
+include(`grants.m4')
 include(`permission_comments.m4')
 
 -- In keeping with the notion of only allowing particular users to
@@ -43,6 +44,8 @@ CREATE OR REPLACE VIEW permissions AS
         OR EXISTS (SELECT 1
                      FROM user_permissions
                      WHERE permission.study = user_permissions.study));
+
+grant_priv(`permissions')
 
 
 COMMENT ON VIEW permissions IS

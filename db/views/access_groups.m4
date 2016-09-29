@@ -18,6 +18,8 @@
 -- Karl O. Pinc <kop@meme.com>
 --
 
+include(`grants.m4')
+
 -- Roles used as groups in PLHDB.
 create or replace view access_groups as
   select pg_roles.rolname as groupname
@@ -26,6 +28,9 @@ create or replace view access_groups as
            left outer join pg_shdescription
                 on (pg_shdescription.objoid = pg_roles.oid)
     where not pg_roles.rolcanlogin;
+
+grant_priv(`access_groups')
+
 
 COMMENT ON VIEW access_groups IS
 'One row per PostgreSQL role which cannot login.  These roles are used
