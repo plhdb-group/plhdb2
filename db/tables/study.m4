@@ -40,7 +40,7 @@ CREATE TABLE study (
 , siteid INT NOT NULL
   CONSTRAINT "SiteId on SITE" REFERENCES site);
 
-grant_seq_priv(`study', `sid')
+grant_priv(`study', `sid')
 
 
 COMMENT ON TABLE study IS
