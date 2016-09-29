@@ -92,8 +92,8 @@ changequote([,])
 define([grant_managers_seq_priv],[
 grant_managers_priv(`$1')
 
-GRANT SELECT ON $1_$2_seq TO GROUP plhdb_managers;
-GRANT UPDATE ON $1_$2_seq TO GROUP plhdb_managers;
+GRANT SELECT ON SEQUENCE $1_$2_seq TO GROUP plhdb_managers;
+GRANT UPDATE ON SEQUENCE $1_$2_seq TO GROUP plhdb_managers;
 ])
 changequote(`,')
 
@@ -105,7 +105,7 @@ changequote([,])
 define([grant_users_seq_priv],[
 grant_users_priv(`$1')
 
-GRANT SELECT ON $1_$2_seq TO GROUP plhdb_users;
+GRANT SELECT ON SEQUENCE $1_$2_seq TO GROUP plhdb_users;
 ])
 changequote(`,')
 
@@ -117,8 +117,8 @@ dnl
 dnl Syntax: grant_seq_priv(tablename, idname)
 changequote([,])
 define([grant_seq_priv],[
-grant_managers_priv(`$1')
-grant_users_priv(`$1')
+grant_managers_seq_priv(`$1', `$2')
+grant_users_seq_priv(`$1', `$2')
 SELECT '$1_$2_seq' AS done_with;
 ])
 changequote(`,')
