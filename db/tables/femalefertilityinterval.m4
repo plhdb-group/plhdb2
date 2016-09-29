@@ -40,7 +40,7 @@ CREATE TABLE femalefertilityinterval (
               REFERENCES end_event);
 
 grant_row_level_priv(`femalefertilityinterval', `ffiid')
-ALTER TABLE femalefertilityinterval ENABLE ROW LEVEL SECURITY;
+
 
 COMMENT ON TABLE femalefertilityinterval IS
 'One row per observed fertility interval of a female animal.  Per
