@@ -39,7 +39,7 @@ CREATE TABLE femalefertilityinterval (
    CONSTRAINT "StopType must be a END_EVENT.Code value"
               REFERENCES end_event);
 
-grant_seq_priv(`femalefertilityinterval', `ffiid')
+grant_row_level_priv(`femalefertilityinterval', `ffiid')
 ALTER TABLE femalefertilityinterval ENABLE ROW LEVEL SECURITY;
 
 COMMENT ON TABLE femalefertilityinterval IS

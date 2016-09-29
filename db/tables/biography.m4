@@ -128,8 +128,7 @@ CREATE TABLE biography (
                     OR (departdate IS NOT NULL
                         AND departdateerror IS NOT NULL)));
 
-grant_seq_priv(`biography', `bid')
-ALTER TABLE biography ENABLE ROW LEVEL SECURITY;
+grant_row_level_priv(`biography', `bid')
 
 
 COMMENT ON TABLE biography IS
