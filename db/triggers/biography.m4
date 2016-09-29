@@ -49,6 +49,7 @@ CREATE FUNCTION biography_func ()
   DECLARE
     this_momid biography.animid%TYPE;
     this_sex biography.sex%TYPE;
+    this_studyid biography.studyid%TYPE;
 
   BEGIN
   -- Function for biography insert and update triggers
@@ -81,6 +82,25 @@ CREATE FUNCTION biography_func ()
   END IF;
 
   -- Mother of this individual must be in same study as offspring.
+  SELECT biography.animid, biography.studyid
+    INTO this_momid, this_studyid
+    FROM biography
+    WHERE biography.bid = NEW.mombid
+          AND biography.studyid <> NEW.studyid;
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+        , DETAIL = 'Key(BId) = (' || NEW.bid
+                   || '): Value (StudyId) = (' || NEW.studyid
+                   || '): Value (AnimId) = (' || NEW.animid
+                   || '): Value (MomBId) = (' || NEW.mombid
+                   || '): Value (BIOGRAPHY.AnimId of mother) = ('
+                   || this_momid
+                   || '): Value (BIOGRAPHY.StudyId of mother) = ('
+                   || this_studyid
+                   || '): The StudyId value of the mother must be '
+                   || 'that of the offspring.';
+  END IF;
 
 
   IF TG_OP = 'UPDATE' THEN
