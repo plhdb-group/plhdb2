@@ -124,6 +124,22 @@ CREATE FUNCTION biography_func ()
     END IF;
 
     -- Individual cannot have offspring in a different study.
+    IF NEW.studyid <> OLD.studyid THEN
+      PERFORM 1
+        FROM biography
+        WHERE biography.mombid = NEW.bid
+              AND biography.studyid <> NEW.studyid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): StudyId cannot change because this '
+                     || 'individual is another''s mother; the study '
+                     || 'of the mother and offspring must match';
+      END IF;
+    END IF;
 
   END IF;
   
