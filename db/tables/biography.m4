@@ -157,13 +157,21 @@ midpoint of BDMin and BDMax, distribution may be N or U.
 AnimId must be unique per StudyId.
 AnimName must either be NULL or unique per StudyId.
 BirthDate must be on or before EntryDate.
+BirthDate may be NULL only when MomOnly is TRUE.
 BDMin must be NULL or on or before BirthDate.
+BDMin may be NULL only when MomOnly is TRUE.
 BDMax must be NULL or on or after BirthDate.
+BDMax may be NULL only when MomOnly is TRUE.
+BDDist may be NULL only when MomOnly is TRUE.
 Sex must be ''plh_female'' when MomOnly is TRUE.
 Entrydate must be on or before DepartDate.
+EntryDate may be NULL only when MomOnly is TRUE.
+EntryDate may be NULL only when MomOnly is TRUE.
 EntryType can be NULL only when EntryDate is also NULL.
+DepartDate may be NULL only when MomOnly is TRUE.
 DepartType can be NULL only when DepartDate is also NULL.
-DepartDateError can be NULL if and only if DepartDate is also NULL.
+DepartDateError must be NULL if DepartDate is NULL.
+DepartDateError must not be NULL if DepartDate is not NULL.
 
 The combination of StudyId and AnimId must be unique.  Because niether
 of these columns may be NULL this combination can, instead of the Bid
@@ -212,23 +220,21 @@ the database.  This value may not be NULL.';
 COMMENT ON COLUMN biography.birthdate IS
 'Birth date. Animal''s birthdate. The birthdate is either the exactly
 known date of birth or it is midpoint of the range of possible
-birthdates.  This value may be NULL only when MomOnly is TRUE.';
+birthdates.';
 
 COMMENT ON COLUMN biography.bdmin IS
 'Estimated earliest birth date. Must differ from Birthdate whenever
-earliest possible birth date is >7 days before Birthdate.  This value
-may be NULL only when MomOnly is TRUE.';
+earliest possible birth date is >7 days before Birthdate.';
 
 COMMENT ON COLUMN biography.bdmax IS
 'Estimated latest birth date.  Must differ from Birthdate whenever
-latest possible birth date is >7 days after Birthdate.  This value may
-be NULL only when MomOnly is TRUE.';
+latest possible birth date is >7 days after Birthdate.';
 
 COMMENT ON COLUMN biography.bddist IS
 'Probability distribution of the estimated birth date given BDMin,
 Birthdate, and BDMax.  The vocabularly for this column is defined by
 the PROBABILITY_TYPE table, which expected to define only normal (N)
-and uniform (U).  This value may be NULL only when MomOnly is TRUE.';
+and uniform (U).';
 
 COMMENT ON COLUMN biography.birthgroup IS
 'The name or code or ID of the group within which the individual was
@@ -268,18 +274,15 @@ COMMENT ON COLUMN biography.entrydate IS
 sighted in the study population, either because the animal is
 recognized and ID''d as of that date or because strong inference
 indicates group membership from that date. Study population is the
-studied population at the time of the animal''s entry into it.  This
-value may not be NULL.';
+studied population at the time of the animal''s entry into it.';
 
 COMMENT ON COLUMN biography.entrytype IS
 'Type of entry into population. Birth, immigration, start of confirmed
 ID, Initiation of close observation for any other reason, etc.  The
-vocabularly for this column is defined by the START_EVENT table.  This
-value may not be NULL.';
+vocabularly for this column is defined by the START_EVENT table.';
 
 COMMENT ON COLUMN biography.departdate IS
-'Date on which the animal was last seen alive in the population.  This
-value may not be NULL.';
+'Date on which the animal was last seen alive in the population.';
 
 COMMENT ON COLUMN biography.departtype IS
 'Type of departure.  Death, permanent disappearance, emigration out of
@@ -290,16 +293,14 @@ circumstantial evidence indicates poor health or other risks
 contributing to mortality and/or violations of population-specific
 behavior patterns. Otherwise assign permanent disappearance. Do not
 assign mortality based solely on inferred risks associated with age.
-The vocabularly for this column is defined by the END_EVENT table.
-This value may not be NULL.';
+The vocabularly for this column is defined by the END_EVENT table.';
 
 COMMENT ON COLUMN biography.departdateerror IS
 'Time between departdate and the first time that the animal was
 confirmed missing.  Expressed as fraction of a year (number of days
 divided by number of days in a year).  Assign a zero to
 DepartdateError only if the number of day between departdate and the
-first time that the animal was confirmed missing was < 15.  This value
-may not be NULL.';
+first time that the animal was confirmed missing was < 15.';
 
 -- Unique indexes, for utility but also to enforce data integrity!
 CREATE UNIQUE INDEX biography_studyid_animid
