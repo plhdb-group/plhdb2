@@ -104,7 +104,27 @@ CREATE FUNCTION biography_func ()
 
 
   IF TG_OP = 'UPDATE' THEN
- 
+
+    -- Individuals who have rows only because they are another's mother
+    -- cannot have female fertility intervals.
+    IF NEW.MomOnly <> OLD.MomOnly
+       AND NEW.MomOnly THEN
+      PERFORM 1
+        FROM femalefertilityinterval
+        WHERE femalefertilityinterval.bid = NEW.bid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (MomOnly) = (' || NEW.momonly
+                     || '): Rows with MomOnly = TRUE cannot '
+                     || 'have a related FEMALEFERTILTIYINTERVAL row';
+
+      END IF;
+    END IF;
+
     -- Individual cannot have offspring unless female.
     IF NEW.sex <> OLD.sex
        AND NEW.sex <> 'plh_female' THEN

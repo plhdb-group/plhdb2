@@ -54,6 +54,9 @@ StartDate must be on or before StopDate.
 Only BIOGRAPHY rows with Sex = ''plh_female'' may have related female
 fertility interval rows.
 
+FEMALEFERTILITYINTERVAL rows may only be related to those BIOGRAPHY
+rows which have a FALSE MomOnly value.
+
 TIP: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
 columns.  FEMALEFERTILITYINTERVALS is identical to this table but for
 the additional columns.';
