@@ -27,9 +27,9 @@ CREATE TABLE probability_type (
   code CHAR(1) PRIMARY KEY
   empty_string_check(`Code')
   sensible_whitespace(`Code')
-, name VARCHAR(64) NOT NULL
-  empty_string_check(`Name')
-  sensible_whitespace(`Name'));
+, description VARCHAR(64) NOT NULL
+  empty_string_check(`Description')
+  sensible_whitespace(`Description'));
 
 grant_priv(`probability_type', `code')
 grant_demo_user_priv(`probability_type')
@@ -43,10 +43,10 @@ COMMENT ON COLUMN probability_type.code IS
 'A unique single character code for the probability type.  This code
 identifies the row within the database.';
 
-COMMENT ON COLUMN probability_type.name IS
+COMMENT ON COLUMN probability_type.description IS
 'A unique description of the kind of probability distribution.';
 
 
-CREATE UNIQUE INDEX probability_type_name
-  ON probability_type (name);
+CREATE UNIQUE INDEX probability_type_description
+  ON probability_type (description);
 

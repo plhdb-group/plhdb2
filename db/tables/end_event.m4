@@ -27,9 +27,9 @@ CREATE TABLE end_event (
   code CHAR(1) PRIMARY KEY
   empty_string_check(`Code')
   sensible_whitespace(`Code')
-, name VARCHAR(64) NOT NULL
-  empty_string_check(`Name')
-  sensible_whitespace(`Name'));
+, description VARCHAR(64) NOT NULL
+  empty_string_check(`Description')
+  sensible_whitespace(`Description'));
 
 grant_priv(`end_event', `code')
 grant_demo_user_priv(`end_event')
@@ -48,8 +48,8 @@ COMMENT ON COLUMN end_event.code IS
 'A unique single character code for the end of observation type.  This
 code identifies the row within the database.';
 
-COMMENT ON COLUMN end_event.name IS
+COMMENT ON COLUMN end_event.description IS
 'A unique description of the end of observation type.';
 
 
-CREATE UNIQUE INDEX end_event_name ON end_event (name);
+CREATE UNIQUE INDEX end_event_description ON end_event (description);

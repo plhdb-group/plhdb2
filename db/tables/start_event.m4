@@ -27,9 +27,9 @@ CREATE TABLE start_event (
   code CHAR(1) PRIMARY KEY
   empty_string_check(`Code')
   sensible_whitespace(`Code')
-, name VARCHAR(64) NOT NULL
-  empty_string_check(`Name')
-  sensible_whitespace(`Name'));
+, description VARCHAR(64) NOT NULL
+  empty_string_check(`Description')
+  sensible_whitespace(`Description'));
 
 grant_priv(`start_event', `code')
 grant_demo_user_priv(`start_event')
@@ -45,8 +45,8 @@ COMMENT ON COLUMN start_event.code IS
 'A unique single character code for the start of observation type.
 This code identifies the row within the database.';
 
-COMMENT ON COLUMN start_event.name IS
+COMMENT ON COLUMN start_event.description IS
 'A unique description of the start of observation type.';
 
 
-CREATE UNIQUE INDEX start_event_name ON start_event (name);
+CREATE UNIQUE INDEX start_event_description ON start_event (description);
