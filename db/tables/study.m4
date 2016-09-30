@@ -41,6 +41,7 @@ CREATE TABLE study (
   CONSTRAINT "SiteId on SITE" REFERENCES site);
 
 grant_priv(`study', `sid')
+grant_demo_user_priv(`study')
 
 
 COMMENT ON TABLE study IS

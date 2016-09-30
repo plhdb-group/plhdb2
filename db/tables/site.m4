@@ -35,6 +35,7 @@ CREATE TABLE site (
                  sensible_whitespace(`Geodetic_Datum'));
 
 grant_seq_priv(`site', `siteid')
+grant_demo_user_priv(`site')
 
 
 COMMENT ON TABLE site IS

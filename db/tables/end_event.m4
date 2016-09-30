@@ -32,6 +32,7 @@ CREATE TABLE end_event (
   sensible_whitespace(`Name'));
 
 grant_priv(`end_event', `code')
+grant_demo_user_priv(`end_event')
 
 
 COMMENT ON TABLE end_event IS

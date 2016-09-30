@@ -40,6 +40,7 @@ CREATE TABLE femalefertilityinterval (
               REFERENCES end_event);
 
 grant_row_level_priv(`femalefertilityinterval', `ffiid')
+grant_demo_user_priv(`femalefertilityinterval')
 
 
 COMMENT ON TABLE femalefertilityinterval IS

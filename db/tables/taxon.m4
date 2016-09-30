@@ -33,6 +33,7 @@ CREATE TABLE taxon (
   sensible_whitespace(`Common_Name'));
 
 grant_seq_priv(`taxon', `taxonid')
+grant_demo_user_priv(`taxon')
 
 
 COMMENT ON TABLE taxon IS

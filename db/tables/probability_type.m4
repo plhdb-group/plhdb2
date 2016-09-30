@@ -32,6 +32,7 @@ CREATE TABLE probability_type (
   sensible_whitespace(`Name'));
 
 grant_priv(`probability_type', `code')
+grant_demo_user_priv(`probability_type')
 
 
 COMMENT ON TABLE probability_type IS

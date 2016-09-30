@@ -129,6 +129,7 @@ CREATE TABLE biography (
                         AND departdateerror IS NOT NULL)));
 
 grant_row_level_priv(`biography', `bid')
+grant_demo_user_priv(`biography')
 
 
 COMMENT ON TABLE biography IS

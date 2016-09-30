@@ -147,6 +147,32 @@ SELECT '$1' AS done_with;
 changequote(`,')
 
 
+dnl Grant privileges to the demo user, but only for tables in the
+dnl demo database.
+dnl
+dnl Syntax: grant_demo_user_priv(tablename)
+dnl
+dnl Remarks:
+dnl   It is annoying to have to use this macro for every table
+dnl to which the demo user has access.  But it is better to deny
+dnl access to the demo user than it is to accidentally grant
+dnl the demo user access.
+changequote([,])
+define([grant_demo_user_priv],[
+DO $$
+BEGIN
+  PERFORM 1
+    WHERE CURRENT_DATABASE() = 'plhdb_demo';
+  IF FOUND THEN
+    raise warning 'Not granting SELECT on $1 TO demo_user';
+    --GRANT SELECT ON $1 TO demo_user;
+  END IF;
+END;
+$$;
+])
+changequote(`,')
+
+
 -- Done defining macros.
 divert`'dnl
 dnl
