@@ -216,7 +216,7 @@ cat - <<\EOF
     SELECT 'DO $$ BEGIN
               PERFORM SETVAL(''biography_bid_seq''
                           , MAX(biography.bid))
-                FROM biography; END;$$';
+                FROM biography; END;$$;';
   ROLLBACK;
 EOF
 }
@@ -247,7 +247,7 @@ EOF
         SELECT 'DO $$ BEGIN
                   PERFORM SETVAL(''site_siteid_seq''
                               , MAX(site.siteid))
-                    FROM site; END;$$';
+                    FROM site; END;$$;';
 EOF
 } \
   | psql -q --tuples-only -U plhdb_admin $targetdb
@@ -267,7 +267,7 @@ EOF
         SELECT 'DO $$ BEGIN
                   PERFORM SETVAL(''taxon_taxonid_seq''
                               , MAX(taxon.taxonid))
-                    FROM taxon; END;$$';
+                    FROM taxon; END;$$;';
 EOF
 } \
   | psql -q --tuples-only -U plhdb_admin $targetdb
@@ -336,7 +336,7 @@ make_sql \
         SELECT 'DO $$ BEGIN
                   PERFORM SETVAL(''femalefertilityinterval_ffiid_seq''
                               , MAX(femalefertilityinterval.ffiid))
-                    FROM femalefertilityinterval; END;$$';
+                    FROM femalefertilityinterval; END;$$;';
 EOF
 } \
   | psql -q --tuples-only -U plhdb_admin $targetdb
