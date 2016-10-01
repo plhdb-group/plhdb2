@@ -25,11 +25,11 @@ include(`constants.m4')
 
 CREATE TABLE probability_type (
   code CHAR(1) PRIMARY KEY
-  empty_string_check(`Code')
-  sensible_whitespace(`Code')
+    empty_string_check(`Code')
+    sensible_whitespace(`Code')
 , description TEXT NOT NULL
-  empty_string_check(`Description')
-  sensible_whitespace(`Description')
+    empty_string_check(`Description')
+    sensible_whitespace(`Description')
 , symmetrical BOOLEAN NOT NULL);
 
 grant_priv(`probability_type', `code')
