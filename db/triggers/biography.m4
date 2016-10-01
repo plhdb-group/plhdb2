@@ -61,6 +61,34 @@ CREATE FUNCTION biography_func ()
     cannot_change(`BIOGRAPHY', `BId')
   END IF;
 
+  -- Birthdates with a "symmetric" (normal) distribution must have their
+  -- birth date halfway between the min and max range.  Or one of the
+  -- two midpoint dates if the range has an even number of days.
+  IF NEW.birthdate IS NOT NULL
+     AND ABS((NEW.birthdate - NEW.bdmin)
+             - (NEW.bdmax - NEW.birthdate))
+            > 1 THEN
+    PERFORM 1
+      FROM probability_type
+      WHERE probability_type.code = NEW.bddist
+            AND probability_type.symmetrical;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (BirthDate) = (' || NEW.BirthDate
+                     || '): Value (BDMin) = (' || NEW.bdmin
+                     || '): Value (BDMax) = (' || NEW.bdmax
+                     || '): Value (BDDist) = (' || NEW.bddist
+                     || '): When a BDDist relates to a PROBABILITY_TYPE '
+                     || 'row with a TRUE Symmetrical value (as is set '
+                     || 'for normal distributions), the BirthDate '
+                     || 'must fall midway between BDMin and BDMax';
+    END IF;
+  END IF;
+
   IF NEW.mombid IS NOT NULL THEN
     -- Mother of this individual must be female.
     SELECT biography.animid, biography.sex

@@ -49,17 +49,19 @@ COMMENT ON COLUMN probability_type.description IS
 
 COMMENT ON COLUMN probability_type.symmetrical IS 
 'TRUE when the related data-endpoints must be "symmetrical" about the
-distribution''s most likely value, in the same way that the endpoints of
-a normal distribution are equidistant from the mean, median, and mode.
-FALSE when the related data need not be.  In effect, denotes whether
-the probability distribution is a normal distribution.  When a
+distribution''s most likely value, in the same way that the endpoints
+of a normal distribution are equidistant from the mean, median, and
+mode.  FALSE when the related data need not be.  In effect, denotes
+whether the probability distribution is a normal distribution.  When a
 PROBABILITY_TYPE row is related to data consisting of a value, a
-minimum, and a maximum (as it is with BIOGRAPHY''s BirthDate, BDMin, and
-BDMax columns) symmetry requires that the value be midway between the
-minimum and the maximum.  Because some intervals are measured in
-discrete time units (days) the midpoint is defined to be either one of
-the 2 midpoint dates when there are an even number of days in the
-min-to-max interval.';
+minimum, and a maximum (as it is with BIOGRAPHY''s BirthDate, BDMin,
+and BDMax columns) symmetry requires that the value be midway between
+the minimum and the maximum.  Because some intervals are measured in
+discrete time units (i.e. days) the midpoint is defined to be either
+one of the 2 midpoint dates when there are an even number of days in
+the min-to-max interval.
+
+The value of this column cannot be changed.';
 
 
 CREATE UNIQUE INDEX probability_type_description
