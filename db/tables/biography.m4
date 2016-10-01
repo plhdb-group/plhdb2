@@ -56,6 +56,8 @@ CREATE TABLE biography (
                 CHECK(birthdate IS NULL
                       OR birthdate <= entrydate)
      null_only_when_momonly(`BirthDate')
+     CONSTRAINT "BirthDate >= plh_minbirth"
+                CHECK('plh_minbirth' <= BirthDate)
  , bdmin DATE
      CONSTRAINT "BDMin <= BirthDate"
                 CHECK(bdmin IS NULL
@@ -210,8 +212,11 @@ typical study subjects as to what data must or must not be recorded in
 the database.  This value may not be NULL.';
 
 COMMENT ON COLUMN biography.birthdate IS
+
 'Birth date. Animal''s birthdate. The birthdate is either the exactly
-known date of birth or it is with a range of possible birthdates.';
+known date of birth or it is with a range of possible birthdates.
+
+The BirthDate must be on or after plh_minbirth.';
 
 COMMENT ON COLUMN biography.bdmin IS
 'Estimated earliest birth date. Must differ from Birthdate whenever
