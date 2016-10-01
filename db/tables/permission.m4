@@ -27,11 +27,12 @@ include(`permission_comments.m4')
 CREATE TABLE permission (
   pid SERIAL PRIMARY KEY
 , access VARCHAR(10) NOT NULL
-  CONSTRAINT "Access must be one of plh_search, plh_insert, plh_edit, plh_all"
-             CHECK (access = 'plh_search'
-                    OR access = 'plh_insert'
-                    OR access = 'plh_edit'
-                    OR access = 'plh_all')
+    CONSTRAINT
+      "Access must be one of plh_search, plh_insert, plh_edit, plh_all"
+      CHECK (access = 'plh_search'
+             OR access = 'plh_insert'
+             OR access = 'plh_edit'
+             OR access = 'plh_all')
 , study plh_studyid_type NOT NULL
 , username NAME NOT NULL);
 
