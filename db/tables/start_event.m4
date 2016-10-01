@@ -25,11 +25,11 @@ include(`constants.m4')
 
 CREATE TABLE start_event (
   code CHAR(1) PRIMARY KEY
-  empty_string_check(`Code')
-  sensible_whitespace(`Code')
+    empty_string_check(`Code')
+    sensible_whitespace(`Code')
 , description VARCHAR(64) NOT NULL
-  empty_string_check(`Description')
-  sensible_whitespace(`Description'));
+    empty_string_check(`Description')
+    sensible_whitespace(`Description'));
 
 grant_priv(`start_event', `code')
 grant_demo_user_priv(`start_event')
