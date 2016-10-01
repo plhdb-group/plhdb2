@@ -53,20 +53,17 @@ CREATE TABLE biography (
  , momonly BOOLEAN NOT NULL
  , birthdate DATE
      CONSTRAINT "BirthDate <= EntryDate"
-                CHECK(birthdate IS NULL
-                      OR birthdate <= entrydate)
+                CHECK(birthdate <= entrydate)
      null_only_when_momonly(`BirthDate')
      CONSTRAINT "BirthDate >= plh_minbirth"
                 CHECK('plh_minbirth' <= BirthDate)
  , bdmin DATE
      CONSTRAINT "BDMin <= BirthDate"
-                CHECK(bdmin IS NULL
-                      OR bdmin <= birthdate)
+                CHECK(bdmin <= birthdate)
      null_only_when_momonly(`BDMin')
  , bdmax DATE
      CONSTRAINT "Birthdate <= BDMax"
-                CHECK(bdmax IS NULL
-                      OR birthdate <= bdmax)
+                CHECK(birthdate <= bdmax)
      null_only_when_momonly(`BDMax')
      CONSTRAINT "BDMax <= DepartDate when DepartDateError = 0"
                 CHECK(departdateerror <> 0
