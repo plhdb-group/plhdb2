@@ -289,9 +289,9 @@ EOF
 
 # Hardcode the probablity_types, which come from the old cvterm table.
 psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
-INSERT INTO probability_type (code, description)
-  VALUES ('N', 'normal distribution')
-       , ('U', 'uniform distribution');
+INSERT INTO probability_type (code, description, symmetrical)
+  VALUES ('N', 'normal distribution', TRUE)
+       , ('U', 'uniform distribution', FALSE);
 EOF
 
 # Hardcode the start events, which come from the old cvterm table.
