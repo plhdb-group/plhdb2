@@ -42,40 +42,40 @@ changequote(`,')dnl
 CREATE TABLE biography (
    bid SERIAL PRIMARY KEY
  , studyid plh_studyid_type NOT NULL
-   CONSTRAINT "StudyId must be a STUDY.Id value"
-              REFERENCES study
+     CONSTRAINT "StudyId must be a STUDY.Id value"
+                REFERENCES study
  , animid VARCHAR(16) NOT NULL
-   empty_string_check(`AnimId')
-   sensible_whitespace(`AnimId')
+     empty_string_check(`AnimId')
+     sensible_whitespace(`AnimId')
  , animname VARCHAR(128)
-   empty_string_check(`AnimName')
-   sensible_whitespace(`AnimName')
+     empty_string_check(`AnimName')
+     sensible_whitespace(`AnimName')
  , momonly BOOLEAN NOT NULL
  , birthdate DATE
-   CONSTRAINT "BirthDate <= EntryDate"
-              CHECK(birthdate IS NULL
-                    OR birthdate <= entrydate)
-   null_only_when_momonly(`BirthDate')
+     CONSTRAINT "BirthDate <= EntryDate"
+                CHECK(birthdate IS NULL
+                      OR birthdate <= entrydate)
+     null_only_when_momonly(`BirthDate')
  , bdmin DATE
-   CONSTRAINT "BDMin <= BirthDate"
-              CHECK(bdmin IS NULL
-                    OR bdmin <= birthdate)
-   null_only_when_momonly(`BDMin')
+     CONSTRAINT "BDMin <= BirthDate"
+                CHECK(bdmin IS NULL
+                      OR bdmin <= birthdate)
+     null_only_when_momonly(`BDMin')
  , bdmax DATE
-   CONSTRAINT "Birthdate <= BDMax"
-              CHECK(bdmax IS NULL
-                    OR birthdate <= bdmax)
-   null_only_when_momonly(`BDMax')
-   CONSTRAINT "BDMax <= DepartDate when DepartDateError = 0"
-              CHECK(departdateerror <> 0
-                    OR bdmax <= departdate)
+     CONSTRAINT "Birthdate <= BDMax"
+                CHECK(bdmax IS NULL
+                      OR birthdate <= bdmax)
+     null_only_when_momonly(`BDMax')
+     CONSTRAINT "BDMax <= DepartDate when DepartDateError = 0"
+                CHECK(departdateerror <> 0
+                      OR bdmax <= departdate)
  , bddist CHAR(1)
-   null_only_when_momonly(`BDDist')
-   CONSTRAINT "BDDist must be a PROBABILITY_TYPE.Code value"
-              REFERENCES probability_type
+     null_only_when_momonly(`BDDist')
+     CONSTRAINT "BDDist must be a PROBABILITY_TYPE.Code value"
+                REFERENCES probability_type
  , birthgroup VARCHAR(32)
-   empty_string_check(`BirthGroup')
-   sensible_whitespace(`BirthGroup')
+     empty_string_check(`BirthGroup')
+     sensible_whitespace(`BirthGroup')
  , bgqual CHAR(1)
      CONSTRAINT "BGQual is NULL or one of plh_bgcertain or plh_bguncertain"
                 CHECK(bgqual IS NULL
@@ -83,50 +83,50 @@ CREATE TABLE biography (
                           AND (bgqual = 'plh_bgcertain'
                                OR bgqual = 'plh_bguncertain')))
  , firstborn CHAR(1)
-   CONSTRAINT
-     "FirstBorn is NULL or one of: plh_fb_yes, plh_fb_no, plh_fb_unk"
-     CHECK(firstborn IS NULL
-           OR (firstborn IS NOT NULL
-               AND (firstborn = 'plh_fb_yes'
-                    OR firstborn = 'plh_fb_no'
-                    OR firstborn = 'plh_fb_unk')))
+     CONSTRAINT
+       "FirstBorn is NULL or one of: plh_fb_yes, plh_fb_no, plh_fb_unk"
+       CHECK(firstborn IS NULL
+             OR (firstborn IS NOT NULL
+                 AND (firstborn = 'plh_fb_yes'
+                      OR firstborn = 'plh_fb_no'
+                      OR firstborn = 'plh_fb_unk')))
  , mombid INTEGER
-   CONSTRAINT "MomBId must be a BIOGRAPHY.BId value"
-              REFERENCES biography
+     CONSTRAINT "MomBId must be a BIOGRAPHY.BId value"
+                REFERENCES biography
  , sex CHAR(1) NOT NULL
-   CONSTRAINT "Sex one of: plh_male, plh_female, plh_unk_sex"
-              CHECK(sex = 'plh_male'
-                    OR sex = 'plh_female'
-                    OR sex = 'plh_unk_sex')
-   CONSTRAINT "Sex = 'plh_female' when MomOnly = TRUE"
-              CHECK(NOT(momonly)
-                    OR sex = 'plh_female')
+     CONSTRAINT "Sex one of: plh_male, plh_female, plh_unk_sex"
+                CHECK(sex = 'plh_male'
+                      OR sex = 'plh_female'
+                      OR sex = 'plh_unk_sex')
+     CONSTRAINT "Sex = 'plh_female' when MomOnly = TRUE"
+                CHECK(NOT(momonly)
+                      OR sex = 'plh_female')
  , entrydate DATE
-   CONSTRAINT "EntryDate <= DepartDate"
-              CHECK(entrydate <= departdate)
-   null_only_when_momonly(`EntryDate')
+     CONSTRAINT "EntryDate <= DepartDate"
+                CHECK(entrydate <= departdate)
+     null_only_when_momonly(`EntryDate')
  , entrytype VARCHAR(8)
-   CONSTRAINT "EntryType must be a START_EVENT.Code value"
-              REFERENCES start_event
-   null_only_when_momonly(`EntryType')
-   CONSTRAINT "EntryType can be NULL only when EntryDate is NULL"
-              CHECK(entrydate IS NULL
-                    OR entrytype IS NOT NULL)
+     CONSTRAINT "EntryType must be a START_EVENT.Code value"
+                REFERENCES start_event
+     null_only_when_momonly(`EntryType')
+     CONSTRAINT "EntryType can be NULL only when EntryDate is NULL"
+                CHECK(entrydate IS NULL
+                      OR entrytype IS NOT NULL)
  , departdate DATE
-   null_only_when_momonly(`DepartDate')
+     null_only_when_momonly(`DepartDate')
  , departtype VARCHAR(8)
-   CONSTRAINT "DepartType must be a END_EVENT.Code value"
-              REFERENCES end_event
-   CONSTRAINT "DepartType can be NULL only when DepartDate is NULL"
-              CHECK(departdate IS NULL
-                    OR departtype IS NOT NULL)
+     CONSTRAINT "DepartType must be a END_EVENT.Code value"
+                REFERENCES end_event
+     CONSTRAINT "DepartType can be NULL only when DepartDate is NULL"
+                CHECK(departdate IS NULL
+                      OR departtype IS NOT NULL)
  , departdateerror DOUBLE PRECISION
-   CONSTRAINT "DepartDateError >= 0"
-              CHECK(departdateerror >= 0)
-   CONSTRAINT "DepartDateError can be NULL if and only if DepartDate is NULL"
-              CHECK((departdate IS NULL AND departdateerror IS NULL)
-                    OR (departdate IS NOT NULL
-                        AND departdateerror IS NOT NULL)));
+     CONSTRAINT "DepartDateError >= 0"
+                CHECK(departdateerror >= 0)
+     CONSTRAINT "DepartDateError can be NULL if and only if DepartDate is NULL"
+                CHECK((departdate IS NULL AND departdateerror IS NULL)
+                      OR (departdate IS NOT NULL
+                          AND departdateerror IS NOT NULL)));
 
 grant_row_level_priv(`biography', `bid')
 grant_demo_user_priv(`biography')
