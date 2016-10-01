@@ -116,6 +116,8 @@ CREATE TABLE biography (
                       OR entrytype IS NOT NULL)
  , departdate DATE
      null_only_when_momonly(`DepartDate')
+     CONSTRAINT "DepartDate must be on or before today's date"
+                CHECK(departdate <= current_date)
  , departtype VARCHAR(8)
      CONSTRAINT "DepartType must be a END_EVENT.Code value"
                 REFERENCES end_event
@@ -278,7 +280,8 @@ ID, Initiation of close observation for any other reason, etc.  The
 vocabularly for this column is defined by the START_EVENT table.';
 
 COMMENT ON COLUMN biography.departdate IS
-'Date on which the animal was last seen alive in the population.';
+'Date on which the animal was last seen alive in the population.
+DepartDate must be on or before today''s date.';
 
 COMMENT ON COLUMN biography.departtype IS
 'Type of departure.  Death, permanent disappearance, emigration out of
