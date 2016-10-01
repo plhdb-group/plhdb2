@@ -27,7 +27,7 @@ CREATE TABLE probability_type (
   code CHAR(1) PRIMARY KEY
   empty_string_check(`Code')
   sensible_whitespace(`Code')
-, description VARCHAR(64) NOT NULL
+, description TEXT NOT NULL
   empty_string_check(`Description')
   sensible_whitespace(`Description')
 , symmetrical BOOLEAN NOT NULL);
