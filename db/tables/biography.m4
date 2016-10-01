@@ -144,15 +144,6 @@ a name a birth group would need to have.
 Access to rows in BIOGRAPHY is controlled, on a per-study basis, by the
 PERMISSION table.
 
-If BDDist is N (normal), construct the birth date probability
-distribution so that BDMin and BDMax represent + 2 standard deviations
-of Birthdate.  If U (uniform), the probability distribution is
-truncated at BDMin and BDMax with equal Birthdate probability within
-this range. Birthdate must be at the midpoint of BDMin and BDMax, or
-one of the 2 midpoint dates when there are an even number of days in
-the BDMin to BDMax interval, when BDDist is N. If Birthdate is at the
-midpoint of BDMin and BDMax, distribution may be N or U.
-
 AnimId must be unique per StudyId.
 AnimName must either be NULL or unique per StudyId.
 BirthDate must be on or before EntryDate.
