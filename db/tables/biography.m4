@@ -107,6 +107,8 @@ CREATE TABLE biography (
      CONSTRAINT "EntryDate <= DepartDate"
                 CHECK(entrydate <= departdate)
      null_only_when_momonly(`EntryDate')
+     CONSTRAINT "EntryDate must be on or before today's date"
+                CHECK(entrydate <= current_date)
  , entrytype VARCHAR(8)
      CONSTRAINT "EntryType must be a START_EVENT.Code value"
                 REFERENCES start_event
@@ -272,7 +274,9 @@ COMMENT ON COLUMN biography.entrydate IS
 sighted in the study population, either because the animal is
 recognized and ID''d as of that date or because strong inference
 indicates group membership from that date. Study population is the
-studied population at the time of the animal''s entry into it.';
+studied population at the time of the animal''s entry into it.
+
+EntryDate must be on or before today''s date.';
 
 COMMENT ON COLUMN biography.entrytype IS
 'Type of entry into population. Birth, immigration, start of confirmed
