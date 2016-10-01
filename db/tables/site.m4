@@ -26,13 +26,13 @@ include(`constants.m4')
 CREATE TABLE site (
   siteid SERIAL PRIMARY KEY
 , name VARCHAR(64) NOT NULL
-       empty_string_check(`Name')
-       sensible_whitespace(`Name')
+    empty_string_check(`Name')
+    sensible_whitespace(`Name')
 , latitude NUMERIC(7,3)
 , longitude NUMERIC(7,3)
 , geodetic_datum VARCHAR(12) DEFAULT 'WGS84'
-                 empty_string_check(`Geodetic_Datum')
-                 sensible_whitespace(`Geodetic_Datum'));
+    empty_string_check(`Geodetic_Datum')
+    sensible_whitespace(`Geodetic_Datum'));
 
 grant_seq_priv(`site', `siteid')
 grant_demo_user_priv(`site')
