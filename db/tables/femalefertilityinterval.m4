@@ -26,18 +26,18 @@ include(`constants.m4')
 CREATE TABLE femalefertilityinterval (
    ffiid SERIAL PRIMARY KEY
  , bid INTEGER NOT NULL
-   CONSTRAINT "BId must be BIOGRAPHY.BId value"
-              REFERENCES biography
+     CONSTRAINT "BId must be BIOGRAPHY.BId value"
+                REFERENCES biography
  , startdate DATE NOT NULL
  , starttype CHAR(1) NOT NULL
-   CONSTRAINT "StartType must be a START_EVENT.Code value"
-              REFERENCES start_event
+     CONSTRAINT "StartType must be a START_EVENT.Code value"
+                REFERENCES start_event
  , stopdate DATE NOT NULL
-   CONSTRAINT "StartDate <= StopDate"
-              CHECK(startdate <= stopdate)
+     CONSTRAINT "StartDate <= StopDate"
+                CHECK(startdate <= stopdate)
  , stoptype CHAR(1) NOT NULL
-   CONSTRAINT "StopType must be a END_EVENT.Code value"
-              REFERENCES end_event);
+     CONSTRAINT "StopType must be a END_EVENT.Code value"
+                REFERENCES end_event);
 
 grant_row_level_priv(`femalefertilityinterval', `ffiid')
 grant_demo_user_priv(`femalefertilityinterval')
