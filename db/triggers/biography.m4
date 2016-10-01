@@ -61,24 +61,26 @@ CREATE FUNCTION biography_func ()
     cannot_change(`BIOGRAPHY', `BId')
   END IF;
 
-  -- Mother of this individual must be female.
-  SELECT biography.animid, biography.sex
-    INTO this_momid, this_sex
-    FROM biography
-    WHERE biography.bid = NEW.mombid
-          AND biography.sex <> 'plh_female';
-  IF FOUND THEN
-    RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
-        , DETAIL = 'Key(BId) = (' || NEW.bid
-                   || '): Value (StudyId) = (' || NEW.studyid
-                   || '): Value (AnimId) = (' || NEW.animid
-                   || '): Value (MomBId) = (' || NEW.mombid
-                   || '): Value (BIOGRAPHY.AnimId of mother) = ('
-                   || this_momid
-                   || '): Value (BIOGRAPHY.Sex of mother) = (' || this_sex
-                   || '): The Sex value of a mother must be '
-                   || '''plh_female''.';
+  IF NEW.mombid IS NOT NULL THEN
+    -- Mother of this individual must be female.
+    SELECT biography.animid, biography.sex
+      INTO this_momid, this_sex
+      FROM biography
+      WHERE biography.bid = NEW.mombid
+            AND biography.sex <> 'plh_female';
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (MomBId) = (' || NEW.mombid
+                     || '): Value (BIOGRAPHY.AnimId of mother) = ('
+                     || this_momid
+                     || '): Value (BIOGRAPHY.Sex of mother) = (' || this_sex
+                     || '): The Sex value of a mother must be '
+                     || '''plh_female''.';
+    END IF;
   END IF;
 
   -- Mother of this individual must be in same study as offspring.
