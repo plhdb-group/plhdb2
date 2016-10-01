@@ -25,20 +25,20 @@ include(`constants.m4')
 
 CREATE TABLE study (
   sid plh_studyid_type PRIMARY KEY
-  empty_string_check(`SId')
-  sensible_whitespace(`SId')
-  CONSTRAINT "SId may not be 'plh_allstudies'"
-             CHECK(sid <> 'plh_allstudies')
+    empty_string_check(`SId')
+    sensible_whitespace(`SId')
+    CONSTRAINT "SId may not be 'plh_allstudies'"
+               CHECK(sid <> 'plh_allstudies')
 , name VARCHAR(32)
-  empty_string_check(`Name')
-  sensible_whitespace(`Name')
+    empty_string_check(`Name')
+    sensible_whitespace(`Name')
 , owners VARCHAR(128)
-  empty_string_check(`Owners')
-  sensible_whitespace(`Owners')
+    empty_string_check(`Owners')
+    sensible_whitespace(`Owners')
 , taxonid INT NOT NULL
-  CONSTRAINT "TaxonId on TAXON" REFERENCES taxon
+    CONSTRAINT "TaxonId on TAXON" REFERENCES taxon
 , siteid INT NOT NULL
-  CONSTRAINT "SiteId on SITE" REFERENCES site);
+    CONSTRAINT "SiteId on SITE" REFERENCES site);
 
 grant_priv(`study', `sid')
 grant_demo_user_priv(`study')
