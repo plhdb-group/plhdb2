@@ -211,8 +211,7 @@ the database.  This value may not be NULL.';
 
 COMMENT ON COLUMN biography.birthdate IS
 'Birth date. Animal''s birthdate. The birthdate is either the exactly
-known date of birth or it is midpoint of the range of possible
-birthdates.';
+known date of birth or it is with a range of possible birthdates.';
 
 COMMENT ON COLUMN biography.bdmin IS
 'Estimated earliest birth date. Must differ from Birthdate whenever
