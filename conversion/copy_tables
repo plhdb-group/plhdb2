@@ -242,6 +242,24 @@ EOF
 
 make_ffi_sql () {
   cat - <<\EOF
+      BEGIN;
+    SELECT *
+      INTO TEMP TABLE fixed_ffi
+      FROM femalefertilityinterval;
+    CREATE INDEX fffi_anim_oid ON fixed_ffi (anim_oid);
+EOF
+
+
+  if [ "$fix" = "y" ] ; then
+    cat - <<\EOF
+      -- Apply fixes to female fertility data.
+
+      -- Female fertility stop dates after departdate + error get changed
+      -- to departdate + error.
+EOF
+  fi
+
+  cat - <<\EOF
         SELECT FORMAT(
             'INSERT INTO femalefertilityinterval '
             '  (ffiid, bid, startdate, starttype, stopdate, stoptype) '
@@ -252,13 +270,14 @@ make_ffi_sql () {
           , quote_literal(starttype)
           , quote_literal(stopdate)
           , quote_literal(stoptype))
-          FROM femalefertilityinterval;
+          FROM fixed_ffi;
 
         -- Update sequence.
         SELECT 'DO $$ BEGIN
                   PERFORM SETVAL(''femalefertilityinterval_ffiid_seq''
                               , MAX(femalefertilityinterval.ffiid))
                     FROM femalefertilityinterval; END;$$;';
+        ROLLBACK;
 EOF
 }
 
