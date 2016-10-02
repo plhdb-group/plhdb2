@@ -52,20 +52,20 @@ CREATE TABLE biography (
      sensible_whitespace(`AnimName')
  , momonly BOOLEAN NOT NULL
  , birthdate DATE
-     CONSTRAINT "BirthDate <= EntryDate"
+     CONSTRAINT "BirthDate must be <= EntryDate"
                 CHECK(birthdate <= entrydate)
      null_only_when_momonly(`BirthDate')
-     CONSTRAINT "BirthDate >= plh_minbirth"
+     CONSTRAINT "BirthDate must be >= plh_minbirth"
                 CHECK('plh_minbirth' <= BirthDate)
  , bdmin DATE
-     CONSTRAINT "BDMin <= BirthDate"
+     CONSTRAINT "BDMin must be <= BirthDate"
                 CHECK(bdmin <= birthdate)
      null_only_when_momonly(`BDMin')
  , bdmax DATE
-     CONSTRAINT "Birthdate <= BDMax"
+     CONSTRAINT "Birthdate must be <= BDMax"
                 CHECK(birthdate <= bdmax)
      null_only_when_momonly(`BDMax')
-     CONSTRAINT "BDMax <= DepartDate when DepartDateError = 0"
+     CONSTRAINT "BDMax must be <= DepartDate when DepartDateError = 0"
                 CHECK(departdateerror <> 0
                       OR bdmax <= departdate)
  , bddist CHAR(1)
@@ -97,11 +97,11 @@ CREATE TABLE biography (
                 CHECK(sex = 'plh_male'
                       OR sex = 'plh_female'
                       OR sex = 'plh_unk_sex')
-     CONSTRAINT "Sex = 'plh_female' when MomOnly = TRUE"
+     CONSTRAINT "Sex must be = 'plh_female' when MomOnly = TRUE"
                 CHECK(NOT(momonly)
                       OR sex = 'plh_female')
  , entrydate DATE
-     CONSTRAINT "EntryDate <= DepartDate"
+     CONSTRAINT "EntryDate must be <= DepartDate"
                 CHECK(entrydate <= departdate)
      null_only_when_momonly(`EntryDate')
      CONSTRAINT "EntryDate must be on or after plh_minentry"
@@ -126,7 +126,7 @@ CREATE TABLE biography (
                 CHECK(departdate IS NULL
                       OR departtype IS NOT NULL)
  , departdateerror DOUBLE PRECISION
-     CONSTRAINT "DepartDateError >= 0"
+     CONSTRAINT "DepartDateError must be >= 0"
                 CHECK(departdateerror >= 0)
      CONSTRAINT "DepartDateError can be NULL if and only if DepartDate is NULL"
                 CHECK((departdate IS NULL AND departdateerror IS NULL)

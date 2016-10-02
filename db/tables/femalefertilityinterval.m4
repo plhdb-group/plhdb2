@@ -33,7 +33,7 @@ CREATE TABLE femalefertilityinterval (
      CONSTRAINT "StartType must be a START_EVENT.Code value"
                 REFERENCES start_event
  , stopdate DATE NOT NULL
-     CONSTRAINT "StartDate <= StopDate"
+     CONSTRAINT "StartDate must be <= StopDate"
                 CHECK(startdate <= stopdate)
  , stoptype CHAR(1) NOT NULL
      CONSTRAINT "StopType must be a END_EVENT.Code value"
