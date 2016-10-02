@@ -58,6 +58,10 @@ fertility interval rows.
 FEMALEFERTILITYINTERVAL rows may only be related to those BIOGRAPHY
 rows which have a FALSE MomOnly value.
 
+The StopDate cannot be after the date from the related individual''s
+BIOGRAPHY row given by the formula (DepartDate plus (DepartDateError
+number of years)).
+
 TIP: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
 columns.  FEMALEFERTILITYINTERVALS is identical to this table but for
 the additional columns.';

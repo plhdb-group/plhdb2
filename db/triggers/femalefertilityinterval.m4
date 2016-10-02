@@ -50,6 +50,8 @@ CREATE FUNCTION femalefertilityinterval_func ()
     this_studyid biography.studyid%TYPE;
     this_animid biography.animid%TYPE;
     this_sex biography.sex%TYPE;
+    this_departdate biography.departdate%TYPE;
+    this_departdateerror biography.departdateerror%TYPE;
 
   BEGIN
   -- Function for femalefertilityinterval insert and update triggers
@@ -90,6 +92,32 @@ CREATE FUNCTION femalefertilityinterval_func ()
                    || '): Only individuals with BIOGRAPHY.Sex = '
                    || '''plh_female'' can have related '
                    || 'FEMALEFERTILITYINTERVAL rows';
+  END IF;
+
+  -- StopDate cannot be after DepartDate + (DepartDateError years)
+  SELECT biography.studyid, biography.animid, biography.departdate
+       , biography.departdateerror
+    INTO this_studyid,      this_animid,      this_departdate
+       , this_departdateerror
+    FROM biography
+    WHERE biography.bid = NEW.bid
+          AND last_departdate(biography.departdate, biography.departdateerror)
+              < NEW.stopdate;
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+                   || '): Value (BId) = (' || NEW.Bid
+                   || '): Value(StopDate) = (' || NEW.stopdate
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
+                   || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.DepartDate) = (' || this_departdate
+                   || '): Value (BIOGRAPHY.DepartDateError) = ('
+                   || this_departdateerror
+                   || '): StopDate cannot be after the DepartDate + '
+                   || '(DepartDateError years) of the related BIOGRAPHY '
+                   || 'row; the computed last departure date is: '
+                   || last_departdate(this_departdate, this_departdateerror);
   END IF;
 
   RETURN NULL;

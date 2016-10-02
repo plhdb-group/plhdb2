@@ -209,6 +209,34 @@ CREATE FUNCTION biography_func ()
       END IF;
     END IF;
 
+    -- Individual cannot have female fertility intervals after
+    -- departure date + (departdateerror years).
+    IF (NEW.departdate <> OLD.departdate
+        AND NEW.departdate < OLD.departdate)
+       OR (NEW.departdateerror <> OLD.departdateerror
+           AND OLD.departdateerror < NEW.departdateerror) THEN
+      PERFORM 1
+        FROM femalefertilityinterval AS ffi
+        WHERE ffi.bid = NEW.bid
+              AND last_departdate(NEW.departdate, NEW.departdateerror)
+                  < ffi.stopdate;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (DepartDate) = (' || NEW.departdate
+                     || '): Value (DepartDateError) = ('
+                     || NEW.departdateerror
+                     || '): There is a related FEMALEFERTILITYINTERVAL row '
+                     || 'which has a StopDate value after the computed '
+                     || 'new last possible departure date; the computed '
+                     || 'last possible departure date is: '
+                     || last_departdate(NEW.departdate, NEW.departdateerror);
+      END IF;
+    END IF;
+
   END IF;  -- UPDATE
   
 
