@@ -54,11 +54,6 @@ define({cannot_change}, {
 changequote(`,')
 
 
-dnl Strings used in error messages
-dnl
-define(`restricted_hint_msg', `The change can only be made by a user who is allowed to create triggers on the table')dnl
-
-
 dnl Turn output back on
 divert`'dnl
 ]}])dnl End of ifdef over the whole file.
