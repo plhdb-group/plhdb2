@@ -49,6 +49,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
   DECLARE
     this_studyid biography.studyid%TYPE;
     this_animid biography.animid%TYPE;
+    this_sex biography.sex%TYPE;
 
   BEGIN
   -- Function for femalefertilityinterval insert and update triggers
@@ -70,6 +71,25 @@ CREATE FUNCTION femalefertilityinterval_func ()
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
                    || '): Individuals with BIOGRAPHY.MomOnly = TRUE '
                    || 'cannot have related FEMALEFERTILITYINTERVAL rows';
+  END IF;
+
+  -- Non-female individuals cannot have related FEMALEFERTILITYINTERVAL rows.
+  SELECT biography.studyid, biography.animid, biography.sex
+    INTO this_studyid,      this_animid,      this_sex
+    FROM biography
+    WHERE biography.bid = NEW.bid
+          AND biography.sex <> 'plh_female';
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+                   || '): Value (BId) = (' || NEW.Bid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
+                   || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.Sex) = (' || this_sex
+                   || '): Only individuals with BIOGRAPHY.Sex = '
+                   || '''plh_female'' can have related '
+                   || 'FEMALEFERTILITYINTERVAL rows';
   END IF;
 
   RETURN NULL;

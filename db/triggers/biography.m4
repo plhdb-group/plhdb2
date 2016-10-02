@@ -155,9 +155,10 @@ CREATE FUNCTION biography_func ()
       END IF;
     END IF;
 
-    -- Individual cannot have offspring unless female.
     IF NEW.sex <> OLD.sex
        AND NEW.sex <> 'plh_female' THEN
+ 
+     -- Individual cannot have offspring unless female.
       PERFORM 1
         FROM biography
         WHERE biography.mombid = NEW.bid;
@@ -171,6 +172,23 @@ CREATE FUNCTION biography_func ()
                      || '): Sex must be ''plh_female'' because this '
                      || 'individual is another''s mother';
       END IF;
+
+      -- Individual cannot have female fertility intervals unless female.
+      PERFORM 1
+        FROM femalefertilityinterval
+        WHERE femalefertilityinterval.bid = NEW.bid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (Sex) = (' || NEW.sex
+                     || '): Sex must be ''plh_female'' because this '
+                     || 'individual has related FEMALEFERTILITYINTERVAL '
+                     || 'rows';
+      END IF;
+
     END IF;
 
     -- Individual cannot have offspring in a different study.
