@@ -50,8 +50,7 @@ CREATE OR REPLACE FUNCTION last_departdate(departdate DATE
 
   BEGIN
 
-  RETURN departdate
-         + CEIL(departdateerror * 'plh_days_in_year'::DOUBLE PRECISION)::INT;
+  RETURN plh_last_departdate_inline;
   END;
 $$;
 grant_func_priv(`last_departdate(DATE, DOUBLE PRECISION)')

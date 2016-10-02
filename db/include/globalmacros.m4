@@ -48,6 +48,14 @@ dnl The datatype of the study id.  We use this in too many places to
 dnl want to re-type it.
 define(`plh_studyid_type', `VARCHAR(12)')
 
+dnl The expression used to calculate last_departdate().
+dnl Easier to inline that to use a function in a constraint.
+changequote([,])
+define([plh_last_departdate_inline],[
+         departdate
+         + CEIL(departdateerror * 'plh_days_in_year'::DOUBLE PRECISION)::INT])
+changequote(`,')dnl  See above.
+
 dnl Turn output back on
 divert`'dnl
 ]}])dnl End of ifdef over the whole file.
