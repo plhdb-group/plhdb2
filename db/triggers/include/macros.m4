@@ -56,32 +56,7 @@ changequote(`,')
 
 dnl Strings used in error messages
 dnl
-define(`cannot_change_msg', `This row has special meaning to PLHDB and may not 
-be changed by ordinary users')dnl
 define(`restricted_hint_msg', `The change can only be made by a user who is allowed to create triggers on the table')dnl
-
-dnl plpgsql fragment for checking that a support table value cannot
-dnl be changed by regular users
-dnl
-dnl Syntax: restrict_change(table, column, value)
-dnl
-dnl table   The table
-dnl column  The column
-dnl value   The value that can't be changed by ordinary users.
-dnl
-changequote({,})
-define({restrict_change},{
-    IF (NEW.$2 = '$3' OR OLD.$2 = '$3')
-       AND (NEW.$2 <> OLD.$2
-            OR NEW.name <> OLD.name)
-       AND NOT(has_table_privilege('$1', 'trigger')) THEN
-      RAISE EXCEPTION insufficient_privilege USING
-            MESSAGE = 'Error on ' || TG_OP || ' of $1'
-          , DETAIL = 'Key($2) = ($3): cannot_change_msg'
-          , HINT = 'restricted_hint_msg';
-    END IF;
-})dnl
-changequote(`,')dnl
 
 
 dnl Turn output back on
