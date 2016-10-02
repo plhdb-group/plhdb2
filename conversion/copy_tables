@@ -38,16 +38,6 @@ fi
 sourcedb=$1
 targetdb=$2
 
-copy_table() {
-  local fromdb=$1
-  local todb=$2
-  local table=$3
-
-  pg_dump -U plhdb_admin -Fc --data-only \
-          --table=plhdb.$table --dbname=$fromdb \
-    | pg_restore -U plhdb_admin --dbname $todb
-}
-
 make_biography_sql() {
 cat - <<\EOF
     --
@@ -292,10 +282,6 @@ EOF
                     FROM femalefertilityinterval; END;$$;';
 EOF
 }
-
-#for t in '' ; do
-#  copy_table $sourcedb $targetdb $t
-#done
 
 
 {
