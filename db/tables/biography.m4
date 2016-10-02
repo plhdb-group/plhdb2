@@ -219,7 +219,11 @@ COMMENT ON COLUMN biography.birthdate IS
 'Birth date. Animal''s birthdate. The birthdate is either the exactly
 known date of birth or it is with a range of possible birthdates.
 
-The BirthDate must be on or after plh_minbirth.';
+The BirthDate must be on or after plh_minbirth.
+
+Caution: The automatic data integrity check for early BirthDates does
+not provide adequate per-study data integrity.';
+
 
 COMMENT ON COLUMN biography.bdmin IS
 'Estimated earliest birth date. Must differ from Birthdate whenever
@@ -276,7 +280,10 @@ indicates group membership from that date. Study population is the
 studied population at the time of the animal''s entry into it.
 
 EntryDate must be on or after plh_minentry.
-EntryDate must be on or before today''s date.';
+EntryDate must be on or before today''s date.
+
+Caution: The automatic data integrity check for early EntryDates does
+not provide adequate per-study data integrity.';
 
 COMMENT ON COLUMN biography.entrytype IS
 'Type of entry into population. Birth, immigration, start of confirmed
