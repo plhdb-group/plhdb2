@@ -144,6 +144,16 @@ if [ "$fix" = "y" ] ; then
               AND ABS((birthdate::DATE - bdmin::DATE)
                       - (bdmax::DATE - birthdate::DATE))
                      > 1 ;
+
+      -- Change non-female individuals who have fertility intervals
+      -- to female.
+      UPDATE fixed_biography
+        SET sex = 'F'
+        WHERE sex <> 'F'
+              AND EXISTS (
+                    SELECT 1
+                      FROM femalefertilityinterval AS ffi
+                      WHERE ffi.anim_oid = fixed_biography.anim_oid);
 EOF
 fi
 
