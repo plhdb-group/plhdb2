@@ -69,8 +69,8 @@ CREATE FUNCTION femalefertilityinterval_func ()
           MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
-                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Individuals with BIOGRAPHY.MomOnly = TRUE '
                    || 'cannot have related FEMALEFERTILITYINTERVAL rows';
   END IF;
@@ -86,8 +86,8 @@ CREATE FUNCTION femalefertilityinterval_func ()
           MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
-                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.Sex) = (' || this_sex
                    || '): Only individuals with BIOGRAPHY.Sex = '
                    || '''plh_female'' can have related '
@@ -109,8 +109,8 @@ CREATE FUNCTION femalefertilityinterval_func ()
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StopDate) = (' || NEW.stopdate
-                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.DepartDate) = (' || this_departdate
                    || '): Value (BIOGRAPHY.DepartDateError) = ('
                    || this_departdateerror
