@@ -136,11 +136,11 @@ EOF
 
 # Hardcode the end events, which come from the old cvterm table.
 psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
-INSERT INTO end_event (code, description)
-  VALUES ('O', 'end of observation')
-       , ('D', 'death')
-       , ('E', 'emigration from population')
-       , ('P', 'permanent disappearance');
+INSERT INTO end_event (code, description, final)
+  VALUES ('O', 'end of observation', FALSE)
+       , ('D', 'death', TRUE)
+       , ('E', 'emigration from population', FALSE)
+       , ('P', 'permanent disappearance', TRUE);
 EOF
 
 
