@@ -29,7 +29,8 @@ CREATE TABLE end_event (
     sensible_whitespace(`Code')
 , description VARCHAR(64) NOT NULL
     empty_string_check(`Description')
-    sensible_whitespace(`Description'));
+    sensible_whitespace(`Description')
+, final BOOLEAN NOT NULL);
 
 grant_priv(`end_event', `code')
 grant_demo_user_priv(`end_event')
@@ -50,6 +51,17 @@ code identifies the row within the database.';
 
 COMMENT ON COLUMN end_event.description IS
 'A unique description of the end of observation type.';
+
+COMMENT ON COLUMN end_event.final IS
+'A boolean value.  When TRUE indicates that no other events may follow.
+Death is an example end event where Final should be TRUE.
+
+This flag may impose additional requirements; this is dependent upon
+the table referencing the END_EVENT row.  For more information see the
+documentation of each table which uses END_EVENT for vocabulary
+control.
+
+The value of this column may not be NULL.';
 
 
 CREATE UNIQUE INDEX end_event_description ON end_event (description);
