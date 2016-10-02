@@ -22,6 +22,7 @@ include(`copyright.m4')
 include(`tablemacros.m4')
 include(`grants.m4')
 include(`constants.m4')
+include(`globalmacros.m4')
 
 dnl plpgsql fragment to allow NULL column content only when MomOnly is TRUE
 dnl
@@ -65,9 +66,8 @@ CREATE TABLE biography (
      CONSTRAINT "Birthdate must be <= BDMax"
                 CHECK(birthdate <= bdmax)
      null_only_when_momonly(`BDMax')
-     CONSTRAINT "BDMax must be <= DepartDate when DepartDateError = 0"
-                CHECK(departdateerror <> 0
-                      OR bdmax <= departdate)
+     CONSTRAINT "BDMax must be <= DepartDate plus DepartDateError years"
+                CHECK(bdmax <= plh_last_departdate_inline)
  , bddist CHAR(1)
      null_only_when_momonly(`BDDist')
      CONSTRAINT "BDDist must be a PROBABILITY_TYPE.Code value"
@@ -157,6 +157,8 @@ BDMin must be NULL or on or before BirthDate.
 BDMin may be NULL only when MomOnly is TRUE.
 BDMax must be NULL or on or after BirthDate.
 BDMax may be NULL only when MomOnly is TRUE.
+BDMax may not be after the sum DepartDate plus DepartDateError number
+  of years.
 BDDist may be NULL only when MomOnly is TRUE.
 Sex must be ''plh_female'' when MomOnly is TRUE.
 Entrydate must be on or before DepartDate.

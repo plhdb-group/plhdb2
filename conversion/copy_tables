@@ -84,6 +84,7 @@ if [ "$fix" = "y" ] ; then
       -- Apply "fixes" to the data.
 
       -- departdate/departdateerror/bdmax problem.  (4 rows)
+      -- Just happens that that's the only bdmax/departdate problems.
       UPDATE fixed_biography
         SET departdate = bdmax
         WHERE departdate < bdmax
