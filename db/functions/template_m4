@@ -52,3 +52,6 @@ CREATE OR REPLACE FUNCTION template()
   END;
 $$;
 grant_func_priv(`template()')
+
+COMMENT ON FUNCTION template() IS
+'';
