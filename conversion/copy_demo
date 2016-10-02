@@ -45,108 +45,10 @@ sourcedb=$2
 targetdb=$3
 
 
-# Site
-{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
-        SELECT FORMAT(
-            'INSERT INTO site (siteid, name, latitude, longitude'
-            '                , geodetic_datum) '
-            'VALUES (%s, %s, %s, %s, %s);'
-          , site_oid, quote_literal(name)
-          , CASE WHEN latitude IS NULL
-                   THEN 'NULL'
-                   ELSE latitude::TEXT END
-          , CASE WHEN longitude IS NULL
-                   THEN 'NULL'
-                   ELSE longitude::TEXT END
-          , CASE WHEN geodetic_datum IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(geodetic_datum) END)
-          FROM plhdb.site;
-
-        -- Update sequence.
-        SELECT 'DO $$ BEGIN
-                  PERFORM SETVAL(''site_siteid_seq''
-                              , MAX(site.siteid))
-                    FROM site; END;$$';
-EOF
-} \
-  | psql -q --tuples-only -U plhdb_admin $targetdb
-
-# Taxon
-{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
-        SELECT FORMAT(
-            'INSERT INTO taxon (taxonid, scientific_name, common_name) '
-            'VALUES (%s, %s, %s);'
-          , taxon_oid, quote_literal(scientific_name)
-          , CASE WHEN common_name IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(common_name) END)
-          FROM plhdb.taxon;
-
-        -- Update sequence.
-        SELECT 'DO $$ BEGIN
-                  PERFORM SETVAL(''taxon_taxonid_seq''
-                              , MAX(taxon.taxonid))
-                    FROM taxon; END;$$';
-EOF
-} \
-  | psql -q --tuples-only -U plhdb_admin $targetdb
-
-# Study
-{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
-        SELECT FORMAT(
-            'INSERT INTO study (sid, name, owners, taxonid, siteid) '
-            'VALUES (%s, %s, %s, %s, %s);'
-          , quote_literal(id)
-          , CASE WHEN name IS NULL
-                   THEN 'NULL'
-                   ELSE quote_literal(name) END
-          , quote_literal(owners), taxon_oid, site_oid)
-          FROM plhdb.study;
-EOF
-} \
-  | psql -q --tuples-only -U plhdb_admin $targetdb
-
-# Hardcode the probablity_types, which come from the old cvterm table.
-psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
-INSERT INTO probability_type (code, description, symmetrical)
-  VALUES ('N'
-        , 'Normal distribution.  Construct the birth date probability '
-          'distribution so that BDMin and BDMax represent + 2 '
-          'standard deviations of Birthdate.  Birthdate must be '
-          'at the midpoint of BDMin and BDMax, or one of the 2 midpoint '
-          'dates when there are an even number of days in the BDMin to '
-          'BDMax interval'
-        , TRUE)
-       , ('U'
-        , 'Uniform distribution.  The probability distribution is '
-          'truncated at BDMin and BDMax with equal Birthdate '
-          'probability within this range.'
-        , FALSE);
-EOF
-
-# Hardcode the start events, which come from the old cvterm table.
-psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
-INSERT INTO start_event (code, description, initial)
-  VALUES ('B', 'birth', TRUE)
-       , ('I', 'immigration into population', FALSE)
-       , ('C', 'confirmed identification', FALSE)
-       , ('O', 'beginning of observation', FALSE);
-EOF
-
-# Hardcode the end events, which come from the old cvterm table.
-psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
-INSERT INTO end_event (code, description, final)
-  VALUES ('O', 'end of observation', FALSE)
-       , ('D', 'death', TRUE)
-       , ('E', 'emigration from population', FALSE)
-       , ('P', 'permanent disappearance', TRUE);
-EOF
-
-
-# Biography and femalefertilityinterval
-
-{ psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
+{ m4 -D site_key=siteid -D taxon_key=taxonid -D study_key=sid convert.m4
+  {
+  # Biography and femalefertilityinterval
+  psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
   SELECT biography.studyid, biography.animid, biography.momid
     FROM biography
     ORDER BY biography.birthdate;
@@ -169,6 +71,7 @@ EOF
                               , MAX(femalefertilityinterval.ffiid))
                     FROM femalefertilityinterval; END;$$;';
 EOF
+    } \
     } \
   | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
   | psql -q --tuples-only -U plhdb_admin $targetdb
