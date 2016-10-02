@@ -51,16 +51,16 @@ include ../defaults.mk
 $(COPYRIGHT): $(COPYRIGHTSRC) $(DEPS)
 	make -C $(INCLUDE) $$(basename $(COPYRIGHT))
 
-makepolicyfunctions.sql: $(SQLFILES) $(COPYRIGHT) $(DEPS)
-	cat $(COPYRIGHT) $(SQLFILES) > makepolicyfunctions.sql
+makepolicyfunctions.sql: $(POLICYSQLFILES) $(COPYRIGHT) $(DEPS)
+	cat $(COPYRIGHT) $(POLICYSQLFILES) > makepolicyfunctions.sql
 
 destroypolicyfunctions.sql: destroypolicyfunctions.m4 \
                             include/*.m4 $(INCLUDE)/*.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include destroypolicyfunctions.m4 \
 	  > destroypolicyfunctions.sql
 
-makeotherfunctions.sql: $(SQLFILES) $(COPYRIGHT) $(DEPS)
-	cat $(COPYRIGHT) $(SQLFILES) > makeotherfunctions.sql
+makeotherfunctions.sql: $(OTHERSQLFILES) $(COPYRIGHT) $(DEPS)
+	cat $(COPYRIGHT) $(OTHERSQLFILES) > makeotherfunctions.sql
 
 destroyotherfunctions.sql: destroyotherfunctions.m4 \
                            include/*.m4 $(INCLUDE)/*.m4 $(DEPS)
