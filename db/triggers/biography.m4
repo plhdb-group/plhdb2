@@ -209,7 +209,7 @@ CREATE FUNCTION biography_func ()
       END IF;
     END IF;
 
-  END IF;
+  END IF;  -- UPDATE
   
 
   RETURN NULL;
