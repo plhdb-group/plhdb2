@@ -104,6 +104,8 @@ CREATE TABLE biography (
      CONSTRAINT "EntryDate <= DepartDate"
                 CHECK(entrydate <= departdate)
      null_only_when_momonly(`EntryDate')
+     CONSTRAINT "EntryDate must be on or after plh_minentry"
+                CHECK('plh_minentry' <= entrydate)
      CONSTRAINT "EntryDate must be on or before today's date"
                 CHECK(entrydate <= current_date)
  , entrytype VARCHAR(8)
@@ -273,6 +275,7 @@ recognized and ID''d as of that date or because strong inference
 indicates group membership from that date. Study population is the
 studied population at the time of the animal''s entry into it.
 
+EntryDate must be on or after plh_minentry.
 EntryDate must be on or before today''s date.';
 
 COMMENT ON COLUMN biography.entrytype IS

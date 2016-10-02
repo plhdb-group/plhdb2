@@ -45,6 +45,9 @@ define(`plh_death', `D')
 dnl BIOGRAPHY.BirthDate
 define(`plh_minbirth', `1910-01-01')
 
+dnl BIOGRAPHY.EntryDate
+define(`plh_minentry', `1960-01-01')
+
 dnl BIOGRAPHY.BGQual
 define(`plh_bgcertain',   `C')
 define(`plh_bguncertain', `U')
