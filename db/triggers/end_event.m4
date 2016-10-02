@@ -51,11 +51,6 @@ CREATE FUNCTION end_event_func ()
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
 
-  IF TG_OP = 'UPDATE' THEN
-    -- Death is a hardcoded constant.
-    restrict_change(`END_EVENT', `Code', `plh_death')
-  END IF;
-
   RETURN NULL;
   END;
 $$;
@@ -74,9 +69,6 @@ CREATE FUNCTION end_event_delete_func ()
   DECLARE
 
   BEGIN
-
-  -- Death is an hardcoded constant.
-  restrict_delete(`END_EVENT', `Code', `plh_death')  
 
   RETURN NULL;
   END;
