@@ -308,9 +308,9 @@ The vocabularly for this column is defined by the END_EVENT table.';
 COMMENT ON COLUMN biography.departdateerror IS
 'Time between departdate and the first time that the animal was
 confirmed missing.  Expressed as fraction of a year (number of days
-divided by number of days in a year).  Assign a zero to
-DepartdateError only if the number of day between departdate and the
-first time that the animal was confirmed missing was < 15.';
+divided by plh_days_in_year).  Assign a zero to DepartdateError only if
+the number of day between departdate and the first time that the animal
+was confirmed missing was < 15.';
 
 -- Unique indexes, for utility but also to enforce data integrity!
 CREATE UNIQUE INDEX biography_studyid_animid

@@ -30,6 +30,9 @@ dnl
 dnl Turn output off.  This file produces no output.
 divert(-1)
 
+dnl The number of days in a year.
+define(`plh_days_in_year', `365.25')
+
 dnl The row-level permissions
 define(`plh_search', `search')
 define(`plh_insert', `insert')
