@@ -50,8 +50,6 @@ copy_table() {
 
 make_biography_sql() {
 cat - <<\EOF
-  BEGIN;
-
     --
     -- Cleanup biography before dumping it.
     --
@@ -236,13 +234,11 @@ cat - <<\EOF
               PERFORM SETVAL(''biography_bid_seq''
                           , MAX(biography.bid))
                 FROM biography; END;$$;';
-  ROLLBACK;
 EOF
 }
 
 make_ffi_sql () {
   cat - <<\EOF
-      BEGIN;
     SELECT *
       INTO TEMP TABLE fixed_ffi
       FROM femalefertilityinterval;
@@ -277,7 +273,6 @@ EOF
                   PERFORM SETVAL(''femalefertilityinterval_ffiid_seq''
                               , MAX(femalefertilityinterval.ffiid))
                     FROM femalefertilityinterval; END;$$;';
-        ROLLBACK;
 EOF
 }
 
@@ -384,12 +379,11 @@ INSERT INTO end_event (code, description, final)
 EOF
 
 
-# Biography
-make_biography_sql \
-  | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
-  | psql -q --tuples-only -U plhdb_admin $targetdb
-
-# Femalefertilityinterval
-make_ffi_sql \
+{
+  echo 'BEGIN;'
+  make_biography_sql
+  make_ffi_sql
+  echo 'ROLLBACK;'
+} \
   | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
   | psql -q --tuples-only -U plhdb_admin $targetdb
