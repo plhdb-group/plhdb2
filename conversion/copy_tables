@@ -252,6 +252,23 @@ EOF
 
       -- Female fertility stop dates after departdate + error get changed
       -- to departdate + error.
+      WITH b AS (
+        SELECT bio.anim_oid AS bid
+             , bio.departdate::date + CEIL(bio.departdateerror * 365.25)::INT
+                 AS last_departdate
+          FROM fixed_biography AS bio
+          WHERE EXISTS (
+                  SELECT 1
+                    FROM fixed_ffi
+                    WHERE fixed_ffi.anim_oid = bio.anim_oid
+                          AND (bio.departdate::date
+                               + CEIL(bio.departdateerror * 365.25)::INT)
+                              < fixed_ffi.stopdate))
+      UPDATE fixed_ffi
+        SET stopdate = b.last_departdate
+        FROM b
+        WHERE b.bid = fixed_ffi.anim_oid
+              AND b.last_departdate < stopdate;
 EOF
   fi
 
