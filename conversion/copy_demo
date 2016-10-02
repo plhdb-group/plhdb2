@@ -47,13 +47,13 @@ targetdb=$3
 
 { m4 -D site_key=siteid -D taxon_key=taxonid -D study_key=sid convert.m4
   {
-  # Biography and femalefertilityinterval
-  psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
-  SELECT biography.studyid, biography.animid, biography.momid
-    FROM biography
-    ORDER BY biography.birthdate;
+    # Biography and femalefertilityinterval
+    psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $demodb <<\EOF
+    SELECT biography.studyid, biography.animid, biography.momid
+      FROM biography
+      ORDER BY biography.birthdate;
 EOF
-} \
+  } \
   | awk 'BEGIN {print "include(copy_both.m4)"; }
          {print "copy_both(" $1 ", " $2 ", " $3 ")";}' \
   | { m4 \
@@ -72,6 +72,6 @@ EOF
                     FROM femalefertilityinterval; END;$$;';
 EOF
     } \
-    } \
+} \
   | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
   | psql -q --tuples-only -U plhdb_admin $targetdb
