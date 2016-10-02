@@ -19,3 +19,5 @@ dnl Karl O. Pinc <kop@meme.com>
 dnl
 include(`copyright.m4')
 include(`functionmacros.m4')
+
+DROP FUNCTION IF EXISTS last_departdate(DATE, DOUBLE PRECISION) CASCADE;

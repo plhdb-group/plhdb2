@@ -32,7 +32,7 @@ POLICYINFILES := biography_all_access.m4 \
                  femalefertilityinterval_search_access.m4 \
                  femalefertilityinterval_insert_access.m4 \
                  femalefertilityinterval_edit_access.m4
-OTHERINFILES := 
+OTHERINFILES := last_departdate.m4
 POLICYSQLFILES := $(POLICYINFILES:.m4=.sql)
 OTHERSQLFILES := $(OTHERINFILES:.m4=.sql)
 SQLFILES := $(POLICYSQLFILES) $(OTHERSQLFILES)
