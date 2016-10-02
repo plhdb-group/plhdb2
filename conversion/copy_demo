@@ -127,11 +127,11 @@ EOF
 
 # Hardcode the start events, which come from the old cvterm table.
 psql -q --no-align -F ' ' -U plhdb_admin $targetdb <<EOF
-INSERT INTO start_event (code, description)
-  VALUES ('B', 'birth')
-       , ('I', 'immigration into population')
-       , ('C', 'confirmed identification')
-       , ('O', 'beginning of observation');
+INSERT INTO start_event (code, description, initial)
+  VALUES ('B', 'birth', TRUE)
+       , ('I', 'immigration into population', FALSE)
+       , ('C', 'confirmed identification', FALSE)
+       , ('O', 'beginning of observation', FALSE);
 EOF
 
 # Hardcode the end events, which come from the old cvterm table.
