@@ -48,7 +48,7 @@ copy_table() {
     | pg_restore -U plhdb_admin --dbname $todb
 }
 
-make_sql() {
+make_biography_sql() {
 cat - <<\EOF
   BEGIN;
 
@@ -344,7 +344,7 @@ EOF
 
 
 # Biography
-make_sql \
+make_biography_sql \
   | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
   | psql -q --tuples-only -U plhdb_admin $targetdb
 
