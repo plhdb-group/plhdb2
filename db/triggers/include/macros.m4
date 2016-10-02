@@ -58,7 +58,6 @@ dnl Strings used in error messages
 dnl
 define(`cannot_change_msg', `This row has special meaning to PLHDB and may not 
 be changed by ordinary users')dnl
-define(`cannot_delete_msg', `This row has special meaning to PLHDB and may not be deleted by ordinary users')dnl
 define(`restricted_hint_msg', `The change can only be made by a user who is allowed to create triggers on the table')dnl
 
 dnl plpgsql fragment for checking that a support table value cannot
@@ -81,26 +80,6 @@ define({restrict_change},{
           , DETAIL = 'Key($2) = ($3): cannot_change_msg'
           , HINT = 'restricted_hint_msg';
     END IF;
-})dnl
-changequote(`,')dnl
-
-dnl plpgsql fragment for checking that a value cannot be deleted by regular users
-dnl
-dnl Syntax: restrict_delete(table, column, value)
-dnl
-dnl table   The table
-dnl column  The column
-dnl value   The value that can't be deleted by ordinary users.
-dnl
-changequote({,})
-define({restrict_delete},{
-  IF OLD.$2 = '$3'
-     AND NOT(has_table_privilege('$1', 'trigger')) THEN
-    RAISE EXCEPTION insufficient_privilege USING
-          MESSAGE = 'Error on ' || TG_OP || ' of $1'
-        , DETAIL = 'Key($2) = ($3): cannot_delete_msg'
-        , HINT = 'restricted_hint_msg';
-  END IF;
 })dnl
 changequote(`,')dnl
 
