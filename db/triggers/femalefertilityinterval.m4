@@ -52,6 +52,9 @@ CREATE FUNCTION femalefertilityinterval_func ()
     this_sex biography.sex%TYPE;
     this_departdate biography.departdate%TYPE;
     this_departdateerror biography.departdateerror%TYPE;
+    this_startdate femalefertilityinterval.startdate%TYPE;
+    this_stopdate femalefertilityinterval.stopdate%TYPE;
+    this_ffiid femalefertilityinterval.ffiid%TYPE;
 
   BEGIN
   -- Function for femalefertilityinterval insert and update triggers
@@ -118,6 +121,35 @@ CREATE FUNCTION femalefertilityinterval_func ()
                    || '(DepartDateError years) of the related BIOGRAPHY '
                    || 'row; the computed last departure date is: '
                    || last_departdate(this_departdate, this_departdateerror);
+  END IF;
+
+  -- Female fertility intervals cannot overlap.
+  SELECT biography.studyid, biography.animid,
+         ffi.ffiid,  ffi.startdate,  ffi.stopdate
+    INTO this_studyid,      this_animid,
+         this_ffiid, this_startdate, this_stopdate
+    FROM femalefertilityinterval AS ffi
+         JOIN biography ON (biography.bid = NEW.bid)
+    WHERE ffi.ffiid <> NEW.ffiid
+          AND ffi.bid = NEW.bid
+          AND ((NEW.startdate <= ffi.startdate
+                AND ffi.startdate <= NEW.stopdate)
+               OR (NEW.startdate <= ffi.stopdate
+                   AND ffi.stopdate <= NEW.stopdate));
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+                   || '): Value (BId) = (' || NEW.Bid
+                   || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
+                   || '): Value(StartDate) = (' || NEW.startdate
+                   || '): Value(StopDate) = (' || NEW.stopdate
+                   || '): Key(Other FFIId) = (' || this_ffiid
+                   || '): Value(Other StartDate) = (' || this_startdate
+                   || '): Value(Other StopDate) = (' || this_stopdate
+                   || '): The female fertility intervals of a single '
+                   || 'individual cannot overlap';
   END IF;
 
   RETURN NULL;
