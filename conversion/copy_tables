@@ -260,6 +260,14 @@ EOF
         FROM b
         WHERE b.bid = fixed_ffi.anim_oid
               AND b.last_departdate < stopdate;
+
+      -- Fertility intervals cannot overlap
+      -- Change Study 7, animid 'CT--', startdate 2004-01-01 to stopdate
+      -- 2015-03-31.  Bump startdate so it does not overlap 2001-01-01
+      -- to 2004-09-01.
+      UPDATE fixed_ffi
+        SET startdate = '2004-09-02'
+        WHERE fixed_ffi.interval_oid = 15287;
 EOF
   fi
 
