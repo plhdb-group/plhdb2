@@ -275,6 +275,11 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
+  DECLARE
+    this_ffiid femalefertilityinterval.ffiid%TYPE;
+    this_stopdate femalefertilityinterval.stopdate%TYPE;
+    this_stoptype femalefertilityinterval.stoptype%TYPE;
+
   BEGIN
 
   -- Get the latest values of the row
@@ -284,6 +289,36 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
     -- Nothing to do.
     RETURN NULL;
   END IF;
+
+  IF TG_OP = 'UPDATE' THEN
+    -- Final StopTypes mean StopDate = DepartDate.
+    IF NEW.departdate <> OLD.departdate THEN
+      SELECT ffi.ffiid,  ffi.stopdate,  ffi.stoptype
+        INTO this_ffiid, this_stopdate, this_stoptype
+        FROM femalefertilityinterval AS ffi
+             JOIN end_event ON (end_event.code = ffi.stoptype)
+        WHERE ffi.bid = NEW.bid
+              AND ffi.stopdate <> NEW.departdate
+              AND end_event.final;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (DepartDate) = (' || NEW.departdate
+                     || '): Key(FEMALEFERTILITYINTERVAL.FFIId) = ('
+                     || this_ffiid
+                     || '): Value(FEMALEFERTILITYINTERVAL.StopDate) = ('
+                     || this_stopdate
+                     || '): Value(FEMALEFERTILITYINTERVAL.StopType) = ('
+                     || this_stoptype
+                     || '): FEMALEFERTILITYINTERVAL.StopDate must be the '
+                     || 'DepartDate when StopType is a Final STOP_EVENT';
+
+      END IF;
+    END IF;
+  END IF;  -- UPDATE
 
   RETURN NULL;
   END;

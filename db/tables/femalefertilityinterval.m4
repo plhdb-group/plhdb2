@@ -65,6 +65,11 @@ The StopDate cannot be after the date from the related individual''s
 BIOGRAPHY row given by the formula (DepartDate plus (DepartDateError
 number of years)).
 
+Rows with a StopType flagged as Final on the END_EVENT table must have
+a StopDate equal to the related BIOGRAPHY row''s DepartDate.  This
+condition is checked on transaction commit, except in the case where
+END_EVENT.Final is altered.
+
 TIP: Use the FEMALEFERTILITYINTERVALS view to see AnimId and StudyId
 columns.  FEMALEFERTILITYINTERVALS is identical to this table but for
 the additional columns.';

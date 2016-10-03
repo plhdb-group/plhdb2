@@ -40,8 +40,8 @@ changequote(`,')dnl
 --
 SELECT 'end_event' AS table;
 
-SELECT 'end_event_func' AS function;
-CREATE FUNCTION end_event_func ()
+SELECT 'end_event_update_func' AS function;
+CREATE FUNCTION end_event_update_func ()
   RETURNS trigger
   LANGUAGE plpgsql
   plh_function_set_search_path
@@ -51,13 +51,33 @@ CREATE FUNCTION end_event_func ()
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
 
+  IF OLD.Final <> NEW.final
+    AND NEW.Final THEN
+    -- Final StopTypes mean StopDate = DepartDate.
+    PERFORM 1
+      FROM biography
+           JOIN femalefertilityinterval AS ffi ON (ffi.bid = biography.bid)
+      WHERE ffi.stoptype = NEW.code
+            AND biography.departdate <> ffi.stopdate;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on ' || TG_OP || ' of END_EVENT'
+        , DETAIL = 'Key(Code) = (' || NEW.code
+                   || '): Value (Final) = (' || NEW.final
+                   || '): Cannot make Final = TRUE; there is a related '
+                   || 'FEMALEFERTILITYINTERVAL row using this Code for '
+                   || 'a StopType but it''s related BIOGRAPHY.DepartDate '
+                   || 'is not the fertility interval StopDate';
+    END IF;
+  END IF;
+
   RETURN NULL;
   END;
 $$;
 
 
-SELECT 'end_event_trigger' AS trigger;
-CREATE TRIGGER end_event_trigger
-  AFTER INSERT OR UPDATE
+SELECT 'end_event_update_trigger' AS trigger;
+CREATE TRIGGER end_event_update_trigger
+  AFTER UPDATE
   ON end_event FOR EACH ROW
-  EXECUTE PROCEDURE end_event_func();
+  EXECUTE PROCEDURE end_event_update_func();
