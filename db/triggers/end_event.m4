@@ -56,33 +56,8 @@ CREATE FUNCTION end_event_func ()
 $$;
 
 
-SELECT 'end_event_delete_func' AS function;
-CREATE FUNCTION end_event_delete_func ()
-  RETURNS trigger
-  LANGUAGE plpgsql
-  plh_function_set_search_path
-  AS $$
-  -- Function for end_event delete trigger
-  --
-  -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
-
-  DECLARE
-
-  BEGIN
-
-  RETURN NULL;
-  END;
-$$;
-
-
 SELECT 'end_event_trigger' AS trigger;
 CREATE TRIGGER end_event_trigger
   AFTER INSERT OR UPDATE
   ON end_event FOR EACH ROW
   EXECUTE PROCEDURE end_event_func();
-
-SELECT 'end_event_delete_trigger' AS trigger;
-CREATE TRIGGER end_event_delete_trigger
-  AFTER DELETE
-  ON end_event FOR EACH ROW
-  EXECUTE PROCEDURE end_event_delete_func();
