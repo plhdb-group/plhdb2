@@ -237,6 +237,27 @@ CREATE FUNCTION biography_func ()
       END IF;
     END IF;
 
+    -- Individual cannot have female fertility intervals before
+    -- entry date.
+    IF NEW.entrydate <> OLD.entrydate
+       AND NEW.entrydate > OLD.entrydate THEN
+      PERFORM 1
+        FROM femalefertilityinterval AS ffi
+        WHERE ffi.bid = NEW.bid
+              AND ffi.startdate < NEW.entrydate;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (EntryDate) = (' || NEW.entrydate
+                     || '): There is a related FEMALEFERTILITYINTERVAL row '
+                     || 'which has a StartDate value before the new '
+                     || 'EntryDate';
+      END IF;
+    END IF;
+
   END IF;  -- UPDATE
   
 

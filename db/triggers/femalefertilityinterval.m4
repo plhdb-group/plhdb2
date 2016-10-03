@@ -50,6 +50,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
     this_studyid biography.studyid%TYPE;
     this_animid biography.animid%TYPE;
     this_sex biography.sex%TYPE;
+    this_entrydate biography.entrydate%TYPE;
     this_departdate biography.departdate%TYPE;
     this_departdateerror biography.departdateerror%TYPE;
     this_startdate femalefertilityinterval.startdate%TYPE;
@@ -121,6 +122,25 @@ CREATE FUNCTION femalefertilityinterval_func ()
                    || '(DepartDateError years) of the related BIOGRAPHY '
                    || 'row; the computed last departure date is: '
                    || last_departdate(this_departdate, this_departdateerror);
+  END IF;
+
+  -- StartDate cannot be before EntryDate.
+  SELECT biography.studyid, biography.animid, biography.entrydate
+    INTO this_studyid,      this_animid,      this_entrydate
+    FROM biography
+    WHERE biography.bid = NEW.bid
+          AND NEW.startdate < biography.entrydate;
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+                   || '): Value (BId) = (' || NEW.Bid
+                   || '): Value(StartDate) = (' || NEW.startdate
+                   || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
+                   || '): Value (BIOGRAPHY.EntryDate) = (' || this_entrydate
+                   || '): StartDate cannot be before the EntryDate '
+                   || 'of the related BIOGRAPHY row';
   END IF;
 
   -- Female fertility intervals cannot overlap.

@@ -58,6 +58,9 @@ fertility interval rows.
 FEMALEFERTILITYINTERVAL rows may only be related to those BIOGRAPHY
 rows which have a FALSE MomOnly value.
 
+The StartDate cannot be before the EntryDate of the related BIOGRAPHY
+row.
+
 The StopDate cannot be after the date from the related individual''s
 BIOGRAPHY row given by the formula (DepartDate plus (DepartDateError
 number of years)).
