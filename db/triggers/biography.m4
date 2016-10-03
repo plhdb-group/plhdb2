@@ -265,9 +265,41 @@ CREATE FUNCTION biography_func ()
   END;
 $$;
 
+SELECT 'biography_commit_func' AS function;
+CREATE OR REPLACE FUNCTION biography_commit_func()
+  RETURNS trigger
+  LANGUAGE plpgsql
+  plh_function_set_search_path
+  AS $$
+  -- Function for biography insert and update fired upon transaction commit.
+  --
+  -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
+  --
+  BEGIN
+
+  -- Get the latest values of the row
+  SELECT * INTO NEW FROM biography WHERE biography.bid = NEW.bid;
+  IF NOT FOUND THEN
+    -- Whatever row was inserted was subsequently deleted.
+    -- Nothing to do.
+    RETURN NULL;
+  END IF;
+
+  RETURN NULL;
+  END;
+$$;
+
 
 SELECT 'biography_trigger' AS trigger;
 CREATE TRIGGER biography_trigger
   AFTER INSERT OR UPDATE
   ON biography FOR EACH ROW
   EXECUTE PROCEDURE biography_func();
+
+SELECT 'biography_commit_trigger' AS trigger;
+CREATE CONSTRAINT TRIGGER biography_commit_trigger
+  AFTER INSERT OR UPDATE
+  ON biography
+  DEFERRABLE INITIALLY DEFERRED
+  FOR EACH ROW
+  EXECUTE PROCEDURE biography_commit_func();
