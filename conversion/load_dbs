@@ -21,6 +21,9 @@
 # Remarks:
 #   More or less, one-off program.
 #
+#   Must be run after the new databases (or at least the new roles)
+#   are created.
+#
 # Bugs:
 #  The comment on the plhdb_demo db does not restore.  We don't care.
 
@@ -35,11 +38,21 @@ loaddb() {
 
   createdb -U $ADMIN $newdb "Copy of old $db db before conversion."
 
-  printf "revoke connect on database $newdb from public;\n" \
-    | psql -U $ADMIN template1
+  { printf "revoke connect on database $newdb from public;\n"
+    printf "revoke connect on database $newdb from demo_user;\n"
+
+    printf "grant connect on database $newdb to plhdb_managers;\n"
+  } | psql -U $ADMIN template1
 
   dumpfile=/tmp/$db.custom
   pg_restore --no-privileges --no-owner -U $ADMIN -d $newdb $dumpfile
+
+  for schema in audit auth bulkimp plhdb public sandbox ; do
+    printf "grant usage on schema $schema to plhdb_managers;\n"
+    printf "grant select on all tables in schema $schema \n"
+    printf "             to plhdb_managers;\n"
+  done \
+  | psql -U $ADMIN $newdb
 }
 
 loaddb plhdb
