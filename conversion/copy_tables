@@ -261,6 +261,22 @@ EOF
         WHERE b.bid = fixed_ffi.anim_oid
               AND b.last_departdate < stopdate;
 
+      -- Female fertility start dates before entrydate
+
+      -- Get rid of row that looks like bunk
+      -- (Maybe it belongs to another individual, but what can we do?)
+      DELETE FROM fixed_ffi WHERE interval_oid = 15050;
+
+      -- Change startdate to entrydate
+      UPDATE fixed_ffi
+        SET startdate = b.entrydate
+--        , stopdate = CASE WHEN stopdate > b.entrydate
+--                            THEN stopdate
+--                          ELSE b.entrydate END
+        FROM fixed_biography AS b
+        WHERE b.anim_oid = fixed_ffi.anim_oid
+              AND fixed_ffi.startdate < b.entrydate;
+
       -- Fertility intervals cannot overlap
       -- Change Study 7, animid 'CT--', startdate 2004-01-01 to stopdate
       -- 2015-03-31.  Bump startdate so it does not overlap 2001-01-01
