@@ -30,5 +30,6 @@ DROP FUNCTION biography_func() CASCADE;
 DROP FUNCTION biography_commit_func() CASCADE;
 
 DROP FUNCTION femalefertilityinterval_func() CASCADE;
+DROP FUNCTION femalefertilityinterval_commit_func() CASCADE;
 
 DROP FUNCTION probability_type_update_func() CASCADE;

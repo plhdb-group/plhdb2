@@ -72,7 +72,7 @@ the additional columns.';
 
 COMMENT ON COLUMN femalefertilityinterval.ffiid IS
 'Unique row identifer, and hence the unique identifer of the female
-fertility interval.';
+fertility interval.  The value of this column cannot be changed.';
 
 COMMENT ON COLUMN femalefertilityinterval.bid IS
 'Unique identifer of the individual for which the row records a

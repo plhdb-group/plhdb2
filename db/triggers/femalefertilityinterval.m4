@@ -62,6 +62,10 @@ CREATE FUNCTION femalefertilityinterval_func ()
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
 
+  IF TG_OP = 'UPDATE' THEN
+    cannot_change(`FEMALEFERTILITYINTERVAL', `FFIId')
+  END IF;
+
   -- MomOnly rows cannot have related FEMALEFERTILITYINTERVAL rows.
   SELECT biography.studyid, biography.animid
     INTO this_studyid,      this_animid
@@ -176,9 +180,45 @@ CREATE FUNCTION femalefertilityinterval_func ()
   END;
 $$;
 
+SELECT 'femalefertilityinterval_commit_func' AS function;
+CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
+  RETURNS trigger
+  LANGUAGE plpgsql
+  plh_function_set_search_path
+  AS $$
+  -- Function for femalefertilityinterval insert and update
+  -- fired upon transaction commit.
+  --
+  -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
+  --
+  BEGIN
+
+  -- Get the latest values of the row
+  SELECT *
+    INTO NEW
+    FROM femalefertilityinterval
+    WHERE femalefertilityinterval.ffiid = NEW.ffiid;
+  IF NOT FOUND THEN
+    -- Whatever row was inserted was subsequently deleted.
+    -- Nothing to do.
+    RETURN NULL;
+  END IF;
+
+  RETURN NULL;
+  END;
+$$;
+
 
 SELECT 'femalefertilityinterval_trigger' AS trigger;
 CREATE TRIGGER femalefertilityinterval_trigger
   AFTER INSERT OR UPDATE
   ON femalefertilityinterval FOR EACH ROW
   EXECUTE PROCEDURE femalefertilityinterval_func();
+
+SELECT 'femalefertilityinterval_commit_trigger' AS trigger;
+CREATE CONSTRAINT TRIGGER femalefertilityinterval_commit_trigger
+  AFTER INSERT OR UPDATE
+  ON femalefertilityinterval
+  DEFERRABLE INITIALLY DEFERRED
+  FOR EACH ROW
+  EXECUTE PROCEDURE femalefertilityinterval_commit_func();
