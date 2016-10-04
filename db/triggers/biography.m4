@@ -290,33 +290,32 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
     RETURN NULL;
   END IF;
 
-    -- Final StopTypes mean StopDate = DepartDate.
-    IF NEW.departdate <> OLD.departdate THEN
-      SELECT ffi.ffiid,  ffi.stopdate,  ffi.stoptype
-        INTO this_ffiid, this_stopdate, this_stoptype
-        FROM femalefertilityinterval AS ffi
-             JOIN end_event ON (end_event.code = ffi.stoptype)
-        WHERE ffi.bid = NEW.bid
-              AND ffi.stopdate <> NEW.departdate
-              AND end_event.final;
-      IF FOUND THEN
-        RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
-            , DETAIL = 'Key(BId) = (' || NEW.bid
-                     || '): Value (StudyId) = (' || NEW.studyid
-                     || '): Value (AnimId) = (' || NEW.animid
-                     || '): Value (DepartDate) = (' || NEW.departdate
-                     || '): Key(FEMALEFERTILITYINTERVAL.FFIId) = ('
-                     || this_ffiid
-                     || '): Value(FEMALEFERTILITYINTERVAL.StopDate) = ('
-                     || this_stopdate
-                     || '): Value(FEMALEFERTILITYINTERVAL.StopType) = ('
-                     || this_stoptype
-                     || '): FEMALEFERTILITYINTERVAL.StopDate must be the '
-                     || 'DepartDate when StopType is a Final STOP_EVENT';
-
-      END IF;
+  -- Final StopTypes mean StopDate = DepartDate.
+  IF NEW.departdate <> OLD.departdate THEN
+    SELECT ffi.ffiid,  ffi.stopdate,  ffi.stoptype
+      INTO this_ffiid, this_stopdate, this_stoptype
+      FROM femalefertilityinterval AS ffi
+           JOIN end_event ON (end_event.code = ffi.stoptype)
+      WHERE ffi.bid = NEW.bid
+            AND ffi.stopdate <> NEW.departdate
+            AND end_event.final;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                   || '): Value (StudyId) = (' || NEW.studyid
+                   || '): Value (AnimId) = (' || NEW.animid
+                   || '): Value (DepartDate) = (' || NEW.departdate
+                   || '): Key(FEMALEFERTILITYINTERVAL.FFIId) = ('
+                   || this_ffiid
+                   || '): Value(FEMALEFERTILITYINTERVAL.StopDate) = ('
+                   || this_stopdate
+                   || '): Value(FEMALEFERTILITYINTERVAL.StopType) = ('
+                   || this_stoptype
+                   || '): FEMALEFERTILITYINTERVAL.StopDate must be the '
+                   || 'DepartDate when StopType is a Final STOP_EVENT';
     END IF;
+  END IF;
 
   RETURN NULL;
   END;
