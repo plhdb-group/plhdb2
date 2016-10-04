@@ -194,6 +194,7 @@ CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
   DECLARE
     this_studyid biography.studyid%TYPE;
     this_animid biography.animid%TYPE;
+    this_entrydate biography.entrydate%TYPE;
     this_departdate biography.departdate%TYPE;
 
   BEGIN
@@ -207,6 +208,28 @@ CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
     -- Whatever row was inserted was subsequently deleted.
     -- Nothing to do.
     RETURN NULL;
+  END IF;
+
+  -- Initial StartTypes mean StartDate = EntryDate.
+  SELECT biography.studyid, biography.animid, biography.entrydate
+    INTO this_studyid,      this_animid,      this_entrydate
+    FROM biography
+         JOIN start_event ON (start_event.code = NEW.starttype)
+    WHERE biography.bid = NEW.bid
+          AND biography.entrydate <> NEW.startdate
+          AND start_event.initial;
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on FEMALEFERTILITYINTERVAL ' || TG_OP || ' commit'
+        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+                   || '): Value (BId) = (' || NEW.Bid
+                   || '): Value(StartDate) = (' || NEW.startdate
+                   || '): Value(StartType) = (' || NEW.starttype
+                   || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
+                   || '): Value (BIOGRAPHY.EntryDate) = (' || this_entrydate
+                   || '): StartDate must be the BIOGRAPHY.EntryDate when '
+                   || 'StartType is an Initial START_EVENT';
   END IF;
 
   -- Final StopTypes mean StopDate = DepartDate.

@@ -277,6 +277,8 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
   --
   DECLARE
     this_ffiid femalefertilityinterval.ffiid%TYPE;
+    this_startdate femalefertilityinterval.startdate%TYPE;
+    this_starttype femalefertilityinterval.starttype%TYPE;
     this_stopdate femalefertilityinterval.stopdate%TYPE;
     this_stoptype femalefertilityinterval.stoptype%TYPE;
 
@@ -288,6 +290,33 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
     -- Whatever row was updated was subsequently deleted.
     -- Nothing to do.
     RETURN NULL;
+  END IF;
+
+  -- Initial StartTypes mean StartDate = EntryDate.
+  IF NEW.entrydate <> OLD.entrydate THEN
+    SELECT ffi.ffiid,  ffi.startdate,  ffi.starttype
+      INTO this_ffiid, this_startdate, this_starttype
+      FROM femalefertilityinterval AS ffi
+           JOIN start_event ON (start_event.code = ffi.starttype)
+      WHERE ffi.bid = NEW.bid
+            AND ffi.startdate <> NEW.entrydate
+            AND start_event.initial;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                   || '): Value (StudyId) = (' || NEW.studyid
+                   || '): Value (AnimId) = (' || NEW.animid
+                   || '): Value (EntryDate) = (' || NEW.entrydate
+                   || '): Key(FEMALEFERTILITYINTERVAL.FFIId) = ('
+                   || this_ffiid
+                   || '): Value(FEMALEFERTILITYINTERVAL.StartDate) = ('
+                   || this_startdate
+                   || '): Value(FEMALEFERTILITYINTERVAL.StartType) = ('
+                   || this_starttype
+                   || '): FEMALEFERTILITYINTERVAL.StartDate must be the '
+                   || 'EntryDate when StartType is an Initial START_EVENT';
+    END IF;
   END IF;
 
   -- Final StopTypes mean StopDate = DepartDate.

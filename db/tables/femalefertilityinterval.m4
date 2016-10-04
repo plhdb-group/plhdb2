@@ -65,6 +65,11 @@ The StopDate cannot be after the date from the related individual''s
 BIOGRAPHY row given by the formula (DepartDate plus (DepartDateError
 number of years)).
 
+Rows with a StartType flagged as Initial on the START_EVENT table must
+have a StartDate equal to the related BIOGRAPHY row''s EntryDate.  This
+condition is checked on transaction commit, except in the case where
+START_EVENT.Initial is altered.
+
 Rows with a StopType flagged as Final on the END_EVENT table must have
 a StopDate equal to the related BIOGRAPHY row''s DepartDate.  This
 condition is checked on transaction commit, except in the case where
