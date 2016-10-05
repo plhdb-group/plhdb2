@@ -20,7 +20,7 @@
 
 INFILES := $(wildcard *.m4)
 SQLFILES := $(INFILES:.m4=.sql)
-TARGETS := $(SQLFILES) makepolicy.sql
+TARGETS := $(SQLFILES) makepolicy.sql destroypolicy.sql
 
 INCLUDE := ../include
 COPYRIGHT := $(INCLUDE)/copyright.sql
