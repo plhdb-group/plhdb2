@@ -43,8 +43,9 @@ grant_row_level_priv(`femalefertilityinterval', `ffiid')
 grant_demo_user_priv(`femalefertilityinterval')
 
 
-COMMENT ON TABLE femalefertilityinterval IS
-'One row per observed fertility interval of a female animal.
+COMMENT ON TABLE femalefertilityinterval IS 
+'One row per uninterrupted period of observation on a female; during
+which no possible births would have been missed.
 
 Access to rows in FEMALEFERTILITYINTERVALS is controlled, on a
 per-study basis, by the PERMISSION table.
