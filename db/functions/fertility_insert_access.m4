@@ -25,7 +25,7 @@ include(`functionmacros.m4')
 dnl
 
 CREATE OR REPLACE FUNCTION
-       femalefertilityinterval_insert_access(this_bid INT)
+       fertility_insert_access(this_bid INT)
   RETURNS BOOLEAN
   LANGUAGE plpgsql
   STABLE
@@ -37,13 +37,13 @@ CREATE OR REPLACE FUNCTION
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
-  -- Syntax: femalefertilityinterval_insert_access()
+  -- Syntax: fertility_insert_access()
   --
   -- Arguments:
   --   studyid  STUDY.SId of the related biography row
   --
   -- Remarks:
-  --   Defines the insert_access policy for the FEMALEFERTILITYINTERVAL table.
+  --   Defines the insert_access policy for the FERTILITY table.
   --
   -- Bugs:
 
@@ -64,4 +64,4 @@ CREATE OR REPLACE FUNCTION
 
   END;
 $$;
-grant_func_priv(`femalefertilityinterval_insert_access(INT)')
+grant_func_priv(`fertility_insert_access(INT)')

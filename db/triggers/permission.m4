@@ -64,13 +64,13 @@ define({grant_update},{
                 'ON SEQUENCE biography_bid_seq '
                 'TO ' || NEW.username || ';';
       EXECUTE 'GRANT UPDATE '
-                'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+                'ON SEQUENCE fertility_ffiid_seq '
                 'TO ' || NEW.username || ';';
       EXECUTE 'GRANT USAGE '
                 'ON SEQUENCE biography_bid_seq '
                 'TO ' || NEW.username || ';';
       EXECUTE 'GRANT USAGE '
-                'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+                'ON SEQUENCE fertility_ffiid_seq '
                 'TO ' || NEW.username || ';';
 })dnl
 changequote(`,')dnl
@@ -153,7 +153,7 @@ CREATE FUNCTION permission_func ()
               'ON SEQUENCE biography_bid_seq '
               'TO ' || NEW.username || ';';
     EXECUTE 'GRANT SELECT '
-              'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+              'ON SEQUENCE fertility_ffiid_seq '
               'TO ' || NEW.username || ';';
     IF NEW.access <> 'plh_search' THEN
       grant_update()
@@ -203,7 +203,7 @@ CREATE FUNCTION permission_delete_func ()
               'ON SEQUENCE biography_bid_seq '
               'FROM ' || OLD.username || ';';
     EXECUTE 'REVOKE SELECT '
-              'ON SEQUENCE femalefertilityinterval_ffiid_seq '
+              'ON SEQUENCE fertility_ffiid_seq '
               'FROM ' || OLD.username || ';';
   END IF;
 

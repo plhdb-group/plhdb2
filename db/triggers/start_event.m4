@@ -56,7 +56,7 @@ CREATE FUNCTION start_event_update_func ()
     -- Initial StartTypes mean StartDate = EntryDate.
     PERFORM 1
       FROM biography
-           JOIN femalefertilityinterval AS ffi ON (ffi.bid = biography.bid)
+           JOIN fertility AS ffi ON (ffi.bid = biography.bid)
       WHERE ffi.starttype = NEW.code
             AND biography.entrydate <> ffi.startdate;
     IF FOUND THEN
@@ -65,7 +65,7 @@ CREATE FUNCTION start_event_update_func ()
         , DETAIL = 'Key(Code) = (' || NEW.code
                    || '): Value (Initial) = (' || NEW.initial
                    || '): Cannot make Initial = TRUE; there is a related '
-                   || 'FEMALEFERTILITYINTERVAL row using this Code for '
+                   || 'FERTILITY row using this Code for '
                    || 'a StartType but it''s related BIOGRAPHY.EntryDate '
                    || 'is not the fertility interval StartDate';
     END IF;

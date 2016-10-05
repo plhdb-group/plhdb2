@@ -56,7 +56,7 @@ CREATE FUNCTION end_event_update_func ()
     -- Final StopTypes mean StopDate = DepartDate.
     PERFORM 1
       FROM biography
-           JOIN femalefertilityinterval AS ffi ON (ffi.bid = biography.bid)
+           JOIN fertility AS ffi ON (ffi.bid = biography.bid)
       WHERE ffi.stoptype = NEW.code
             AND biography.departdate <> ffi.stopdate;
     IF FOUND THEN
@@ -65,7 +65,7 @@ CREATE FUNCTION end_event_update_func ()
         , DETAIL = 'Key(Code) = (' || NEW.code
                    || '): Value (Final) = (' || NEW.final
                    || '): Cannot make Final = TRUE; there is a related '
-                   || 'FEMALEFERTILITYINTERVAL row using this Code for '
+                   || 'FERTILITY row using this Code for '
                    || 'a StopType but it''s related BIOGRAPHY.DepartDate '
                    || 'is not the fertility interval StopDate';
     END IF;

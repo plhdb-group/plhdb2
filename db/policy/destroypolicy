@@ -23,9 +23,9 @@ DROP POLICY IF EXISTS search_access ON biography;
 DROP POLICY IF EXISTS insert_access ON biography;
 DROP POLICY IF EXISTS edit_access ON biography;
 
-DROP POLICY IF EXISTS all_access ON femalefertilityinterval;
-DROP POLICY IF EXISTS search_access ON femalefertilityinterval;
-DROP POLICY IF EXISTS insert_access ON femalefertilityinterval;
-DROP POLICY IF EXISTS edit_access ON femalefertilityinterval;
+DROP POLICY IF EXISTS all_access ON fertility;
+DROP POLICY IF EXISTS search_access ON fertility;
+DROP POLICY IF EXISTS insert_access ON fertility;
+DROP POLICY IF EXISTS edit_access ON fertility;
 
 

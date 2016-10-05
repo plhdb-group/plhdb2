@@ -25,7 +25,7 @@ include(`functionmacros.m4')
 dnl
 
 CREATE OR REPLACE FUNCTION
-       femalefertilityinterval_all_access(this_bid INT)
+       fertility_all_access(this_bid INT)
   RETURNS BOOLEAN
   LANGUAGE plpgsql
   STABLE
@@ -37,13 +37,13 @@ CREATE OR REPLACE FUNCTION
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
-  -- Syntax: femalefertilityinterval_all_access()
+  -- Syntax: fertility_all_access()
   --
   -- Arguments:
   --   studyid  STUDY.SId of the related biography row
   --
   -- Remarks:
-  --   Defines the all_access policy for the FEMALEFERTILITYINTERVAL table.
+  --   Defines the all_access policy for the FERTILITY table.
   --
   -- Bugs:
 
@@ -63,4 +63,4 @@ CREATE OR REPLACE FUNCTION
 
   END;
 $$;
-grant_func_priv(`femalefertilityinterval_all_access(INT)')
+grant_func_priv(`fertility_all_access(INT)')

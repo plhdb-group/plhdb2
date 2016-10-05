@@ -36,12 +36,12 @@ define({BLAH},{
 changequote(`,')dnl
 
 --  
--- femalefertilityinterval
+-- fertility
 --
-SELECT 'femalefertilityinterval' AS table;
+SELECT 'fertility' AS table;
 
-SELECT 'femalefertilityinterval_func' AS function;
-CREATE FUNCTION femalefertilityinterval_func ()
+SELECT 'fertility_func' AS function;
+CREATE FUNCTION fertility_func ()
   RETURNS trigger
   LANGUAGE plpgsql
   plh_function_set_search_path
@@ -53,20 +53,20 @@ CREATE FUNCTION femalefertilityinterval_func ()
     this_entrydate biography.entrydate%TYPE;
     this_departdate biography.departdate%TYPE;
     this_departdateerror biography.departdateerror%TYPE;
-    this_startdate femalefertilityinterval.startdate%TYPE;
-    this_stopdate femalefertilityinterval.stopdate%TYPE;
-    this_ffiid femalefertilityinterval.ffiid%TYPE;
+    this_startdate fertility.startdate%TYPE;
+    this_stopdate fertility.stopdate%TYPE;
+    this_ffiid fertility.ffiid%TYPE;
 
   BEGIN
-  -- Function for femalefertilityinterval insert and update triggers
+  -- Function for fertility insert and update triggers
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
 
   IF TG_OP = 'UPDATE' THEN
-    cannot_change(`FEMALEFERTILITYINTERVAL', `FFIId')
+    cannot_change(`FERTILITY', `FFIId')
   END IF;
 
-  -- MomOnly rows cannot have related FEMALEFERTILITYINTERVAL rows.
+  -- MomOnly rows cannot have related FERTILITY rows.
   SELECT biography.studyid, biography.animid
     INTO this_studyid,      this_animid
     FROM biography
@@ -74,16 +74,16 @@ CREATE FUNCTION femalefertilityinterval_func ()
           AND biography.momonly;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+          MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Individuals with BIOGRAPHY.MomOnly = TRUE '
-                   || 'cannot have related FEMALEFERTILITYINTERVAL rows';
+                   || 'cannot have related FERTILITY rows';
   END IF;
 
-  -- Non-female individuals cannot have related FEMALEFERTILITYINTERVAL rows.
+  -- Non-female individuals cannot have related FERTILITY rows.
   SELECT biography.studyid, biography.animid, biography.sex
     INTO this_studyid,      this_animid,      this_sex
     FROM biography
@@ -91,7 +91,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
           AND biography.sex <> 'plh_female';
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+          MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
@@ -99,7 +99,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
                    || '): Value (BIOGRAPHY.Sex) = (' || this_sex
                    || '): Only individuals with BIOGRAPHY.Sex = '
                    || '''plh_female'' can have related '
-                   || 'FEMALEFERTILITYINTERVAL rows';
+                   || 'FERTILITY rows';
   END IF;
 
   -- StopDate cannot be after DepartDate + (DepartDateError years)
@@ -113,7 +113,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
               < NEW.stopdate;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+          MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StopDate) = (' || NEW.stopdate
@@ -136,7 +136,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
           AND NEW.startdate < biography.entrydate;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+          MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StartDate) = (' || NEW.startdate
@@ -152,7 +152,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
          ffi.ffiid,  ffi.startdate,  ffi.stopdate
     INTO this_studyid,      this_animid,
          this_ffiid, this_startdate, this_stopdate
-    FROM femalefertilityinterval AS ffi
+    FROM fertility AS ffi
          JOIN biography ON (biography.bid = NEW.bid)
     WHERE ffi.ffiid <> NEW.ffiid
           AND ffi.bid = NEW.bid
@@ -162,7 +162,7 @@ CREATE FUNCTION femalefertilityinterval_func ()
                    AND ffi.stopdate <= NEW.stopdate));
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of FEMALEFERTILITYINTERVAL'
+          MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
@@ -180,13 +180,13 @@ CREATE FUNCTION femalefertilityinterval_func ()
   END;
 $$;
 
-SELECT 'femalefertilityinterval_commit_func' AS function;
-CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
+SELECT 'fertility_commit_func' AS function;
+CREATE OR REPLACE FUNCTION fertility_commit_func()
   RETURNS trigger
   LANGUAGE plpgsql
   plh_function_set_search_path
   AS $$
-  -- Function for femalefertilityinterval insert and update
+  -- Function for fertility insert and update
   -- fired upon transaction commit.
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
@@ -202,8 +202,8 @@ CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
   -- Get the latest values of the row
   SELECT *
     INTO NEW
-    FROM femalefertilityinterval
-    WHERE femalefertilityinterval.ffiid = NEW.ffiid;
+    FROM fertility
+    WHERE fertility.ffiid = NEW.ffiid;
   IF NOT FOUND THEN
     -- Whatever row was inserted was subsequently deleted.
     -- Nothing to do.
@@ -220,7 +220,7 @@ CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
           AND start_event.initial;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on FEMALEFERTILITYINTERVAL ' || TG_OP || ' commit'
+          MESSAGE = 'Error on FERTILITY ' || TG_OP || ' commit'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StartDate) = (' || NEW.startdate
@@ -242,7 +242,7 @@ CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
           AND end_event.final;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on FEMALEFERTILITYINTERVAL ' || TG_OP || ' commit'
+          MESSAGE = 'Error on FERTILITY ' || TG_OP || ' commit'
         , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StopDate) = (' || NEW.stopdate
@@ -260,16 +260,16 @@ CREATE OR REPLACE FUNCTION femalefertilityinterval_commit_func()
 $$;
 
 
-SELECT 'femalefertilityinterval_trigger' AS trigger;
-CREATE TRIGGER femalefertilityinterval_trigger
+SELECT 'fertility_trigger' AS trigger;
+CREATE TRIGGER fertility_trigger
   AFTER INSERT OR UPDATE
-  ON femalefertilityinterval FOR EACH ROW
-  EXECUTE PROCEDURE femalefertilityinterval_func();
+  ON fertility FOR EACH ROW
+  EXECUTE PROCEDURE fertility_func();
 
-SELECT 'femalefertilityinterval_commit_trigger' AS trigger;
-CREATE CONSTRAINT TRIGGER femalefertilityinterval_commit_trigger
+SELECT 'fertility_commit_trigger' AS trigger;
+CREATE CONSTRAINT TRIGGER fertility_commit_trigger
   AFTER INSERT OR UPDATE
-  ON femalefertilityinterval
+  ON fertility
   DEFERRABLE INITIALLY DEFERRED
   FOR EACH ROW
-  EXECUTE PROCEDURE femalefertilityinterval_commit_func();
+  EXECUTE PROCEDURE fertility_commit_func();

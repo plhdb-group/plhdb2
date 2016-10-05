@@ -33,15 +33,15 @@ dnl m4 includes
 include(`copyright.m4')dnl
 include(`constants.m4')dnl
 
-CREATE POLICY all_access ON femalefertilityinterval FOR ALL USING(
-  femalefertilityinterval_all_access(bid));
+CREATE POLICY all_access ON fertility FOR ALL USING(
+  fertility_all_access(bid));
 
-CREATE POLICY search_access ON femalefertilityinterval FOR SELECT USING(
-  femalefertilityinterval_search_access(bid));
+CREATE POLICY search_access ON fertility FOR SELECT USING(
+  fertility_search_access(bid));
 
-CREATE POLICY insert_access ON femalefertilityinterval FOR INSERT WITH CHECK(
-  femalefertilityinterval_insert_access(bid));
+CREATE POLICY insert_access ON fertility FOR INSERT WITH CHECK(
+  fertility_insert_access(bid));
 
-CREATE POLICY edit_access ON femalefertilityinterval FOR UPDATE USING(
-  femalefertilityinterval_edit_access(bid));
+CREATE POLICY edit_access ON fertility FOR UPDATE USING(
+  fertility_edit_access(bid));
 

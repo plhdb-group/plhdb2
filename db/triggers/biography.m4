@@ -140,8 +140,8 @@ CREATE FUNCTION biography_func ()
     IF NEW.MomOnly <> OLD.MomOnly
        AND NEW.MomOnly THEN
       PERFORM 1
-        FROM femalefertilityinterval
-        WHERE femalefertilityinterval.bid = NEW.bid;
+        FROM fertility
+        WHERE fertility.bid = NEW.bid;
       IF FOUND THEN
         RAISE EXCEPTION integrity_constraint_violation USING
               MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
@@ -175,8 +175,8 @@ CREATE FUNCTION biography_func ()
 
       -- Individual cannot have female fertility intervals unless female.
       PERFORM 1
-        FROM femalefertilityinterval
-        WHERE femalefertilityinterval.bid = NEW.bid;
+        FROM fertility
+        WHERE fertility.bid = NEW.bid;
       IF FOUND THEN
         RAISE EXCEPTION integrity_constraint_violation USING
               MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
@@ -185,7 +185,7 @@ CREATE FUNCTION biography_func ()
                      || '): Value (AnimId) = (' || NEW.animid
                      || '): Value (Sex) = (' || NEW.sex
                      || '): Sex must be ''plh_female'' because this '
-                     || 'individual has related FEMALEFERTILITYINTERVAL '
+                     || 'individual has related FERTILITY '
                      || 'rows';
       END IF;
 
@@ -216,7 +216,7 @@ CREATE FUNCTION biography_func ()
        OR (NEW.departdateerror <> OLD.departdateerror
            AND OLD.departdateerror < NEW.departdateerror) THEN
       PERFORM 1
-        FROM femalefertilityinterval AS ffi
+        FROM fertility AS ffi
         WHERE ffi.bid = NEW.bid
               AND last_departdate(NEW.departdate, NEW.departdateerror)
                   < ffi.stopdate;
@@ -229,7 +229,7 @@ CREATE FUNCTION biography_func ()
                      || '): Value (DepartDate) = (' || NEW.departdate
                      || '): Value (DepartDateError) = ('
                      || NEW.departdateerror
-                     || '): There is a related FEMALEFERTILITYINTERVAL row '
+                     || '): There is a related FERTILITY row '
                      || 'which has a StopDate value after the computed '
                      || 'new last possible departure date; the computed '
                      || 'last possible departure date is: '
@@ -242,7 +242,7 @@ CREATE FUNCTION biography_func ()
     IF NEW.entrydate <> OLD.entrydate
        AND NEW.entrydate > OLD.entrydate THEN
       PERFORM 1
-        FROM femalefertilityinterval AS ffi
+        FROM fertility AS ffi
         WHERE ffi.bid = NEW.bid
               AND ffi.startdate < NEW.entrydate;
       IF FOUND THEN
@@ -252,7 +252,7 @@ CREATE FUNCTION biography_func ()
                      || '): Value (StudyId) = (' || NEW.studyid
                      || '): Value (AnimId) = (' || NEW.animid
                      || '): Value (EntryDate) = (' || NEW.entrydate
-                     || '): There is a related FEMALEFERTILITYINTERVAL row '
+                     || '): There is a related FERTILITY row '
                      || 'which has a StartDate value before the new '
                      || 'EntryDate';
       END IF;
@@ -276,11 +276,11 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
   DECLARE
-    this_ffiid femalefertilityinterval.ffiid%TYPE;
-    this_startdate femalefertilityinterval.startdate%TYPE;
-    this_starttype femalefertilityinterval.starttype%TYPE;
-    this_stopdate femalefertilityinterval.stopdate%TYPE;
-    this_stoptype femalefertilityinterval.stoptype%TYPE;
+    this_ffiid fertility.ffiid%TYPE;
+    this_startdate fertility.startdate%TYPE;
+    this_starttype fertility.starttype%TYPE;
+    this_stopdate fertility.stopdate%TYPE;
+    this_stoptype fertility.stoptype%TYPE;
 
   BEGIN
 
@@ -296,7 +296,7 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
   IF NEW.entrydate <> OLD.entrydate THEN
     SELECT ffi.ffiid,  ffi.startdate,  ffi.starttype
       INTO this_ffiid, this_startdate, this_starttype
-      FROM femalefertilityinterval AS ffi
+      FROM fertility AS ffi
            JOIN start_event ON (start_event.code = ffi.starttype)
       WHERE ffi.bid = NEW.bid
             AND ffi.startdate <> NEW.entrydate
@@ -308,13 +308,13 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
                    || '): Value (StudyId) = (' || NEW.studyid
                    || '): Value (AnimId) = (' || NEW.animid
                    || '): Value (EntryDate) = (' || NEW.entrydate
-                   || '): Key(FEMALEFERTILITYINTERVAL.FFIId) = ('
+                   || '): Key(FERTILITY.FFIId) = ('
                    || this_ffiid
-                   || '): Value(FEMALEFERTILITYINTERVAL.StartDate) = ('
+                   || '): Value(FERTILITY.StartDate) = ('
                    || this_startdate
-                   || '): Value(FEMALEFERTILITYINTERVAL.StartType) = ('
+                   || '): Value(FERTILITY.StartType) = ('
                    || this_starttype
-                   || '): FEMALEFERTILITYINTERVAL.StartDate must be the '
+                   || '): FERTILITY.StartDate must be the '
                    || 'EntryDate when StartType is an Initial START_EVENT';
     END IF;
   END IF;
@@ -323,7 +323,7 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
   IF NEW.departdate <> OLD.departdate THEN
     SELECT ffi.ffiid,  ffi.stopdate,  ffi.stoptype
       INTO this_ffiid, this_stopdate, this_stoptype
-      FROM femalefertilityinterval AS ffi
+      FROM fertility AS ffi
            JOIN end_event ON (end_event.code = ffi.stoptype)
       WHERE ffi.bid = NEW.bid
             AND ffi.stopdate <> NEW.departdate
@@ -335,13 +335,13 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
                    || '): Value (StudyId) = (' || NEW.studyid
                    || '): Value (AnimId) = (' || NEW.animid
                    || '): Value (DepartDate) = (' || NEW.departdate
-                   || '): Key(FEMALEFERTILITYINTERVAL.FFIId) = ('
+                   || '): Key(FERTILITY.FFIId) = ('
                    || this_ffiid
-                   || '): Value(FEMALEFERTILITYINTERVAL.StopDate) = ('
+                   || '): Value(FERTILITY.StopDate) = ('
                    || this_stopdate
-                   || '): Value(FEMALEFERTILITYINTERVAL.StopType) = ('
+                   || '): Value(FERTILITY.StopType) = ('
                    || this_stoptype
-                   || '): FEMALEFERTILITYINTERVAL.StopDate must be the '
+                   || '): FERTILITY.StopDate must be the '
                    || 'DepartDate when StopType is a Final STOP_EVENT';
     END IF;
   END IF;
