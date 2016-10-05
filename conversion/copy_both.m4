@@ -125,9 +125,9 @@ define({copy_both},{
 -- Femalefertilityinterval
         SELECT FORMAT(
             'INSERT INTO femalefertilityinterval '
-            '  (ffiid, bid, startdate, starttype, stopdate, stoptype) '
+            '  (fid, bid, startdate, starttype, stopdate, stoptype) '
             'VALUES (%s, %s, %s, %s, %s, %s);'
-          , ffi.ffiid
+          , ffi.fid
           , ffi.bid
           , quote_literal(ffi.startdate)
           , quote_literal(ffi.starttype)

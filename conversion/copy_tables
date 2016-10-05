@@ -318,7 +318,7 @@ EOF
   cat - <<\EOF
         SELECT FORMAT(
             'INSERT INTO fertility '
-            '  (ffiid, bid, startdate, starttype, stopdate, stoptype) '
+            '  (fid, bid, startdate, starttype, stopdate, stoptype) '
             'VALUES (%s, %s, %s, %s, %s, %s);'
           , interval_oid
           , anim_oid
@@ -330,8 +330,8 @@ EOF
 
         -- Update sequence.
         SELECT 'DO $$ BEGIN
-                  PERFORM SETVAL(''fertility_ffiid_seq''
-                              , MAX(fertility.ffiid))
+                  PERFORM SETVAL(''fertility_fid_seq''
+                              , MAX(fertility.fid))
                     FROM fertility; END;$$;';
 EOF
 }

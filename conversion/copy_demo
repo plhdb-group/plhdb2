@@ -67,8 +67,8 @@ EOF
 
         -- Update femalefertiltyinterval sequence.
         SELECT 'DO $$ BEGIN
-                  PERFORM SETVAL(''fertility_ffiid_seq''
-                              , MAX(fertility.ffiid))
+                  PERFORM SETVAL(''fertility_fid_seq''
+                              , MAX(fertility.fid))
                     FROM fertility; END;$$;';
 EOF
     } \
