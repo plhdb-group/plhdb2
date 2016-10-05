@@ -47,8 +47,8 @@ COMMENT ON TABLE fertility IS
 'One row per uninterrupted period of observation on a female; during
 which no possible births would have been missed.
 
-Access to rows in FERTILITY is controlled, on a
-per-study basis, by the PERMISSION table.
+Access to rows in FERTILITY is controlled, on a per-study basis, by the
+PERMISSION table.
 
 Per individual, fertility intervals may not overlap.
 StartDate must be on or before StopDate.
@@ -76,9 +76,9 @@ a StopDate equal to the related BIOGRAPHY row''s DepartDate.  This
 condition is checked on transaction commit, except in the case where
 END_EVENT.Final is altered.
 
-TIP: Use the FERTILITIES view to see AnimId and StudyId
-columns.  FERTILITIES is identical to this table but for
-the additional columns.';
+TIP: Use the FERTILITIES view to see AnimId and StudyId columns.
+FERTILITIES is identical to this table but for the additional
+columns.';
 
 
 COMMENT ON COLUMN fertility.ffiid IS
