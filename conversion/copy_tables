@@ -278,7 +278,7 @@ EOF
               AND fixed_ffi.startdate < b.entrydate;
 
 
-      -- Fertility stopdate <> departdate when death or
+      -- Fertility stopdate > departdate when death or
       -- permanent disappearance.  Make stopdate = departdate.
       UPDATE fixed_ffi
         SET stopdate = departdate
@@ -286,20 +286,47 @@ EOF
         WHERE b.anim_oid = fixed_ffi.anim_oid
               AND (fixed_ffi.stoptype = 'D'
                    OR fixed_ffi.stoptype = 'P')
-              AND fixed_ffi.stopdate <> b.departdate
+              AND fixed_ffi.stopdate > b.departdate
               AND fixed_ffi.stopdate = (
                SELECT MAX(f.stopdate)
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
-      -- Fertility startdate <> entrydate when birth.
+      -- Fertility stopdate < departdate when death or
+      -- permanent disappearance.  Change stoptype to end of observation.
+      UPDATE fixed_ffi
+        SET stoptype = 'O'
+        FROM fixed_biography AS b
+        WHERE b.anim_oid = fixed_ffi.anim_oid
+              AND (fixed_ffi.stoptype = 'D'
+                   OR fixed_ffi.stoptype = 'P')
+              AND fixed_ffi.stopdate < b.departdate
+              AND fixed_ffi.stopdate = (
+               SELECT MAX(f.stopdate)
+                 FROM fixed_ffi AS f
+                 WHERE f.anim_oid = b.anim_oid);
+
+      -- Fertility startdate < entrydate when birth.
       -- Make startdate = entrydate.
       UPDATE fixed_ffi
         SET startdate = entrydate
         FROM fixed_biography AS b
         WHERE b.anim_oid = fixed_ffi.anim_oid
               AND fixed_ffi.starttype = 'B'
-              AND fixed_ffi.startdate <> b.entrydate
+              AND fixed_ffi.startdate < b.entrydate
+              AND fixed_ffi.startdate = (
+               SELECT MIN(f.startdate)
+                 FROM fixed_ffi AS f
+                 WHERE f.anim_oid = b.anim_oid);
+
+      -- Fertility startdate > entrydate when birth.
+      -- Make startdate = entrydate.
+      UPDATE fixed_ffi
+        SET starttype = 'O'
+        FROM fixed_biography AS b
+        WHERE b.anim_oid = fixed_ffi.anim_oid
+              AND fixed_ffi.starttype = 'B'
+              AND fixed_ffi.startdate > b.entrydate
               AND fixed_ffi.startdate = (
                SELECT MIN(f.startdate)
                  FROM fixed_ffi AS f
