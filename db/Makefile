@@ -125,6 +125,7 @@ clean:
 	make -C tables clean
 	make -C policy clean
 	make -C include clean
+	make -C triggers clean
 	make -C tables clean
 	make -C views clean
 	make -C functions clean
