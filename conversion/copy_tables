@@ -292,6 +292,19 @@ EOF
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
+      -- Fertility startdate <> entrydate when birth.
+      -- Make startdate = entrydate.
+      UPDATE fixed_ffi
+        SET startdate = entrydate
+        FROM fixed_biography AS b
+        WHERE b.anim_oid = fixed_ffi.anim_oid
+              AND fixed_ffi.starttype = 'B'
+              AND fixed_ffi.startdate <> b.entrydate
+              AND fixed_ffi.startdate = (
+               SELECT MIN(f.startdate)
+                 FROM fixed_ffi AS f
+                 WHERE f.anim_oid = b.anim_oid);
+
       -- Fertility intervals cannot overlap
       -- Change Study 7, animid 'CT--', startdate 2004-01-01 to stopdate
       -- 2015-03-31.  Bump startdate so it does not overlap 2001-01-01
