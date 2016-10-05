@@ -24,7 +24,7 @@ include(`grants.m4')
 include(`constants.m4')
 
 CREATE TABLE fertility (
-   ffiid SERIAL PRIMARY KEY
+   fid SERIAL PRIMARY KEY
  , bid INTEGER NOT NULL
      CONSTRAINT "BId must be BIOGRAPHY.BId value"
                 REFERENCES biography
@@ -39,7 +39,7 @@ CREATE TABLE fertility (
      CONSTRAINT "StopType must be a END_EVENT.Code value"
                 REFERENCES end_event);
 
-grant_row_level_priv(`fertility', `ffiid')
+grant_row_level_priv(`fertility', `fid')
 grant_demo_user_priv(`fertility')
 
 
@@ -81,7 +81,7 @@ FERTILITIES is identical to this table but for the additional
 columns.';
 
 
-COMMENT ON COLUMN fertility.ffiid IS
+COMMENT ON COLUMN fertility.fid IS
 'Unique row identifer, and hence the unique identifer of the female
 fertility interval.  The value of this column cannot be changed.';
 

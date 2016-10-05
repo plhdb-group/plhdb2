@@ -276,7 +276,7 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
   DECLARE
-    this_ffiid fertility.ffiid%TYPE;
+    this_fid fertility.fid%TYPE;
     this_startdate fertility.startdate%TYPE;
     this_starttype fertility.starttype%TYPE;
     this_stopdate fertility.stopdate%TYPE;
@@ -294,8 +294,8 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
 
   -- Initial StartTypes mean StartDate = EntryDate.
   IF NEW.entrydate <> OLD.entrydate THEN
-    SELECT ffi.ffiid,  ffi.startdate,  ffi.starttype
-      INTO this_ffiid, this_startdate, this_starttype
+    SELECT ffi.fid,  ffi.startdate,  ffi.starttype
+      INTO this_fid, this_startdate, this_starttype
       FROM fertility AS ffi
            JOIN start_event ON (start_event.code = ffi.starttype)
       WHERE ffi.bid = NEW.bid
@@ -308,8 +308,8 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
                    || '): Value (StudyId) = (' || NEW.studyid
                    || '): Value (AnimId) = (' || NEW.animid
                    || '): Value (EntryDate) = (' || NEW.entrydate
-                   || '): Key(FERTILITY.FFIId) = ('
-                   || this_ffiid
+                   || '): Key(FERTILITY.FId) = ('
+                   || this_fid
                    || '): Value(FERTILITY.StartDate) = ('
                    || this_startdate
                    || '): Value(FERTILITY.StartType) = ('
@@ -321,8 +321,8 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
 
   -- Final StopTypes mean StopDate = DepartDate.
   IF NEW.departdate <> OLD.departdate THEN
-    SELECT ffi.ffiid,  ffi.stopdate,  ffi.stoptype
-      INTO this_ffiid, this_stopdate, this_stoptype
+    SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
+      INTO this_fid, this_stopdate, this_stoptype
       FROM fertility AS ffi
            JOIN end_event ON (end_event.code = ffi.stoptype)
       WHERE ffi.bid = NEW.bid
@@ -335,8 +335,8 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
                    || '): Value (StudyId) = (' || NEW.studyid
                    || '): Value (AnimId) = (' || NEW.animid
                    || '): Value (DepartDate) = (' || NEW.departdate
-                   || '): Key(FERTILITY.FFIId) = ('
-                   || this_ffiid
+                   || '): Key(FERTILITY.FId) = ('
+                   || this_fid
                    || '): Value(FERTILITY.StopDate) = ('
                    || this_stopdate
                    || '): Value(FERTILITY.StopType) = ('

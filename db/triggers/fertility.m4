@@ -55,7 +55,7 @@ CREATE FUNCTION fertility_func ()
     this_departdateerror biography.departdateerror%TYPE;
     this_startdate fertility.startdate%TYPE;
     this_stopdate fertility.stopdate%TYPE;
-    this_ffiid fertility.ffiid%TYPE;
+    this_fid fertility.fid%TYPE;
 
   BEGIN
   -- Function for fertility insert and update triggers
@@ -63,7 +63,7 @@ CREATE FUNCTION fertility_func ()
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
 
   IF TG_OP = 'UPDATE' THEN
-    cannot_change(`FERTILITY', `FFIId')
+    cannot_change(`FERTILITY', `FId')
   END IF;
 
   -- MomOnly rows cannot have related FERTILITY rows.
@@ -75,7 +75,7 @@ CREATE FUNCTION fertility_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
@@ -92,7 +92,7 @@ CREATE FUNCTION fertility_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
@@ -114,7 +114,7 @@ CREATE FUNCTION fertility_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StopDate) = (' || NEW.stopdate
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
@@ -137,7 +137,7 @@ CREATE FUNCTION fertility_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StartDate) = (' || NEW.startdate
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
@@ -149,12 +149,12 @@ CREATE FUNCTION fertility_func ()
 
   -- Female fertility intervals cannot overlap.
   SELECT biography.studyid, biography.animid,
-         ffi.ffiid,  ffi.startdate,  ffi.stopdate
+         ffi.fid,  ffi.startdate,  ffi.stopdate
     INTO this_studyid,      this_animid,
-         this_ffiid, this_startdate, this_stopdate
+         this_fid, this_startdate, this_stopdate
     FROM fertility AS ffi
          JOIN biography ON (biography.bid = NEW.bid)
-    WHERE ffi.ffiid <> NEW.ffiid
+    WHERE ffi.fid <> NEW.fid
           AND ffi.bid = NEW.bid
           AND ((NEW.startdate <= ffi.startdate
                 AND ffi.startdate <= NEW.stopdate)
@@ -163,13 +163,13 @@ CREATE FUNCTION fertility_func ()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on ' || TG_OP || ' of FERTILITY'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value(StartDate) = (' || NEW.startdate
                    || '): Value(StopDate) = (' || NEW.stopdate
-                   || '): Key(Other FFIId) = (' || this_ffiid
+                   || '): Key(Other FId) = (' || this_fid
                    || '): Value(Other StartDate) = (' || this_startdate
                    || '): Value(Other StopDate) = (' || this_stopdate
                    || '): The female fertility intervals of a single '
@@ -203,7 +203,7 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
   SELECT *
     INTO NEW
     FROM fertility
-    WHERE fertility.ffiid = NEW.ffiid;
+    WHERE fertility.fid = NEW.fid;
   IF NOT FOUND THEN
     -- Whatever row was inserted was subsequently deleted.
     -- Nothing to do.
@@ -221,7 +221,7 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on FERTILITY ' || TG_OP || ' commit'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StartDate) = (' || NEW.startdate
                    || '): Value(StartType) = (' || NEW.starttype
@@ -243,7 +243,7 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
           MESSAGE = 'Error on FERTILITY ' || TG_OP || ' commit'
-        , DETAIL = 'Key(FFIId) = (' || NEW.ffiid
+        , DETAIL = 'Key(FId) = (' || NEW.fid
                    || '): Value (BId) = (' || NEW.Bid
                    || '): Value(StopDate) = (' || NEW.stopdate
                    || '): Value(StopType) = (' || NEW.stoptype
