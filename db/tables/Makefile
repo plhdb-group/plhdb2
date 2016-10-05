@@ -22,7 +22,7 @@
 # are created and the reverse order in which they are destroyed.
 INFILES := site.m4 taxon.m4 study.m4 permission.m4 \
            probability_type.m4 start_event.m4 end_event.m4 \
-           biography.m4 femalefertilityinterval.m4
+           biography.m4 fertility.m4
 SQLFILES := $(INFILES:.m4=.sql)
 TARGETS := $(SQLFILES) maketables.sql destroytables.sql emptytables.sql
 

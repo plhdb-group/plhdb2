@@ -28,10 +28,10 @@ POLICYINFILES := biography_all_access.m4 \
                  biography_search_access.m4 \
                  biography_insert_access.m4 \
                  biography_edit_access.m4 \
-                 femalefertilityinterval_all_access.m4 \
-                 femalefertilityinterval_search_access.m4 \
-                 femalefertilityinterval_insert_access.m4 \
-                 femalefertilityinterval_edit_access.m4
+                 fertility_all_access.m4 \
+                 fertility_search_access.m4 \
+                 fertility_insert_access.m4 \
+                 fertility_edit_access.m4
 OTHERINFILES := last_departdate.m4
 POLICYSQLFILES := $(POLICYINFILES:.m4=.sql)
 OTHERSQLFILES := $(OTHERINFILES:.m4=.sql)
