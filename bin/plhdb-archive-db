@@ -1,0 +1,175 @@
+#!/bin/bash
+# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+#
+#    This file is part of PLHDB.
+#
+#    PLHDB is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PLHDB.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Copy the plhdb schema and related schemas from one db to another.
+#
+# Karl O. Pinc <kop@meme.com>
+#
+# Remarks:
+
+# The schemas to copy by default
+DEFAULTSCHEMAS='plhdb'
+
+usage () {
+cat - <<\EOF
+Syntax: plhdb-archive-db [--full] adminuser [fromdb [todb]]
+        plhdb-achive-db -h
+
+Input: adminuser Administrative username used to do the copy.
+       fromdb    (optional) Database to copy.  Defaults to "plhdb".
+       todb      (optional) Database to copy into.  Defaults to
+                 "plhdb_YYYY_MM_DD".
+       -h        Show this help.
+       --full    (optional) Copies all schemas.  Default is to copy only
+                 the "plhdb" schema.
+
+The `fromdb` database is copied into a newly created database.  The
+new database is placed in read-only mode by setting
+"default_transaction_read_only = on".  SET TRANSACTION may be used to
+override this and alter an archived database.
+
+plhdb-archive-db will not overwrite an existing database.
+
+plhdb-archive-db connects to PostgreSQL several times.  It is best to use
+a ~/.pgpass file to avoid errors in password entry.
+EOF
+}
+
+attempt_recovery () {
+local result
+psql -q -U $A_ADMINUSER -d postgres <<EOF
+  DROP DATABASE $TODB;
+EOF
+result=$?
+if [ $result -ne 0 ] ; then
+  cat - >&2 <<\EOF
+The system is left with an incomplete target database.  Please delete
+the target database.
+EOF
+  exit $result
+fi
+}
+
+schema_args () {
+  for schema in $DEFAULTSCHEMAS; do
+    printf "\x2D\x2Dschema=%s " $schema
+  done
+  printf "%s" "--blobs"
+}
+
+generate_date () {
+  date --iso-8601 | tr '-' '_'
+}
+
+# Parse command line.
+
+if [ "$1" = '-h' ] ; then
+  usage
+  exit 0
+fi
+
+if [ "$1" = '--full' ] ; then
+  full=y
+  shift
+else
+  full=n
+fi
+
+A_ADMINUSER=$1
+
+if [ -z "$A_ADMINUSER" ] ; then
+  echo "$0: not enough arguments" >&2
+  usage
+  exit 1
+fi
+
+FROMDB=$2
+if [ -z "$FROMDB" ] ; then
+  FROMDB="plhdb"
+fi
+
+TODB=$3
+if [ -z "$TODB" ] ; then
+  TODB="plhdb_$(generate_date)"
+fi
+
+# Check if the target db exists.
+if psql -U $A_ADMINUSER -d postgres -lqt \
+   | cut -d '|' -f 1 \
+   | grep -qw "$TODB" ; then
+  echo "$0: $TODB: target database exists" >&2
+  usage
+  exit 2
+fi
+
+# Create new database
+createdb -U $A_ADMINUSER -O plhdb_admin -T template0 "$TODB" \
+  "Archive of the $FROMDB database created $(date --iso-8601=minutes)"
+result=$?
+if [ $result -ne 0 ] ; then
+  echo "$0: $TODB: failed to create new database" >&2
+  exit $result
+fi
+
+# Secure db and setup defaults
+psql -q -v ON_ERROR_STOP=1 -U $A_ADMINUSER -d "$TODB" <<EOF
+
+  -- Secure connection to the new db
+  REVOKE CONNECT ON DATABASE $TODB FROM PUBLIC;
+
+  -- We use european date formatting, not us.
+  ALTER DATABASE $TODB SET DATESTYLE='European';
+
+  -- Default all times to US/Eastern times.
+  ALTER DATABASE $TODB SET TIMEZONE='US/Eastern';
+
+  DROP SCHEMA PUBLIC;
+EOF
+result=$?
+if [ $result -ne 0 ] ; then
+  echo "$0: $TODB: failed to secure target database and setup defaults" >&2
+  attempt_recovery
+  exit $result
+fi
+
+# Dump and restore into new db.
+if [ $full = 'y' ] ; then
+  args=''
+else
+  args="$(schema_args)"
+fi
+
+# (Default transaction level is serializable.)
+pg_dump $args -U $A_ADMINUSER -d $FROMDB -Fc -Z0 \
+  | pg_restore --single-transaction -U $A_ADMINUSER --dbname="$TODB"
+
+result=$?
+if [ $result -ne 0 ] ; then
+  echo "$0: $TODB: database dump and restore failed" >&2
+  attempt_recovery
+  exit $result
+fi
+
+# Grant connection privileges and set newdb read-only.
+psql -q -v ON_ERROR_STOP=1 -U $A_ADMINUSER -d "$TODB" <<EOF
+  ALTER DATABASE $TODB SET default_transaction_read_only = on;
+  ALTER DATABASE $TODB SET SEARCH_PATH TO plhdb;
+  GRANT CONNECT ON DATABASE $TODB TO plhdb_managers
+                                   , plhdb_users;
+  VACUUM ANALYZE;
+EOF
