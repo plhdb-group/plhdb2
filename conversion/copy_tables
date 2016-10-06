@@ -344,6 +344,15 @@ EOF
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
+      -- Fertility startdate = entrydate but starttype <> entrytype.
+      -- Change starttype to entrytype.
+      UPDATE fixed_ffi
+        SET starttype = b.entrytype
+        FROM fixed_biography AS b
+        WHERE b.anim_oid = fixed_ffi.anim_oid
+              AND b.entrydate::DATE = fixed_ffi.startdate::DATE
+              AND b.entrytype <> fixed_ffi.starttype;
+
       -- Fertility stopdate = departdate but stoptype <> departtype.
       -- Change stoptype to departtype.
       UPDATE fixed_ffi
