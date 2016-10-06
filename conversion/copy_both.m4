@@ -124,7 +124,7 @@ define({copy_both},{
 
 -- Femalefertilityinterval
         SELECT FORMAT(
-            'INSERT INTO femalefertilityinterval '
+            'INSERT INTO fertility '
             '  (fid, bid, startdate, starttype, stopdate, stoptype) '
             'VALUES (%s, %s, %s, %s, %s, %s);'
           , ffi.fid
@@ -133,7 +133,7 @@ define({copy_both},{
           , quote_literal(ffi.starttype)
           , quote_literal(ffi.stopdate)
           , quote_literal(ffi.stoptype))
-          FROM femalefertilityinterval AS ffi
+          FROM fertility AS ffi
                JOIN biography AS b ON (b.bid = ffi.bid)
           WHERE b.studyid = '$1'
                 AND b.animid = '$2';
