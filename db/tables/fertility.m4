@@ -66,6 +66,11 @@ The StopDate cannot be after the date from the related individual''s
 BIOGRAPHY row given by the formula (DepartDate plus (DepartDateError
 number of years)).
 
+Rows with a StartDate which is that of the related BIOGRAPHY row''s
+EntryDate must have a StartType value which is that of the related
+BIOGRAPHY row''s EntryType.  This condition is checked on transaction
+commit.
+
 Rows with a StopDate which is that of the related BIOGRAPHY row''s
 DepartDate must have a StopType value which is that of the related
 BIOGRAPHY row''s DepartType.  This condition is checked on transaction

@@ -347,6 +347,31 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
     END IF;
   END IF;
 
+  -- EntryDate = StartDate requires EntryType = StartType
+  IF NEW.entrytype <> OLD.entrytype
+     OR NEW.entrydate <> OLD.entrydate THEN
+    SELECT ffi.fid,  ffi.startdate,  ffi.starttype
+      INTO this_fid, this_startdate, this_starttype
+      FROM fertility AS ffi
+      WHERE ffi.bid = NEW.bid
+            AND ffi.startdate = NEW.entrydate
+            AND ffi.starttype <> NEW.entrytype;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                   || '): Value (StudyId) = (' || NEW.studyid
+                   || '): Value (AnimId) = (' || NEW.animid
+                   || '): Value (EntryDate) = (' || NEW.entrydate
+                   || '): Value (EntryType) = (' || NEW.entrytype
+                   || '): Key(FERTILITY.FId) = (' || this_fid
+                   || '): Value(FERTILITY.StartDate) = (' || this_startdate
+                   || '): Value(FERTILITY.StartType) = (' || this_starttype
+                   || '): When FERTILITY.StartDate equals EntryDate then '
+                   || 'EntryType must equal FERTILITY.StartType';
+    END IF;
+  END IF;
+
   -- DepartDate = StopDate requires DepartType = StopType
   IF NEW.departtype <> OLD.departtype
      OR NEW.departdate <> OLD.departdate THEN
