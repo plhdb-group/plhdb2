@@ -64,4 +64,9 @@ consiered to be an entire day for purposes of the computation.
 
 This function is used whenever the system computes an individual''s
 latest possible departure date.  It is also available for use in
-queries.';
+queries.
+
+Example:
+  SELECT studyid, animid, departdate, departdateerror
+       , last_departdate(departdate, departdateerror) AS max_departdate
+    FROM biography;';
