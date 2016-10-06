@@ -164,8 +164,7 @@ BEGIN
   PERFORM 1
     WHERE CURRENT_DATABASE() = 'plhdb_demo';
   IF FOUND THEN
-    raise warning 'Not granting SELECT on $1 TO demo_user';
-    --GRANT SELECT ON $1 TO demo_user;
+    GRANT SELECT ON $1 TO demo_user;
   END IF;
 END;
 $$;
