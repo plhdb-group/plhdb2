@@ -83,6 +83,18 @@ if [ "$fix" = "y" ] ; then
     cat - <<\EOF
       -- Apply "fixes" to the data.
 
+      -- Delete duplicates
+      DELETE FROM fixed_biography
+        WHERE anim_oid = 24258;
+      -- And put one row back.
+      INSERT INTO fixed_biography(
+          studyid, animid, animname, birthgroup, bgqual, sex, momid, firstborn
+        , birthdate, bdmin, bdmax, bddist, entrydate, entrytype, departdate
+        , departdateerror, departtype, anim_oid)
+        VALUES('5', 'SUS', 'Susurka', 'UGE',     'C',    'F', 'FAI', 'N'
+             , '2011-04-18', '2011-04-18', '2011-04-18', 'N', '2011-04-18'
+             , 'B', '2014-11-15', 0, 'D', 24258);
+
       -- departdate/departdateerror/bdmax problem.  (4 rows)
       -- Just happens that that's the only bdmax/departdate problems.
       UPDATE fixed_biography
