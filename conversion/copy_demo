@@ -71,7 +71,12 @@ EOF
                               , MAX(fertility.fid))
                     FROM fertility; END;$$;';
 EOF
-    } \
+    }
+  cat - <<\EOF
+-- Give demo user plhdb-level select access in demo db
+SELECT 'INSERT INTO permission (access, study, username)
+          VALUES (''search'', ''all'', ''demo_user'');';
+EOF
 } \
   | psql -q --no-align -F ' ' --tuples-only -U plhdb_admin $sourcedb \
   | psql -q --tuples-only -U plhdb_admin $targetdb
