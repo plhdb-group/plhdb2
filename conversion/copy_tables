@@ -332,7 +332,7 @@ EOF
                  WHERE f.anim_oid = b.anim_oid);
 
       -- Fertility startdate > entrydate when birth.
-      -- Make startdate = entrydate.
+      -- Make starttype = 'O', beginning of observation
       UPDATE fixed_ffi
         SET starttype = 'O'
         FROM fixed_biography AS b
