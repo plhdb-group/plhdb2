@@ -70,6 +70,16 @@
 
 
 
+<a href="/jsp/searchData.jsp"><img src="/images/inactive_biography.jpg" alt="Search Biography"   onmouseover="this.src='/images/active_biography.jpg'" onmouseout="this.src='/images/inactive_biography.jpg'" /></a>
+
+
+
+
+
+   <a href="/jsp/searchFertility.jsp"><img src="/images/inactive_fertility.jpg"  alt="Search Fertility"   onmouseover="this.src='/images/active_fertility.jpg'" onmouseout="this.src='/images/inactive_fertility.jpg'" /></a>
+
+
+
 
 	
 <a href="/jsp/about.jsp"><img src="/images/active_about.jpg" width="77" height="41" alt="About" /></a>
