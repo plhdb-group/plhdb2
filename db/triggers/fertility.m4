@@ -196,6 +196,7 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
     this_animid biography.animid%TYPE;
     this_entrydate biography.entrydate%TYPE;
     this_departdate biography.departdate%TYPE;
+    this_departtype biography.departtype%TYPE;
 
   BEGIN
 
@@ -254,6 +255,29 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
                    || 'StopType is a Final STOP_EVENT';
   END IF;
   
+  -- StopDate = DepartDate requires StopType = DepartType.
+  SELECT biography.studyid, biography.animid, biography.departdate
+       , biography.departtype
+    INTO this_studyid,      this_animid,      this_departdate
+       , this_departtype
+    FROM biography
+    WHERE biography.bid = NEW.bid
+          AND biography.departdate = NEW.stopdate
+          AND biography.departtype <> NEW.stoptype;
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on FERTILITY ' || TG_OP || ' commit'
+        , DETAIL = 'Key(FId) = (' || NEW.fid
+                   || '): Value (BId) = (' || NEW.Bid
+                   || '): Value(StopDate) = (' || NEW.stopdate
+                   || '): Value(StopType) = (' || NEW.stoptype
+                   || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
+                   || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
+                   || '): Value (BIOGRAPHY.DepartDate) = (' || this_departdate
+                   || '): Value (BIOGRAPHY.DepartType) = (' || this_departtype
+                   || '): When StopDate equals DepartDate then StopType '
+                   || 'must equal DepartType';
+  END IF;
 
   RETURN NULL;
   END;

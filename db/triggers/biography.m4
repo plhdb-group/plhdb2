@@ -319,6 +319,7 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
     END IF;
   END IF;
 
+
   -- Final StopTypes mean StopDate = DepartDate.
   IF NEW.departdate <> OLD.departdate THEN
     SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
@@ -343,6 +344,31 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
                    || this_stoptype
                    || '): FERTILITY.StopDate must be the '
                    || 'DepartDate when StopType is a Final STOP_EVENT';
+    END IF;
+  END IF;
+
+  -- DepartDate = StopDate requires DepartType = StopType
+  IF NEW.departtype <> OLD.departtype
+     OR NEW.departdate <> OLD.departdate THEN
+    SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
+      INTO this_fid, this_stopdate, this_stoptype
+      FROM fertility AS ffi
+      WHERE ffi.bid = NEW.bid
+            AND ffi.stopdate = NEW.departdate
+            AND ffi.stoptype <> NEW.departtype;
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                   || '): Value (StudyId) = (' || NEW.studyid
+                   || '): Value (AnimId) = (' || NEW.animid
+                   || '): Value (DepartDate) = (' || NEW.departdate
+                   || '): Value (DepartType) = (' || NEW.departtype
+                   || '): Key(FERTILITY.FId) = (' || this_fid
+                   || '): Value(FERTILITY.StopDate) = (' || this_stopdate
+                   || '): Value(FERTILITY.StopType) = (' || this_stoptype
+                   || '): When FERTILITY.StopDate equals DepartDate then '
+                   || 'DepartType must equal FERTILITY.StopType';
     END IF;
   END IF;
 
