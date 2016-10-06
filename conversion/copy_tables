@@ -266,12 +266,12 @@ EOF
                     WHERE fixed_ffi.anim_oid = bio.anim_oid
                           AND (bio.departdate::date
                                + CEIL(bio.departdateerror * 365.25)::INT)
-                              < fixed_ffi.stopdate))
+                              < fixed_ffi.stopdate::DATE))
       UPDATE fixed_ffi
-        SET stopdate = b.last_departdate
+        SET stopdate = b.last_departdate::DATE
         FROM b
         WHERE b.bid = fixed_ffi.anim_oid
-              AND b.last_departdate < stopdate;
+              AND b.last_departdate::DATE < stopdate::DATE;
 
       -- Female fertility start dates before entrydate
 
@@ -281,26 +281,26 @@ EOF
 
       -- Change startdate to entrydate
       UPDATE fixed_ffi
-        SET startdate = b.entrydate
---        , stopdate = CASE WHEN stopdate > b.entrydate
---                            THEN stopdate
---                          ELSE b.entrydate END
+        SET startdate = b.entrydate::DATE
+--        , stopdate = CASE WHEN stopdate::DATE > b.entrydate::DATE
+--                            THEN stopdate::DATE
+--                          ELSE b.entrydate::DATE END
         FROM fixed_biography AS b
         WHERE b.anim_oid = fixed_ffi.anim_oid
-              AND fixed_ffi.startdate < b.entrydate;
+              AND fixed_ffi.startdate::DATE < b.entrydate::DATE;
 
 
       -- Fertility stopdate > departdate when death or
       -- permanent disappearance.  Make stopdate = departdate.
       UPDATE fixed_ffi
-        SET stopdate = departdate
+        SET stopdate = departdate::DATE
         FROM fixed_biography AS b
         WHERE b.anim_oid = fixed_ffi.anim_oid
               AND (fixed_ffi.stoptype = 'D'
                    OR fixed_ffi.stoptype = 'P')
-              AND fixed_ffi.stopdate > b.departdate
-              AND fixed_ffi.stopdate = (
-               SELECT MAX(f.stopdate)
+              AND fixed_ffi.stopdate::DATE > b.departdate::DATE
+              AND fixed_ffi.stopdate::DATE = (
+               SELECT MAX(f.stopdate::DATE)
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
@@ -312,9 +312,9 @@ EOF
         WHERE b.anim_oid = fixed_ffi.anim_oid
               AND (fixed_ffi.stoptype = 'D'
                    OR fixed_ffi.stoptype = 'P')
-              AND fixed_ffi.stopdate < b.departdate
-              AND fixed_ffi.stopdate = (
-               SELECT MAX(f.stopdate)
+              AND fixed_ffi.stopdate::DATE < b.departdate::DATE
+              AND fixed_ffi.stopdate::DATE = (
+               SELECT MAX(f.stopdate::DATE)
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
@@ -325,9 +325,9 @@ EOF
         FROM fixed_biography AS b
         WHERE b.anim_oid = fixed_ffi.anim_oid
               AND fixed_ffi.starttype = 'B'
-              AND fixed_ffi.startdate < b.entrydate
-              AND fixed_ffi.startdate = (
-               SELECT MIN(f.startdate)
+              AND fixed_ffi.startdate::DATE < b.entrydate::DATE
+              AND fixed_ffi.startdate::DATE = (
+               SELECT MIN(f.startdate::DATE)
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
@@ -338,9 +338,9 @@ EOF
         FROM fixed_biography AS b
         WHERE b.anim_oid = fixed_ffi.anim_oid
               AND fixed_ffi.starttype = 'B'
-              AND fixed_ffi.startdate > b.entrydate
-              AND fixed_ffi.startdate = (
-               SELECT MIN(f.startdate)
+              AND fixed_ffi.startdate::DATE > b.entrydate::DATE
+              AND fixed_ffi.startdate::DATE = (
+               SELECT MIN(f.startdate::DATE)
                  FROM fixed_ffi AS f
                  WHERE f.anim_oid = b.anim_oid);
 
@@ -359,7 +359,7 @@ EOF
         SET stoptype = b.departtype
         FROM fixed_biography AS b
         WHERE b.anim_oid = fixed_ffi.anim_oid
-              AND b.departdate = fixed_ffi.stopdate
+              AND b.departdate::DATE = fixed_ffi.stopdate::DATE
               AND b.departtype <> fixed_ffi.stoptype;
 
       -- Fertility intervals cannot overlap
