@@ -21,7 +21,7 @@
 # The order views are listed here is the order in which the views
 # are created and the reverse order in which they are destroyed.
 INFILES := permissions.m4 accounts.m4 access_groups.m4 \
-           biographies.m4
+           biographies.m4 fertilities.m4
 SQLFILES := $(INFILES:.m4=.sql)
 TARGETS := $(SQLFILES) makeviews.sql destroyviews.sql
 
