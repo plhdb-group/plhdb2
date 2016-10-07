@@ -44,7 +44,7 @@ loaddb() {
     printf "grant connect on database $newdb to plhdb_managers;\n"
   } | psql -U $ADMIN template1
 
-  dumpfile=/tmp/$db.custom
+  dumpfile=/srv/apps/old_system_db_dumps/$db.custom
   pg_restore --no-privileges --no-owner -U $ADMIN -d $newdb $dumpfile
 
   for schema in audit auth bulkimp plhdb public sandbox ; do
