@@ -1862,7 +1862,7 @@ birth date range#</dia:string>
         <dia:point val="17,29.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="11.95,18.45;17.1118,29.8309"/>
+        <dia:rectangle val="11.95,18.1793;17.1118,29.8309"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="17,29.5"/>
@@ -1887,6 +1887,15 @@ birth date range#</dia:string>
         <dia:real val="0.5"/>
       </dia:attribute>
       <dia:attribute name="start_arrow_width">
+        <dia:real val="0.5"/>
+      </dia:attribute>
+      <dia:attribute name="end_arrow">
+        <dia:enum val="9"/>
+      </dia:attribute>
+      <dia:attribute name="end_arrow_length">
+        <dia:real val="0.5"/>
+      </dia:attribute>
+      <dia:attribute name="end_arrow_width">
         <dia:real val="0.5"/>
       </dia:attribute>
       <dia:connections>
