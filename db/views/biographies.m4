@@ -57,7 +57,7 @@ COMMENT ON VIEW biographies IS
 BIOGRAPHY table, but for the addition of the MomId column -- which
 contains the mother''s AnimId.
 
-For more information see the documentation of the BIOGRAPHY table.';
+For more information see the BIOGRAPHY table documentation.';
 
 comment_biography_columns(`biographies')
 
