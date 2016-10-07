@@ -108,16 +108,16 @@ BId.</p>
 <h3>Available downloads</h3>
 
 <ul>
-  <li>Production Data
-    <ul>
-      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=biography">BIOGRAPHY</a></li>
-      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=biographies">BIOGRAPHIES</a> (recommended)</li>
-    </ul>
-  </li>
   <li>Demo Data
     <ul>
       <li><a href="/demo/?pgsql=&amp;username=&amp;db=plhdb_demo&amp;ns=plhdb&amp;select=biography">BIOGRAPHY</a></li>
       <li><a href="/demo/?pgsql=&amp;username=&amp;db=plhdb_demo&amp;ns=plhdb&amp;select=biographies">BIOGRAPHIES</a> (recommended)</li>
+    </ul>
+  </li>
+  <li>Production Data
+    <ul>
+      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=biography">BIOGRAPHY</a></li>
+      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=biographies">BIOGRAPHIES</a> (recommended)</li>
     </ul>
   </li>
 </ul
