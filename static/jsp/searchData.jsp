@@ -109,7 +109,18 @@ whereas BIOGRAPHY contains only the mother's BId.</p>
 <ul>
   <li>Production Data
     <ul>
-      <li><a href=/adminer/?pgsql=&db=plhdb&ns=plhdb&select=site#fieldset-search>
+      <li><a href=/adminer/?pgsql=&username=&db=plhdb&ns=plhdb&select=biography>BIOGRAPHY</a></li>
+      <li><a href=/adminer/?pgsql=&username=&db=plhdb&ns=plhdb&select=biographies>BIOGRAPHIES</a> (recommended)</li>
+    </ul>
+  </li>
+  <li>Demo Data
+    <ul>
+      <li><a href=/adminer/?pgsql=&username=&db=plhdb_demo&ns=plhdb&select=biography>BIOGRAPHY</a></li>
+      <li><a href=/adminer/?pgsql=&username=&db=plhdb_demo&ns=plhdb&select=biographies>BIOGRAPHIES</a> (recommended)</li>
+    </ul>
+  </li>
+</ul
+
 
 <hr/>
 <img src="/images/photos/BMSR-Sifaka-F80-2001-5wks-infantBrockmanCredit-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
