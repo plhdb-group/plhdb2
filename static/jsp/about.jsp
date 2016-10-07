@@ -70,7 +70,7 @@
 
 
 
-<a href="/jsp/searchData.jsp"><img src="/images/inactive_biography.jpg" alt="Search Biography"   onmouseover="this.src='/images/active_biography.jpg'" onmouseout="this.src='/images/inactive_biography.jpg'" /></a>
+<a href="/jsp/searchData.jsp"><img src="/images/inactive_biography.jpg" width="120" height="41" alt="Search Biography"   onmouseover="this.src='/images/active_biography.jpg'" onmouseout="this.src='/images/inactive_biography.jpg'" /></a>
 
 
 
