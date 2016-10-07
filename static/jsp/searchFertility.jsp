@@ -86,12 +86,35 @@
    <div class="content">
 
 <h2>Search Fertility Interval</h2>
-<p>All records will be returned if no searching conditions are specified.</p>
+<p>This page no longer contains a search form.  Quick links to search
+pages simlar to the old search pages are provided below.  Access to
+all database content is provided through a generic user interface
+supplied by <a href="http://adminer.org">Adminer.org</a>.
+
+<p>The recommended download choice is via the FERTILITIES view.
+FERTILITIES contains AnimId and StudyId columns (and another for BId)
+whereas FERTILITY has only a BId column.</p>
+
 <div style="clear:both;"></div>
+
 
 
 <h3>Available downloads</h3>
 
+<ul>
+  <li>Production Data
+    <ul>
+      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=fertility>FERTILITY"</a></li>
+      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=fertilities">FERTILITIES</a> (recommended)</li>
+    </ul>
+  </li>
+  <li>Demo Data
+    <ul>
+      <li><a href="/demo/?pgsql=&amp;username=&amp;db=plhdb_demo&amp;ns=plhdb&amp;select=fertility">FERTILITY</a></li>
+      <li><a href="/demo/?pgsql=&amp;username=&amp;db=plhdb_demo&amp;ns=plhdb&amp;select=fertilities">FERTILITIES</a> (recommended)</li>
+    </ul>
+  </li>
+</ul
 
 <hr/>
 <img src="/images/photos/Campos-Fedigan-Cebus-capucinus-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
