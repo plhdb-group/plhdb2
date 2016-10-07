@@ -41,7 +41,7 @@ CREATE TABLE fertility (
 
 ALTER TABLE fertility ENABLE ROW LEVEL SECURITY;
 
-grant_row_level_priv(`fertility', `fid')
+grant_row_level_priv(`fertility')
 grant_demo_user_priv(`fertility')
 
 

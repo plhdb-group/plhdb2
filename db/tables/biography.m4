@@ -136,7 +136,7 @@ CREATE TABLE biography (
 
 ALTER TABLE biography ENABLE ROW LEVEL SECURITY;
 
-grant_row_level_priv(`biography', `bid')
+grant_row_level_priv(`biography')
 grant_demo_user_priv(`biography')
 
 
