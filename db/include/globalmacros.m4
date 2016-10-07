@@ -37,6 +37,22 @@ dnl m4 includes
 include(`constants.m4')
 
 
+dnl sql fragment to cast values which might be NULL to text.
+dnl
+dnl Syntax: textualize(expr)
+dnl
+dnl expr  An expression which might be NULL.
+dnl
+dnl Remarks:
+dnl  Useful when raising errors to get a uniform external NULL
+dnl representation.
+dnl
+changequote({,})
+define({textualize},{CASE WHEN $1 IS NULL THEN 'NULL' ELSE $1::TEXT END
+})
+changequote(`,')
+
+
 dnl SET clause used in all function definition statements.
 dnl This secures the function so that it does not operate on unexpected
 dnl objects.
