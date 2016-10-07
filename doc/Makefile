@@ -20,7 +20,7 @@
 # Bugs:
 
 SOURCE := plhdb_base.dia plhdb_data.dia key.dia plhdb_titlepage.dia
-PDF_TARGETS := $(EPS_TARGETS:.eps=.pdf)
+PDF_TARGETS := $(SOURCE:.dia=.pdf)
 
 TARGETS := $(PDF_TARGETS) plhdb_er_diagrams.pdf
 
