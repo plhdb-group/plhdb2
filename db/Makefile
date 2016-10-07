@@ -115,9 +115,9 @@ reinstallnolock:
 .PHONY: destroy
 destroy:
 	make -C triggers destroy
+	make -C views destroy
 	make -C policy destroy
 	make -C tables destroy
-	make -C views destroy
 	make -C functions destroy_other
 
 .PHONY: clean
