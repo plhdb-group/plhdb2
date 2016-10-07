@@ -97,8 +97,9 @@ all database content is provided through a generic user interface
 supplied by <a href="http://adminer.org">Adminer.org</a>.
 
 <p>The recommended download choice is via the BIOGRAPHIES view.
-BIOGRAPHIES contains the mother's AnimId (and the mother's BId)
-whereas BIOGRAPHY contains only the mother's BId.</p>
+BIOGRAPHIES contains a column for the mother's AnimId (and another for
+the mother's BId) whereas BIOGRAPHY has a column only for the mother's
+BId.</p>
 
 <div style="clear:both;"></div>
 
