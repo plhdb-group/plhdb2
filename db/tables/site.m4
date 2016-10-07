@@ -46,7 +46,10 @@ the long term). It would also seem desirable to record the geographic
 area of the site as a polygon, rather than as a single point.';
 
 COMMENT ON COLUMN site.siteid IS
-'Unique row identifier.';
+'Unique row identifier.  The value of this column is automatically
+assigned by the system; the normal practice, which results in a system
+generated id, is to omit this column when inserting new rows or to
+supply a NULL value.  The value of this column cannot be NULL.';
 
 COMMENT ON COLUMN site.name IS
 'The name of the site, which must be unique. This may be a short or a

@@ -25,7 +25,10 @@ changequote({,})
 define({comment_biography_columns}, {dnl
 COMMENT ON COLUMN $1.bid IS
 'Unique row identifer, and hence a unique identifer of the individual
-regardless of study.  The value of this column cannot be changed.
+regardless of study.  The value of this column is automatically
+assigned by the system; the normal practice, which results in a system
+generated id, is to omit this column when inserting new rows or to
+supply a NULL value.  The value of this column cannot be changed.
 
 TIP: Can be used to JOIN with FERTILITY.BId.';
 

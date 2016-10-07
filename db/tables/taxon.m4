@@ -42,7 +42,10 @@ model with no identification of the taxonomy being used, and there can
 be only two names, one scientific and one common.';
 
 COMMENT ON COLUMN taxon.taxonid IS
-'Unique row identifier.';
+'Unique row identifier.  The value of this column is automatically
+assigned by the system; the normal practice, which results in a system
+generated id, is to omit this column when inserting new rows or to
+supply a NULL value.  The value of this column cannot be NULL.';
 
 COMMENT ON COLUMN taxon.scientific_name IS
 'The scientific name for the taxon, using for example the NCBI or the

@@ -24,7 +24,10 @@ changequote({,})
 
 define({comment_permission_columns}, {dnl
 COMMENT ON COLUMN $1.pid IS
-  'Unique row identifier.';
+'Unique row identifier.  The value of this column is automatically
+assigned by the system; the normal practice, which results in a system
+generated id, is to omit this column when inserting new rows or to
+supply a NULL value.  The value of this column cannot be NULL.';
 
 COMMENT ON COLUMN $1.access IS
 'The type of access granted.  Must be one of:
