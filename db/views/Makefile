@@ -39,10 +39,11 @@ $(COPYRIGHT): $(COPYRIGHTSRC) $(DEPS)
 makeviews.sql: $(SQLFILES) $(COPYRIGHT) $(DEPS)
 	cat $(COPYRIGHT) $(SQLFILES) > makeviews.sql
 
-destroyviews.sql: destroyviews.sh $(COPYRIGHT) $(DEPS)
+destroyviews.sql: destroyviews.sh destroyviewtriggers $(COPYRIGHT) $(DEPS)
 	cat $(COPYRIGHT) > destroyviews.sql
 	printf "%s" "$(INFILES:.m4=)" \
 	  | sh destroyviews.sh >> destroyviews.sql
+	cat destroyviewtriggers >> destroyviews.sql
 
 # Make any *.sql file from it's *.m4 file.
 %.sql: %.m4 $(COPYRIGHTSRC) $(INCLUDE)/*.m4 \
