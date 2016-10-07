@@ -22,6 +22,7 @@ include(`copyright.m4')
 include(`tablemacros.m4')
 include(`grants.m4')
 include(`constants.m4')
+include(`fertility_comments.m4')
 
 CREATE TABLE fertility (
    fid SERIAL PRIMARY KEY
@@ -93,40 +94,7 @@ FERTILITIES is identical to this table but for the additional
 columns.';
 
 
-COMMENT ON COLUMN fertility.fid IS
-'Unique row identifer, and hence the unique identifer of the female
-fertility interval.  The value of this column cannot be changed.';
-
-COMMENT ON COLUMN fertility.bid IS
-'Unique identifer of the individual for which the row records a
-fertility interval.
-
-TIP: Can be used to JOIN with BIOGRAPHY.BId.';
-
-COMMENT ON COLUMN fertility.startdate IS
-'Startdate for fertility surveillance.  Date on which surveillance of
-fertility began.  This date must not have error associated with
-it. These dates are con servative: if you are sure that you know about
-her starting on July 15 but you MIGHT know about her starting on July
-1, you must choose the more conservative date, which is July 15.  This
-value may not be NULL.';
-
-COMMENT ON COLUMN fertility.starttype IS
-'Reason for the start of surveillance. The vocabularly for this column
-is defined by the START_EVENT table.  This value may not be NULL.';
-
-COMMENT ON COLUMN fertility.stopdate IS
-'Stopdate for fertility surveillance.  Date on which surveillance of
-fertility ended.  Surveillance ends when you stop seeing the animal for
-a long enough period of time that births could be missed.  This date
-must not have error associated with it. These dates are conservative:
-if you are sure that you know about her until July 1 but you MIGHT know
-about her until July 15, you must choose the more conservative date
-which is July 1.  This value may not be NULL.';
-
-COMMENT ON COLUMN fertility.stoptype IS
-'Cause of the end of surveillance. The vocabularly for this column is
-defined by the END_EVENT table.  This value may not be NULL.';
+comment_fertility_columns(`fertility')
 
 
 CREATE INDEX femalefertilityinteval_bid
