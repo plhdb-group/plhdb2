@@ -20,10 +20,8 @@
 # Bugs:
 
 SOURCE := plhdb_base.dia plhdb_data.dia key.dia plhdb_titlepage.dia
-#EPS_TARGETS := $(SOURCE:.dia=.eps)
 PDF_TARGETS := $(EPS_TARGETS:.eps=.pdf)
 
-#TARGETS := $(EPS_TARGETS) $(PDF_TARGETS) plhdb_er_diagrams.pdf
 TARGETS := $(PDF_TARGETS) plhdb_er_diagrams.pdf
 
 DEPS := Makefile
@@ -38,14 +36,6 @@ plhdb_er_diagrams.pdf: $(PDF_TARGETS) $(DEPS)
 %.pdf: %.dia $(DEPS)
 	dia --export=$@ --filter=pdf $<
 
-#%.eps: %.dia $(DEPS)
-#	dia --export=$@ --filter=eps $<
-#
-#%.pdf: %.eps $(DEPS)
-#	ps2pdf $< $@
-#
-## Don't see why we want make to delete eps files
-#.PRECIOUS: $(EPS_TARGETS)
 
 .PHONY: clean
 clean:
