@@ -63,7 +63,7 @@
 
 
 
-<a href="/jsp/login.jsp"><img src="/images/inactive_login.jpg" width="66" height="41" alt="Login"  onmouseover="this.src='/images/active_login.jpg'" onmouseout="this.src='/images/inactive_login.jpg'"/></a>
+<a href="/adminer/"><img src="/images/inactive_login.jpg" width="66" height="41" alt="Login"  onmouseover="this.src='/images/active_login.jpg'" onmouseout="this.src='/images/inactive_login.jpg'"/></a>
 
 
 
@@ -91,10 +91,14 @@
 
 
 <h2>Search Biography</h2>
-<p>This page no longer contains a search form.  Use the links provided
-below.  Access to all database content is provided through a generic user interface supplied by <a href="http://adminer.org">Adminer.org</a>.
+<p>This page no longer contains a search form.  Quick links to search
+pages simlar to the old search pages are provided below.  Access to
+all database content is provided through a generic user interface
+supplied by <a href="http://adminer.org">Adminer.org</a>.
 
-<p>Download from
+<p>The recommended download choice is via the BIOGRAPHIES view.
+BIOGRAPHIES contains the mother's AnimId (and the mother's BId)
+whereas BIOGRAPHY contains only the mother's BId.</p>
 
 <div style="clear:both;"></div>
 
@@ -102,6 +106,10 @@ below.  Access to all database content is provided through a generic user interf
 
 <h3>Available downloads</h3>
 
+<ul>
+  <li>Production Data
+    <ul>
+      <li><a href=/adminer/?pgsql=&db=plhdb&ns=plhdb&select=site#fieldset-search>
 
 <hr/>
 <img src="/images/photos/BMSR-Sifaka-F80-2001-5wks-infantBrockmanCredit-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
