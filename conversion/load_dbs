@@ -47,11 +47,15 @@ loaddb() {
   dumpfile=/srv/apps/old_system_db_dumps/$db.custom
   pg_restore --no-privileges --no-owner -U $ADMIN -d $newdb $dumpfile
 
-  for schema in audit auth bulkimp plhdb public sandbox ; do
-    printf "grant usage on schema $schema to plhdb_managers;\n"
-    printf "grant select on all tables in schema $schema \n"
-    printf "             to plhdb_managers;\n"
-  done \
+  { for schema in audit auth bulkimp plhdb public sandbox ; do
+      printf "grant usage on schema $schema to plhdb_managers;\n"
+      printf "grant select on all tables in schema $schema \n"
+      printf "             to plhdb_managers;\n"
+    done
+    printf 'alter database %s ' $newdb
+    printf 'set search_path to '
+    printf 'public,plhdb,auth,audit,bulkimp,sandbox,"$user";\n'
+  } \
   | psql -U $ADMIN $newdb
 }
 
