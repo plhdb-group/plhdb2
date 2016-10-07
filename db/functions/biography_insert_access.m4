@@ -58,7 +58,8 @@ CREATE OR REPLACE FUNCTION
              OR permission.study = 'plh_allstudies')
             AND permission.username = SESSION_USER
             AND (permission.access = 'plh_insert'
-                 OR permission.access = 'plh_edit'));
+                 OR permission.access = 'plh_edit'
+                 OR permission.access = 'plh_all'));
 
   END;
 $$;

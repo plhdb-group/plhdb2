@@ -57,7 +57,8 @@ CREATE OR REPLACE FUNCTION
       WHERE (permission.study = studyid
              OR permission.study = 'plh_allstudies')
             AND permission.username = SESSION_USER
-            AND permission.access = 'plh_edit');
+            AND (permission.access = 'plh_edit'
+                 OR permission.access = 'plh_all'));
   END;
 $$;
 grant_func_priv(`biography_edit_access(plh_studyid_type)')

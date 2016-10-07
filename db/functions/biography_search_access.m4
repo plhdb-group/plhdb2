@@ -59,7 +59,8 @@ CREATE OR REPLACE FUNCTION
             AND permission.username = SESSION_USER
             AND (permission.access = 'plh_search'
                  OR permission.access = 'plh_insert'
-                 OR permission.access = 'plh_edit'));
+                 OR permission.access = 'plh_edit'
+                 OR permission.access = 'plh_all'));
   END;
 $$;
 grant_func_priv(`biography_search_access(plh_studyid_type)')

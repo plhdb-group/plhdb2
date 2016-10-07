@@ -60,7 +60,8 @@ CREATE OR REPLACE FUNCTION
       WHERE biography.bid = this_bid
             AND permission.username = SESSION_USER
             AND (permission.access = 'plh_insert'
-                 OR permission.access = 'plh_edit'));
+                 OR permission.access = 'plh_edit'
+                 OR permission.access = 'plh_all'));
 
   END;
 $$;
