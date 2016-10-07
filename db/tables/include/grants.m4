@@ -132,8 +132,6 @@ dnl
 dnl Syntax: grant_row_level_priv(tablename)
 changequote([,])
 define([grant_row_level_priv],[
-ALTER TABLE $1 ENABLE ROW LEVEL SECURITY;
-
 GRANT SELECT ON $1 TO GROUP plhdb_users, plhdb_managers;
 GRANT REFERENCES ON $1 TO GROUP plhdb_users, plhdb_managers;
 GRANT INSERT ON $1 TO GROUP plhdb_users, plhdb_managers;

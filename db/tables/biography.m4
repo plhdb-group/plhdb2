@@ -134,6 +134,8 @@ CREATE TABLE biography (
                       OR (departdate IS NOT NULL
                           AND departdateerror IS NOT NULL)));
 
+ALTER TABLE biography ENABLE ROW LEVEL SECURITY;
+
 grant_row_level_priv(`biography', `bid')
 grant_demo_user_priv(`biography')
 

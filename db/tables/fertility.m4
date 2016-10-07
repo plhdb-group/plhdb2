@@ -39,6 +39,8 @@ CREATE TABLE fertility (
      CONSTRAINT "StopType must be a END_EVENT.Code value"
                 REFERENCES end_event);
 
+ALTER TABLE fertility ENABLE ROW LEVEL SECURITY;
+
 grant_row_level_priv(`fertility', `fid')
 grant_demo_user_priv(`fertility')
 
