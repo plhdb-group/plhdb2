@@ -38,7 +38,7 @@ grant_demo_user_priv(`start_event')
 
 COMMENT ON TABLE start_event IS
 'One row per kind of event which begins the interval of time during
-which the life of study individuals are tracked.  This table
+which the lives of study individuals are tracked.  This table
 establishes a controlled vocabulary for the events which mark the
 start of observation.';
 

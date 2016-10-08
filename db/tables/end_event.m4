@@ -38,7 +38,7 @@ grant_demo_user_priv(`end_event')
 
 COMMENT ON TABLE end_event IS
 'One row per kind of event which ends the interval of time during which
-the life of study individuals are tracked.  This table establishes
+the lives of study individuals are tracked.  This table establishes
 a controlled vocabulary for the events which mark the end of
 observation.';
 
