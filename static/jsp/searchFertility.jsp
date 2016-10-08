@@ -110,7 +110,7 @@ whereas FERTILITY has only a BId column.</p>
   </li>
   <li>Production Data
     <ul>
-      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=fertility>FERTILITY"</a></li>
+      <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=fertility">FERTILITY</a></li>
       <li><a href="/adminer/?pgsql=&amp;username=&amp;db=plhdb&amp;ns=plhdb&amp;select=fertilities">FERTILITIES</a> (recommended)</li>
     </ul>
   </li>
