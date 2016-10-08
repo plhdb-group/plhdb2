@@ -40,7 +40,7 @@ TIP: Can be used to JOIN with BIOGRAPHY.BId.';
 COMMENT ON COLUMN $1.startdate IS
 'Startdate for fertility surveillance.  Date on which surveillance of
 fertility began.  This date must not have error associated with
-it. These dates are con servative: if you are sure that you know about
+it. These dates are conservative: if you are sure that you know about
 her starting on July 15 but you MIGHT know about her starting on July
 1, you must choose the more conservative date, which is July 15.  This
 value may not be NULL.';
