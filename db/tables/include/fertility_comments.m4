@@ -28,7 +28,8 @@ COMMENT ON COLUMN $1.fid IS
 fertility interval.  The value of this column is automatically
 assigned by the system; the normal practice, which results in a system
 generated id, is to omit this column when inserting new rows or to
-supply a NULL value.  The value of this column cannot be changed.';
+supply a NULL value.  The value of this column cannot be NULL.  The
+value of this column cannot be changed.';
 
 COMMENT ON COLUMN $1.bid IS
 'Unique identifer of the individual for which the row records a
