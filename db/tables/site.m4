@@ -39,11 +39,8 @@ grant_demo_user_priv(`site')
 
 
 COMMENT ON TABLE site IS
-'One row per site where a study was or is being conducted.  For now,
-geographic coordinates are designated to the entire site, not
-individually to observations (though that would seem desirable over
-the long term). It would also seem desirable to record the geographic
-area of the site as a polygon, rather than as a single point.';
+'One row per site where a study was or is being conducted.  One pair of
+geographic coordinates are designated to the entire site.';
 
 COMMENT ON COLUMN site.siteid IS
 'Unique row identifier.  The value of this column is automatically

@@ -173,7 +173,7 @@ DepartType can be NULL only when DepartDate is also NULL.
 DepartDateError must be NULL if DepartDate is NULL.
 DepartDateError must not be NULL if DepartDate is not NULL.
 
-The combination of StudyId and AnimId must be unique.  Because niether
+The combination of StudyId and AnimId must be unique.  Because neither
 of these columns may be NULL this combination can, instead of the Bid
 value, be used as a unique row identifier.
 
