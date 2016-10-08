@@ -51,7 +51,7 @@ individuals within the study.';
 
 
 COMMENT ON COLUMN study.sid IS
-'Unique row identifier.  May not be ''plh_allstudies''.';
+'Unique row identifier.  May not be ''plh_allstudies'' or NULL.';
 
 COMMENT ON COLUMN study.name IS
 'The name of the study. This may be a descriptive or encoded, must be
