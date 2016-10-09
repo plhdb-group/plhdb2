@@ -93,6 +93,8 @@ CREATE TABLE biography (
  , mombid INTEGER
      CONSTRAINT "MomBId must be a BIOGRAPHY.BId value"
                 REFERENCES biography
+     CONSTRAINT "The MomBId value cannot be the BId value"
+                CHECK(mombid <> bid)
  , sex CHAR(1) NOT NULL
      CONSTRAINT "Sex one of: plh_male, plh_female, plh_unk_sex"
                 CHECK(sex = 'plh_male'
@@ -163,6 +165,7 @@ BDMax may be NULL only when MomOnly is TRUE.
 BDMax may not be after the sum DepartDate plus DepartDateError number
   of years.
 BDDist may be NULL only when MomOnly is TRUE.
+The MomBId value cannot be the Bid value.
 Sex must be ''plh_female'' when MomOnly is TRUE.
 Entrydate must be on or before DepartDate.
 EntryDate may be NULL only when MomOnly is TRUE.
