@@ -17,3 +17,6 @@
 --
 -- Karl O. Pinc <kop@meme.com>
 
+DROP FUNCTION biographies_insert_func() CASCADE;
+DROP FUNCTION biographies_update_func() CASCADE;
+DROP FUNCTION biographies_delete_func() CASCADE;
