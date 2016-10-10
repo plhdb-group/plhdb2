@@ -351,7 +351,7 @@ CREATE FUNCTION biographies_update_func ()
         INTO NEW.momid
         FROM biography
         WHERE biography.bid = NEW.mombid;
-      -- If we don't find anything the underlying table will raise an erorr
+      -- If we don't find anything the underlying table will raise an error
     END IF;
   END IF;
 
