@@ -231,6 +231,8 @@ CREATE FUNCTION biographies_update_func ()
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc., http://www.meme.com/')
 
   -- Check PLHDB permissions
+
+  -- Check access to old study.
   IF NOT(biography_edit_access(OLD.studyid)) THEN
     RAISE EXCEPTION insufficient_privilege USING
           MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHIES'
@@ -244,6 +246,25 @@ CREATE FUNCTION biographies_update_func ()
                    || textualize(`NEW.animid')
                    || '): Permission denied to this row'
         , HINT = 'The ''plh_edit'' PLHDB permission level to the old '
+                 || 'StudyId is required to update this row';
+  END IF;
+
+  -- Check access to new study.
+  IF NEW.studyid IS NULL
+     OR (NEW.studyid <> OLD.studyid
+         AND NOT(biography_edit_access(NEW.studyid))) THEN
+    RAISE EXCEPTION insufficient_privilege USING
+          MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHIES'
+        , DETAIL = 'Key(OLD BId) = (' || OLD.bid
+                   || '): Value (OLD StudyId) = (' || OLD.studyid
+                   || '): Value (OLD AnimId) = (' || OLD.animid
+                   || '): Key(NEW BId) = (' || textualize(`NEW.bid')
+                   || '): Value (NEW StudyId) = ('
+                   || textualize(`NEW.studyid')
+                   || '): Value (NEW AnimId) = ('
+                   || textualize(`NEW.animid')
+                   || '): Permission denied to this row'
+        , HINT = 'The ''plh_edit'' PLHDB permission level to the new '
                  || 'StudyId is required to update this row';
   END IF;
 
