@@ -237,7 +237,7 @@ CREATE FUNCTION biographies_update_func ()
         , DETAIL = 'Key(OLD BId) = (' || OLD.bid
                    || '): Value (OLD StudyId) = (' || OLD.studyid
                    || '): Value (OLD AnimId) = (' || OLD.animid
-                   || 'Key(NEW BId) = (' || textualize(`NEW.bid')
+                   || '): Key(NEW BId) = (' || textualize(`NEW.bid')
                    || '): Value (NEW StudyId) = ('
                    || textualize(`NEW.studyid')
                    || '): Value (NEW AnimId) = ('
@@ -273,7 +273,7 @@ CREATE FUNCTION biographies_update_func ()
                        || textualize(`OLD.mombid')
                        || '): Value (OLD MomId) = ('
                        || textualize(`OLD.momid')
-                       || 'Key(NEW BId) = (' || textualize(`NEW.bid')
+                       || '): Key(NEW BId) = (' || textualize(`NEW.bid')
                        || '): Value (NEW StudyId) = ('
                        || textualize(`NEW.studyid')
                        || '): Value (NEW AnimId) = ('
@@ -307,7 +307,7 @@ CREATE FUNCTION biographies_update_func ()
                        || textualize(`OLD.mombid')
                        || '): Value (OLD MomId) = ('
                        || textualize(`OLD.momid')
-                       || 'Key(NEW BId) = (' || textualize(`NEW.bid')
+                       || '): Key(NEW BId) = (' || textualize(`NEW.bid')
                        || '): Value (NEW StudyId) = ('
                        || textualize(`NEW.studyid')
                        || '): Value (NEW AnimId) = ('
