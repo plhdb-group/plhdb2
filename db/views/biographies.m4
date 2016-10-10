@@ -106,8 +106,8 @@ CREATE FUNCTION biographies_insert_func ()
                    || '): Value (StudyId) = (' || textualize(`NEW.studyid')
                    || '): Value (AnimId) = (' || textualize(`NEW.animid')
                    || '): Permission denied to this row'
-        , HINT = 'The ''plh_insert'' PLHDB permission level to the '
-                 || 'StudyId is required to insert this row';
+        , HINT = 'To insert this row ''plh_insert'' level PLHDB permission '
+                 || 'to the StudyId is required ';
   END IF;
 
   -- Insert into the underlying table
@@ -245,8 +245,8 @@ CREATE FUNCTION biographies_update_func ()
                    || '): Value (NEW AnimId) = ('
                    || textualize(`NEW.animid')
                    || '): Permission denied to this row'
-        , HINT = 'The ''plh_edit'' PLHDB permission level to the old '
-                 || 'StudyId is required to update this row';
+        , HINT = 'To update this row ''plh_edit'' level PLHDB permission '
+                 || 'to the old StudyId is required ';
   END IF;
 
   -- Check access to new study.
@@ -264,8 +264,8 @@ CREATE FUNCTION biographies_update_func ()
                    || '): Value (NEW AnimId) = ('
                    || textualize(`NEW.animid')
                    || '): Permission denied to this row'
-        , HINT = 'The ''plh_edit'' PLHDB permission level to the new '
-                 || 'StudyId is required to update this row';
+        , HINT = 'To update this row ''plh_edit'' level PLHDB permission '
+                 || 'to the new StudyId is required ';
   END IF;
 
   -- Update the underlying table
@@ -404,8 +404,8 @@ CREATE FUNCTION biographies_delete_func ()
                      || '): Value (StudyId) = (' || OLD.studyid
                      || '): Value (AnimId) = (' || OLD.animid
                      || '): Permission denied to this row'
-          , HINT = 'The ''plh_all'' PLHDB permission level to this study is '
-                   || 'required to delete this row';
+          , HINT = 'To delete this row ''plh_all'' level PLHDB permission '
+                   || 'to the StudyId is required ';
     END IF;
 
     -- Delete from the underlying table
