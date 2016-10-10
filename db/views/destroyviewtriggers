@@ -20,3 +20,7 @@
 DROP FUNCTION biographies_insert_func() CASCADE;
 DROP FUNCTION biographies_update_func() CASCADE;
 DROP FUNCTION biographies_delete_func() CASCADE;
+
+DROP FUNCTION fertilities_insert_func() CASCADE;
+DROP FUNCTION fertilities_update_func() CASCADE;
+DROP FUNCTION fertilities_delete_func() CASCADE;
