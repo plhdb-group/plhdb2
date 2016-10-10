@@ -51,13 +51,14 @@ CREATE OR REPLACE FUNCTION
 
   BEGIN
 
-  RETURN EXISTS(
-    SELECT 1
-      FROM permission
-      WHERE (permission.study = studyid
-             OR permission.study = 'plh_allstudies')
-            AND permission.username = SESSION_USER
-            AND permission.access = 'plh_all');
+  RETURN is_superuser()
+    OR EXISTS(
+      SELECT 1
+        FROM permission
+        WHERE (permission.study = studyid
+               OR permission.study = 'plh_allstudies')
+              AND permission.username = SESSION_USER
+              AND permission.access = 'plh_all');
 
   END;
 $$;

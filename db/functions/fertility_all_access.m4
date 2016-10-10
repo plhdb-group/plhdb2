@@ -51,15 +51,16 @@ CREATE OR REPLACE FUNCTION
 
   BEGIN
 
-  RETURN EXISTS(
-    SELECT 1
-      FROM biography
-           JOIN permission
-                ON (permission.study = biography.studyid
-                    OR permission.study = 'plh_allstudies')
-      WHERE biography.bid = this_bid
-            AND permission.username = SESSION_USER
-            AND permission.access = 'plh_all');
+  RETURN is_superuser()
+    OR EXISTS(
+      SELECT 1
+        FROM biography
+             JOIN permission
+                  ON (permission.study = biography.studyid
+                      OR permission.study = 'plh_allstudies')
+        WHERE biography.bid = this_bid
+              AND permission.username = SESSION_USER
+              AND permission.access = 'plh_all');
 
   END;
 $$;
