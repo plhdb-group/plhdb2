@@ -93,6 +93,9 @@ CREATE FUNCTION biographies_insert_func ()
   LANGUAGE plpgsql
   plh_function_set_search_path
   AS $$
+  DECLARE
+    this_mombid biography.mombid%TYPE;
+
   BEGIN
   -- Function for biographies insert triggers
   --
@@ -136,7 +139,7 @@ CREATE FUNCTION biographies_insert_func ()
     ELSE  -- Only momid specified
       -- Get the mombid that goes with the supplied momid
       SELECT biography.bid
-        INTO NEW.mombid
+        INTO this_mombid
         FROM biography
         WHERE biography.studyid = NEW.studyid
               AND biography.animid = NEW.animid;
@@ -152,6 +155,8 @@ CREATE FUNCTION biographies_insert_func ()
                      || '): The supplied MomId and StudyId values do not '
                      || 'refer to an existant individual';
       END IF;
+
+      NEW.mombid := this_mombid;
     END IF;
 
   ELSE -- No momid specified
@@ -225,6 +230,9 @@ CREATE FUNCTION biographies_update_func ()
   LANGUAGE plpgsql
   plh_function_set_search_path
   AS $$
+  DECLARE
+    this_mombid biography.mombid%TYPE;
+
   BEGIN
   -- Function for biographies update triggers
   --
@@ -313,7 +321,7 @@ CREATE FUNCTION biographies_update_func ()
         NEW.mombid := NULL;
       ELSE
         SELECT biography.bid
-          INTO NEW.mombid
+          INTO this_mombid
           FROM biography
           WHERE biography.studyid = NEW.studyid
                 AND biography.animid = NEW.momid;
@@ -339,6 +347,8 @@ CREATE FUNCTION biographies_update_func ()
                        || '): The supplied new MomId and new StudyId values '
                        || 'do not refer to an existant BIOGRAPHY row';
         END IF;
+
+        NEW.mombid := this_mombid;
       END IF;
     END IF;
   ELSE -- momid did not change
