@@ -1,0 +1,269 @@
+The PLHDB Database
+Version 2.0
+
+
+Database content:
+
+The database performs automatic data validation to catch a selected
+set of data errors.  Please read the documentation of the tables and
+columns within the database for the details.  The database rejects
+with an error message any data which violates it's data integrity
+checks.
+
+The default style for dates is the "international style" (ISO),
+YYYY-MM-DD.  This means that, unless you alter this setting whenever
+submitting queries, the database outputs dates in this format.  No
+change of settings is required to enter dates in a variety of formats.
+When a date input to the database is ambiguous the system assumes the
+date is MM/DD/YY, not DD/MM/YY.  For more information on date formats
+see:
+https://www.postgresql.org/docs/9.5/static/datatype-datetime.html#DATATYPE-DATETIME-OUTPUT
+
+The character encoding of the database is US-ASCII.  This means the
+database is expecting content made up of the numbers, letters, and
+symbols found on a U.S. keyboard.  These characters require 7 bits of
+storage.  The database will hold characters made of up 8 bits, such as
+the UTF-8 character set.  An example character is the Spanish "n" with
+a tilde (~) over it.  Although 8 bit characters can be put into the
+database and downloaded from the database without issue, 8 bit
+characters will not sort as expected.
+
+The timezone of the server and of the times stored in the database
+(when timezone is significant, which it is not unless you create new
+tables) is U.S. Eastern.
+
+  
+PostgreSQL User Accounts:
+
+PostgreSQL accounts are the logins given to PLHDB users which allow
+access to the production database.  Only the demo database can be
+accessed without a PostgreSQL user account.  Each person is given a
+PostgreSQL account (or possibly more than one, see below) and a
+password by an authorized PLHDB project member.  All databases on the
+new server (or at least portions thereof, see below) become accessible
+once the person logs in to the new server using their PostgreSQL
+account.
+
+Note that the PostgreSQL account (and it's associated password) is
+distinct from the Duke NetId (and it's password), even when the
+usernames are identical (and the passwords match).  Should the
+username or password of either the PostgreSQL account or the Duke
+NetId ever change the other will not automatically reflect the change.
+
+
+PLHDB version 2 contains 3 levels of PostgreSQL user accounts:
+Administrators, system managers, and study users.  Within the
+PostgreSQL database PLHDB accounts are PostgreSQL roles with login
+privileges.
+
+
+PLHDB version 2 administrative accounts have no equivalent in PLHDB
+version 1.
+
+Only administrative accounts can create and delete accounts.
+Administrative accounts have unlimited power within the database.
+They can backup and restore the entire database, create new tables,
+delete existing ones, and so forth.  Administrative accounts can
+destroy not only the data within the database but all of the
+database's structure.  Administrative accounts should be handed out
+sparingly, and used sparingly.
+
+Each person with an administrative account should have an additional
+account of another sort for regular use.  The administrative account
+assigned a person should be used only when necessary.  The expected
+typical use is to create new accounts or delete old ones.
+
+The remaining two kinds of accounts, system manager accounts and study
+user accounts, are assigned a personal schema.  (A schema can be
+thought of as a folder which holds database objects, like tables.)
+The name of a personal schema is name of it's associated account.
+Users have full permissions within their personal schemas to create
+any sort of database object -- tables, views, and so forth.  No other
+user non-administrative user has any permissions to a user's personal
+schema or its content, and no such permissions should be granted by
+the user.  All shared database objects (tables etc.) should be put
+into schemas shared by all users.  When a system manager account or a
+study user account is deleted the personal schema must also be
+removed.  Keeping shared database objects _out_ of personal schemas
+ensures that objects can be discarded when no longer in use, and
+ensures that shared objects are not accidentally discarded.
+
+Administrative accounts can create shared schemas, like the built-in
+"sandbox" schema, should such schemas become necessary.
+
+What makes a PostgreSQL role a PLHDB administrator is the assignment
+of PostgreSQL superuser privileges.
+
+
+PLHDB version 2 system manager accounts are roughly equivalent to the
+"admin" accounts in PLHDB version 1.
+
+System manager accounts can alter the data stored within all tables.
+System manager accounts _are_ restricted by the PLHDB permission
+system and therefore, in the same fashion as study user accounts, can
+be prevented from performing certain alterations to the data
+associated with particular studies.  But system manager accounts may
+alter the content of the tables controlling the PLHDB permission
+system.  So system manager accounts can grant themselves any access to
+any study.  As a practical matter system manager accounts may as well
+be given all access to all studies.  As is made clear below, this aids
+the system manager's view of which accounts have what permissions to
+which studies and therefore allows the system manager to better manage
+the PLHDB permission system.
+
+System manager accounts may be used for research.  They are also the
+account type which is expected to do things like create new studies,
+assign PLHDB permissions to other accounts, and bulk load data.
+(Study user accounts can also bulk load data, but only data for those
+studies to which they have the necessary permissions.)
+
+What makes an PostgreSQL role a PLHDB system manager is its membership
+in the PostgreSQL "plhdb_managers" role.
+
+
+PLHDB version 2 study user accounts are equivalent to "non-admin"
+accounts in PLHDB version 1.
+
+Study user accounts are restricted in the study data they can see and
+alter by the PLHDB permission system.  Study user accounts have read
+access to all non-study specific data.  This includes all non-animal
+data, such as study names and locations, and the list of which
+accounts exist, to whom they belong, and what kind of accounts they
+are.
+
+The PLHDB permission system also limits who can see which permissions
+are granted to which accounts.  Study user accounts have access to
+only those rows within the PLHDB permission system related to the
+studies to which the study user account has been granted any level of
+access.  For example, a user granted any access at all to study 5
+within the PLHDB permission system and who has no access to any other
+studies can view only the permissions to study 5 granted to all other
+users.  The user cannot view the permissions granted users to
+non-study 5 studies.
+
+Most accounts are expected to be study user accounts.
+
+What makes an PostgreSQL role a PLHDB study user is its membership in
+the PostgreSQL "plhdb_users" role.
+
+
+Accounts are created with the 'plhdb-user-add' command at the Unix
+command prompt and deleted with the 'plhdb-user-delete' command.  Use
+the '-h' argument with these commands to get help.
+
+
+The PLHDB Permissions System:
+
+When a new system manager or study user account is created permissions
+to studies must be assigned.  Per study we need to know person (the
+person's PostgreSQL account) and permission level.
+
+The PLHDB version 2 permission levels are (as consistent with the
+PLHDB version 1 permissions):
+
+  search
+    Can read study data
+
+  insert
+    search permissions + Can create new rows
+
+  edit
+    insert permissions + Can alter existing rows
+
+  all
+  edit permissions + Can delete existing rows
+
+Without explicitly being given some kind of permission to a study an
+account has no access to that study's data.
+
+An account with no study permissions can see only non-study data --
+the list of existent study codes, the list of the various taxons
+studied, etc.  New PLHDB managers are automatically given search
+access to all studies, but new PLHDB study users are given no access
+to any study; be sure to give new users some access to some study.
+
+
+Views:
+
+Care must be taken when writing views which are to be used by other
+people.  Views execute with the permissions of the view creator, so
+views can expose data that a view user would not otherwise be able to
+access.
+
+As a general rule, views should be created by administrative accounts
+and written so that the views themselves enforce the desired security
+policies.  PLHDB uses functions to enforce row-level security and
+therefore prevent users from seeing data of studies to which they do
+not have access.  New views should avail themselves of these
+functions.  See the in database documentation on the existent
+functions and the doc/db/functions/ directory in the system's source
+code for further information on the PLHDB functions which enforce
+row-level security.  See the doc/db/views/ directory for examples.
+
+
+The Archived PLHDB Version 1 Databases:
+
+The PLHDB version 1 demo and production databases are archived.  These
+databases are in read-only mode; the "default_transaction_read_only"
+setting is "on".  SET TRANSACTION may be used to override this and
+alter an archived database.  This is not recommended.
+
+Only system manager accounts may access the copies of the PLHDB
+version 1 databases.  Because there are no in-database restrictions to
+control which account may see what study data PLHDB version 2 study
+user accounts should not be given access to the PLHDB version 1
+databases.  One possible work-around is to download from the PLHDB
+version 1 database only those rows which a given user is allowed to
+see.  Then upload them into a table within the user's personal schema.
+
+
+Appendixes:
+
+
+List of Unix command line programs:
+
+ plhdb-archive-db          Archive a database
+ plhdb-copy-plhdb-schema   Copy content of the "plhdb" schema between dbs
+ plhdb_postgres_backup     Backup the system (run automatically)
+ plhdb-user-add            Create a new Postgres user and setup for PLHDB
+ plhdb-user-delete         Delete a Postgres user, one setup for PLHDB
+
+
+List of databases:
+
+  old_plhdb         Production database of old server, PLHDB version 1
+  old_plhdb_demo    Demo database of old server, PLHDB version 1
+  plhdb             For production use
+  plhdb_copy        For software development
+  plhdb_demo        Demo database
+  plhdb_test        For testing done by PLHDB account holders
+  plhdb_YYYY_MM_DD  Archive of a database, probably of the "plhdb" db
+  postgres          A system database, ignore it
+  template0         A system database, ignore it
+  template1         A system database, ignore it
+
+
+List of non-security related functions:
+
+-- Syntax: last_departdate(departdate, departdateerror)
+--
+-- Arguments:
+--   departdate  A date
+--   departdateerror  Double precision float; number of years
+--
+          
+Given a departure date and a departure date error returns the latest
+possible departure date.  Fractions of a day are _not_ truncated;
+e.g. if the computed latest possible departure ends at 9AM that date
+is returned.  Any part of a day at the end of the computed interval is
+considered to be an entire day for purposes of the computation.
+
+This function is used whenever the system computes an individual''s
+latest possible departure date.  It is also available for use in
+queries.
+
+Example:
+  SELECT studyid, animid, departdate, departdateerror
+         , last_departdate(departdate, departdateerror) AS max_departdate
+             FROM biography;
+
