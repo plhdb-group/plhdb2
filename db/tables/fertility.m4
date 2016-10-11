@@ -97,7 +97,7 @@ columns.';
 comment_fertility_columns(`fertility')
 
 
-CREATE INDEX femalefertilityinteval_bid
+CREATE INDEX fertility_bid
              ON fertility (bid);
 CREATE INDEX fertility_startdate
              ON fertility (startdate);
