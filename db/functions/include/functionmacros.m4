@@ -13,7 +13,7 @@ dnl    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl    GNU General Public License for more details.
 dnl
 dnl    You should have received a copy of the GNU General Public License
-dnl    along with Babase.  If not, see <http://www.gnu.org/licenses/>.
+dnl    along with PLHDB2.  If not, see <http://www.gnu.org/licenses/>.
 dnl
 dnl M4 macros for making functions to support PLHDB on the server side.
 dnl Karl O. Pinc <kop@meme.com>
