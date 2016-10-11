@@ -53,9 +53,13 @@ db_setup_sql() {
 cat - <<EOF
 create schema $A_USER authorization $A_USER;
 comment on schema $A_USER is 'Area for the exclusive use of $A_DESCR';
-insert into permission (access, study, username)
-  values('plh_search', 'plh_allstudies', '$A_USER');
 EOF
+if [ $MANAGER = 'y' ] ; then
+  cat - <<EOF
+    insert into permission (access, study, username)
+      values('plh_search', 'plh_allstudies', '$A_USER');
+EOF
+fi
 }
 
 # Parse command line
@@ -73,12 +77,16 @@ export A_USER=$2
 export A_GROUP=$3
 export A_DESCR=$4
 
+export MANAGER='n'
 if [ -z "$ADMIN" ] ; then
   if [ "$A_GROUP" != "plhdb_users" \
        -a "$A_GROUP" != "plhdb_managers" ] ; then
     echo "'$A_GROUP' not plhdb_users or plhdb_managers" >&2
     usage >&2
     exit 1;
+  fi
+  if [ "$A_GROUP" = "plhdb_managers" ] ; then
+    MANAGER='y'
   fi
 else
   if [ -z "$A_DESCR" ] ; then
