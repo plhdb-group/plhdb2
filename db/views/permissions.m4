@@ -35,15 +35,16 @@ CREATE OR REPLACE VIEW permissions AS
        , permission.access   AS access
     FROM permission
     WHERE
-      EXISTS (SELECT 1 FROM user_permissions)
-      AND (
-        EXISTS (SELECT 1
-                  FROM user_permissions
-                  WHERE user_permissions.study = 'all')
-        OR study = 'all'
-        OR EXISTS (SELECT 1
-                     FROM user_permissions
-                     WHERE permission.study = user_permissions.study));
+      is_superuser()
+      OR (EXISTS (SELECT 1 FROM user_permissions)
+          AND (
+            EXISTS (SELECT 1
+                      FROM user_permissions
+                      WHERE user_permissions.study = 'all')
+            OR study = 'all'
+            OR EXISTS (SELECT 1
+                         FROM user_permissions
+                         WHERE permission.study = user_permissions.study)));
 
 grant_priv(`permissions')
 
