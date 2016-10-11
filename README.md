@@ -48,8 +48,8 @@ excepting code which extends other projects used on the PLHDB website.
 Code extending other projects is clearly marked and distributed under
 the license(s) used by the projects so extended.
 
->  Primate Life Histories Database
->  Copyright (C) 2007-2015 Hilmar Lapp, Xianhua Liu 
+>  Primate Life Histories Database  
+>  Copyright (C) 2007-2015 Hilmar Lapp, Xianhua Liu   
 >  Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
 >
 >  This program is free software: you can redistribute it and/or modify
