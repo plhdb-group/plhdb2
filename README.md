@@ -11,14 +11,12 @@ life history data that have been collected from wild primate populations.
 Source Code
 -----------
 
-Version 2
-`````````
+### Version 2
 
 The source code to PLHDB version 2 is available on GitHub
 (http://github.com/plhdb-group/plhdb2).
 
-Version 1
-`````````
+### Version 1
 
 The source code to PLHDB version 1 is available on GitHub
 (http://github.com/NESCent/plhdb).
