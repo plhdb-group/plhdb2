@@ -184,7 +184,7 @@ The combination of StudyId and AnimName must be unique.  Because
 AnimName may be NULL this combination cannot be used as a unique row
 identifier.
 
-Individuals identifed as mothers (rows that have a BId value in the
+Individuals identified as mothers (rows that have a BId value in the
 MomBId column of another BIOGRAPHY row) must have a ''plh_female''
 value for Sex.  Mothers and their offspring must have the same StudyId
 value.
