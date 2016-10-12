@@ -222,7 +222,7 @@ CREATE FUNCTION fertilities_insert_func ()
                    || '): Value (StudyId) = (' || NEW.studyid
                    || '): Value (AnimId) = (' || NEW.animid
                    || '): Permission denied to this row'
-        , HINT = 'To insert this row ''plh_insert'' level PLHDB permission '
+        , HINT = 'To insert this row, ''plh_insert'' level PLHDB permission '
                  || 'to the StudyId is required ';
   END IF;
 
@@ -286,7 +286,7 @@ CREATE FUNCTION fertilities_update_func ()
                    || '): Value (NEW AnimId) = ('
                    || textualize(`NEW.animid')
                    || '): Permission denied to this row'
-        , HINT = 'To update this row ''plh_edit'' level PLHDB permission '
+        , HINT = 'To update this row, ''plh_edit'' level PLHDB permission '
                  || 'to the old StudyId is required ';
   END IF;
 
@@ -388,7 +388,7 @@ CREATE FUNCTION fertilities_update_func ()
                    || '): Value (NEW StudyId) = (' || NEW.studyid
                    || '): Value (NEW AnimId) = (' || NEW.animid
                    || '): Permission denied to this row'
-        , HINT = 'To update this row ''plh_edit'' level PLHDB permission '
+        , HINT = 'To update this row, ''plh_edit'' level PLHDB permission '
                  || 'to the new StudyId is required ';
   END IF;
 
@@ -429,7 +429,7 @@ CREATE FUNCTION fertilities_delete_func ()
                      || '): Value (StudyId) = (' || OLD.studyid
                      || '): Value (AnimId) = (' || OLD.animid
                      || '): Permission denied to this row'
-          , HINT = 'To delete this row ''plh_all'' level PLHDB permission '
+          , HINT = 'To delete this row, ''plh_all'' level PLHDB permission '
                    || 'to the StudyId is required ';
     END IF;
 
