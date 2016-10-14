@@ -2,7 +2,7 @@ dnl Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
 dnl
 dnl    This file is part of PLHDB2.
 dnl
-dnl    PLDHB2 is free software; you can redistribute it and/or modify
+dnl    PLHDB2 is free software; you can redistribute it and/or modify
 dnl    it under the terms of the GNU General Public License as published by
 dnl    the Free Software Foundation; either version 3 of the License, or
 dnl    (at your option) any later version.
