@@ -231,7 +231,10 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.EntryDate) = (' || this_entrydate
                    || '): StartDate must be the BIOGRAPHY.EntryDate when '
-                   || 'StartType is an Initial START_EVENT';
+                   || 'StartType is an Initial START_EVENT'
+        , HINT = 'Look at the rows of the START_EVENT table to see which '
+                 || 'events are Initial events; the (' || NEW.starttype
+                 || ') StartType is one.';
   END IF;
 
   -- Final StopTypes mean StopDate = DepartDate.
@@ -253,7 +256,10 @@ CREATE OR REPLACE FUNCTION fertility_commit_func()
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.DepartDate) = (' || this_departdate
                    || '): StopDate must be the BIOGRAPHY.DepartDate when '
-                   || 'StopType is a Final STOP_EVENT';
+                   || 'StopType is a Final STOP_EVENT'
+        , HINT = 'Look at the rows of the STOP_EVENT table to see which '
+                 || 'events are Final events; the (' || NEW.stoptype
+                 || ') StopType is one.';
   END IF;
   
   -- StartDate = EntryDate requires StartType = EntryType.
