@@ -24,7 +24,7 @@ changequote({,})
 
 define({comment_biography_columns}, {dnl
 COMMENT ON COLUMN $1.bid IS
-'Unique row identifer, and hence a unique identifer of the individual
+'Unique row identifier, and hence a unique identifier of the individual
 regardless of study.  The value of this column is automatically
 assigned by the system; the normal practice, which results in a system
 generated id, is to omit this column when inserting new rows or to
@@ -50,7 +50,7 @@ individual has no long name.';
 COMMENT ON COLUMN $1.momonly IS
 'Whether or not the biography row records an individual who exists in
 the database only because they are known to be a mother of another
-individual in the database.  A boolean value.  Individuals who are
+individual in the database.  A Boolean value.  Individuals who are
 "only mothers" (MomOnly = TRUE) have different requirements from
 typical study subjects as to what data must or must not be recorded in
 the database.  This value may not be NULL.';
@@ -76,7 +76,7 @@ latest possible birth date is >7 days after Birthdate.';
 
 COMMENT ON COLUMN $1.bddist IS
 'Probability distribution of the estimated birth date given BDMin,
-Birthdate, and BDMax.  The vocabularly for this column is defined by
+Birthdate, and BDMax.  The vocabulary for this column is defined by
 the PROBABILITY_TYPE table, which expected to define only normal (N)
 and uniform (U).';
 
@@ -129,7 +129,7 @@ not provide adequate per-study data integrity.';
 COMMENT ON COLUMN $1.entrytype IS
 'Type of entry into population. Birth, immigration, start of confirmed
 ID, Initiation of close observation for any other reason, etc.  The
-vocabularly for this column is defined by the START_EVENT table.';
+vocabulary for this column is defined by the START_EVENT table.';
 
 COMMENT ON COLUMN $1.departdate IS
 'Date on which the animal was last seen alive in the population.
@@ -144,7 +144,7 @@ circumstantial evidence indicates poor health or other risks
 contributing to mortality and/or violations of population-specific
 behavior patterns. Otherwise assign permanent disappearance. Do not
 assign mortality based solely on inferred risks associated with age.
-The vocabularly for this column is defined by the END_EVENT table.';
+The vocabulary for this column is defined by the END_EVENT table.';
 
 COMMENT ON COLUMN $1.departdateerror IS
 'Time between departdate and the first time that the animal was

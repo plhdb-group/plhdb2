@@ -38,7 +38,7 @@ grant_demo_user_priv(`probability_type')
 
 COMMENT ON TABLE probability_type IS
 'One row per kind of probability distribution.  This table establishes
-a controlled vocabularly for probability distributions.';
+a controlled vocabulary for probability distributions.';
 
 COMMENT ON COLUMN probability_type.code IS
 'A unique single character code for the probability type.  This code

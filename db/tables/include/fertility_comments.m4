@@ -24,7 +24,7 @@ changequote({,})
 
 define({comment_fertility_columns}, {dnl
 COMMENT ON COLUMN $1.fid IS
-'Unique row identifer, and hence the unique identifer of the female
+'Unique row identifier, and hence the unique identifier of the female
 fertility interval.  The value of this column is automatically
 assigned by the system; the normal practice, which results in a system
 generated id, is to omit this column when inserting new rows or to
@@ -32,7 +32,7 @@ supply a NULL value.  The value of this column cannot be NULL.  The
 value of this column cannot be changed.';
 
 COMMENT ON COLUMN $1.bid IS
-'Unique identifer of the individual for which the row records a
+'Unique identifier of the individual for which the row records a
 fertility interval.
 
 TIP: Can be used to JOIN with BIOGRAPHY.BId.';
@@ -46,7 +46,7 @@ her starting on July 15 but you MIGHT know about her starting on July
 value may not be NULL.';
 
 COMMENT ON COLUMN $1.starttype IS
-'Reason for the start of surveillance. The vocabularly for this column
+'Reason for the start of surveillance. The vocabulary for this column
 is defined by the START_EVENT table.  This value may not be NULL.';
 
 COMMENT ON COLUMN $1.stopdate IS
@@ -59,7 +59,7 @@ about her until July 15, you must choose the more conservative date
 which is July 1.  This value may not be NULL.';
 
 COMMENT ON COLUMN $1.stoptype IS
-'Cause of the end of surveillance. The vocabularly for this column is
+'Cause of the end of surveillance. The vocabulary for this column is
 defined by the END_EVENT table.  This value may not be NULL.';
 })
 
