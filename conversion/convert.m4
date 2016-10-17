@@ -84,11 +84,11 @@ INSERT INTO probability_type (code, description, symmetrical)
   VALUES ('N'
         , 'Normal distribution.  Construct the birth date probability '
           'distribution so that BDMin and BDMax represent + 2 '
-          'standard deviations of Birthdate.  Birthdate must be '
+          'standard deviations of Birthdate.  Birthdate may or may not be '
           'at the midpoint of BDMin and BDMax, or one of the 2 midpoint '
           'dates when there are an even number of days in the BDMin to '
           'BDMax interval'
-        , TRUE)
+        , FALSE)
        , ('U'
         , 'Uniform distribution.  The probability distribution is '
           'truncated at BDMin and BDMax with equal Birthdate '
