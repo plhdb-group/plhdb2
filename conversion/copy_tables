@@ -137,15 +137,6 @@ if [ "$fix" = "y" ] ; then
         SET sex = 'F'
         WHERE anim_oid = 13250;
 
-      -- Normal birthdate distributions where the birthdate is not at
-      -- the midpoint are changed to uniform distributions.
-      UPDATE fixed_biography
-        SET bddist = 'U'
-        WHERE bddist = 'N'
-              AND ABS((birthdate::DATE - bdmin::DATE)
-                      - (bdmax::DATE - birthdate::DATE))
-                     > 1 ;
-
       -- Change non-female individuals who have fertility intervals
       -- to female.
       UPDATE fixed_biography
