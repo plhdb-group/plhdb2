@@ -142,7 +142,7 @@ CREATE FUNCTION biographies_insert_func ()
         INTO this_mombid
         FROM biography
         WHERE biography.studyid = NEW.studyid
-              AND biography.animid = NEW.animid;
+              AND biography.animid = NEW.momid;
       IF NOT FOUND THEN
         -- Don't blindly insert a NULL when a momid was specified.
         RAISE EXCEPTION integrity_constraint_violation USING
