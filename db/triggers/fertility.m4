@@ -24,17 +24,6 @@ include(`constants.m4')dnl
 include(`macros.m4')dnl
 
 
-dnl plpgsql fragment for BLAH
-dnl
-dnl Syntax: BLAH(ARG)
-dnl
-dnl ARG   description
-dnl
-changequote({,})
-define({BLAH},{
-})dnl
-changequote(`,')dnl
-
 --  
 -- fertility
 --
