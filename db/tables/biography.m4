@@ -109,7 +109,7 @@ CREATE TABLE biography (
      null_only_when_momonly(`EntryDate')
      CONSTRAINT "EntryDate must be on or after plh_minentry"
                 CHECK('plh_minentry' <= entrydate)
-     CONSTRAINT "EntryDate must be on or before today's date"
+     CONSTRAINT "EntryDate must be on or precede today's date"
                 CHECK(entrydate <= current_date)
  , entrytype VARCHAR(8)
      CONSTRAINT "EntryType must be a START_EVENT.Code value"
@@ -120,7 +120,7 @@ CREATE TABLE biography (
                       OR entrytype IS NOT NULL)
  , departdate DATE
      null_only_when_momonly(`DepartDate')
-     CONSTRAINT "DepartDate must be on or before today's date"
+     CONSTRAINT "DepartDate must be on or precede today's date"
                 CHECK(departdate <= current_date)
  , departtype VARCHAR(8)
      CONSTRAINT "DepartType must be a END_EVENT.Code value"
@@ -156,9 +156,9 @@ PERMISSION table.
 
 AnimId must be unique per StudyId.
 AnimName must either be NULL or unique per StudyId.
-BirthDate must be on or before EntryDate.
+BirthDate must be on or precede EntryDate.
 BirthDate may be NULL only when MomOnly is TRUE.
-BDMin must be NULL or on or before BirthDate.
+BDMin must be NULL or on or precede BirthDate.
 BDMin may be NULL only when MomOnly is TRUE.
 BDMax must be NULL or on or after BirthDate.
 BDMax may be NULL only when MomOnly is TRUE.
@@ -167,7 +167,7 @@ BDMax may not be after the sum DepartDate plus DepartDateError number
 BDDist may be NULL only when MomOnly is TRUE.
 The MomBId value cannot be the Bid value.
 Sex must be ''plh_female'' when MomOnly is TRUE.
-Entrydate must be on or before DepartDate.
+Entrydate must be on or precede DepartDate.
 EntryDate may be NULL only when MomOnly is TRUE.
 EntryDate may be NULL only when MomOnly is TRUE.
 EntryType can be NULL only when EntryDate is also NULL.

@@ -121,7 +121,7 @@ indicates group membership from that date. Study population is the
 studied population at the time of the animal''s entry into it.
 
 EntryDate must be on or after plh_minentry.
-EntryDate must be on or before today''s date.
+EntryDate must be on or precede today''s date.
 
 Caution: The automatic data integrity check for early EntryDates does
 not provide adequate per-study data integrity.';
@@ -133,7 +133,7 @@ vocabulary for this column is defined by the START_EVENT table.';
 
 COMMENT ON COLUMN $1.departdate IS
 'Date on which the animal was last seen alive in the population.
-DepartDate must be on or before today''s date.';
+DepartDate must be on or precede today''s date.';
 
 COMMENT ON COLUMN $1.departtype IS
 'Type of departure.  Death, permanent disappearance, emigration out of

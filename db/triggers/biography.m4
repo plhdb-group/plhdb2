@@ -253,7 +253,7 @@ CREATE FUNCTION biography_func ()
                      || '): Value (AnimId) = (' || NEW.animid
                      || '): Value (EntryDate) = (' || NEW.entrydate
                      || '): There is a related FERTILITY row '
-                     || 'which has a StartDate value before the new '
+                     || 'which has a StartDate value preceding the new '
                      || 'EntryDate';
       END IF;
     END IF;

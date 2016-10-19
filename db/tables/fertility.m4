@@ -54,7 +54,7 @@ Access to rows in FERTILITY is controlled, on a per-study basis, by the
 PERMISSION table.
 
 Per individual, fertility intervals may not overlap.
-StartDate must be on or before StopDate.
+StartDate must be on or precede StopDate.
 
 Only BIOGRAPHY rows with Sex = ''plh_female'' may have related female
 fertility interval rows.
@@ -62,7 +62,7 @@ fertility interval rows.
 FERTILITY rows may be related only to those BIOGRAPHY
 rows which have a FALSE MomOnly value.
 
-The StartDate cannot be before the EntryDate of the related BIOGRAPHY
+The StartDate cannot precede the EntryDate of the related BIOGRAPHY
 row.
 
 The StopDate cannot be after the date from the related individual''s

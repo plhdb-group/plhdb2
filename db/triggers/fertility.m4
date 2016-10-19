@@ -143,7 +143,7 @@ CREATE FUNCTION fertility_func ()
                    || '): Value (BIOGRAPHY.StudyId) = (' || this_studyid
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.EntryDate) = (' || this_entrydate
-                   || '): StartDate cannot be before the EntryDate '
+                   || '): StartDate cannot precede the EntryDate '
                    || 'of the related BIOGRAPHY row';
   END IF;
 
