@@ -65,7 +65,7 @@ rows which have a FALSE MomOnly value.
 The StartDate cannot precede the EntryDate of the related BIOGRAPHY
 row.
 
-The StopDate cannot be after the date from the related individual''s
+The StopDate cannot follow the date from the related individual''s
 BIOGRAPHY row given by the formula (DepartDate plus (DepartDateError
 number of years)).
 

@@ -60,7 +60,7 @@ COMMENT ON COLUMN $1.birthdate IS
 'Birth date. Animal''s birthdate. The birthdate is either the exactly
 known date of birth or it is with a range of possible birthdates.
 
-The BirthDate must be on or after plh_minbirth.
+The BirthDate must be on or follow plh_minbirth.
 
 Caution: The automatic data integrity check for early BirthDates does
 not provide adequate per-study data integrity.';
@@ -120,7 +120,7 @@ recognized and ID''d as of that date or because strong inference
 indicates group membership from that date. Study population is the
 studied population at the time of the animal''s entry into it.
 
-EntryDate must be on or after plh_minentry.
+EntryDate must be on or follow plh_minentry.
 EntryDate must be on or precede today''s date.
 
 Caution: The automatic data integrity check for early EntryDates does

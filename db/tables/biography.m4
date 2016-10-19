@@ -107,7 +107,7 @@ CREATE TABLE biography (
      CONSTRAINT "EntryDate must be <= DepartDate"
                 CHECK(entrydate <= departdate)
      null_only_when_momonly(`EntryDate')
-     CONSTRAINT "EntryDate must be on or after plh_minentry"
+     CONSTRAINT "EntryDate must be on or follow plh_minentry"
                 CHECK('plh_minentry' <= entrydate)
      CONSTRAINT "EntryDate must be on or precede today's date"
                 CHECK(entrydate <= current_date)
@@ -160,9 +160,9 @@ BirthDate must be on or precede EntryDate.
 BirthDate may be NULL only when MomOnly is TRUE.
 BDMin must be NULL or on or precede BirthDate.
 BDMin may be NULL only when MomOnly is TRUE.
-BDMax must be NULL or on or after BirthDate.
+BDMax must be NULL or on or follow BirthDate.
 BDMax may be NULL only when MomOnly is TRUE.
-BDMax may not be after the sum DepartDate plus DepartDateError number
+BDMax may not follow the sum DepartDate plus DepartDateError number
   of years.
 BDDist may be NULL only when MomOnly is TRUE.
 The MomBId value cannot be the Bid value.

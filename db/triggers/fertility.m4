@@ -122,7 +122,7 @@ CREATE FUNCTION fertility_func ()
                    || '): Value (BIOGRAPHY.DepartDate) = (' || this_departdate
                    || '): Value (BIOGRAPHY.DepartDateError) = ('
                    || this_departdateerror
-                   || '): StopDate cannot be after the DepartDate + '
+                   || '): StopDate cannot follow the DepartDate + '
                    || '(DepartDateError years) of the related BIOGRAPHY '
                    || 'row; the computed last departure date is: '
                    || last_departdate(this_departdate, this_departdateerror);
