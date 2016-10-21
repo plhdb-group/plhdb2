@@ -117,7 +117,7 @@ CREATE FUNCTION biography_func ()
                    || this_momid
                    || '): Value (BIOGRAPHY.StudyId of mother) = ('
                    || this_studyid
-                   || '): The StudyId value of the offspring must be '
+                   || '): The StudyId value of the offspring must match '
                    || 'that of the mother.';
   END IF;
 
