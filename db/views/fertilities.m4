@@ -18,6 +18,7 @@
 -- Karl O. Pinc <kop@meme.com>
 --
 
+include(`macros.m4')
 include(`globalmacros.m4')
 include(`grants.m4')
 include(`fertility_comments.m4')
@@ -184,7 +185,8 @@ CREATE FUNCTION fertilities_insert_func ()
                      || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                      || '): The supplied FERTILITIES AnimId StudyId '
                      || 'combination do not refer to the BIOGRAPHY row '
-                     || 'identified by the supplied BId';
+                     || 'identified by the supplied BId'
+            , HINT = 'plh_character_case_hint';
       END IF;
 
       -- Set the values in case one is NULL and a RETURNING clause is used
@@ -327,7 +329,8 @@ CREATE FUNCTION fertilities_update_func ()
                      || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                      || '): The supplied new StudyId/AnimId combination '
                      || 'do not refer to the same BIOGRAPHY row as the '
-                     || 'new Bid';
+                     || 'new Bid'
+            , HINT = 'plh_character_case_hint';
       END IF;
     ELSE -- bid did not change
       -- Get the bid to go with the changed studyid/animid
@@ -350,7 +353,8 @@ CREATE FUNCTION fertilities_update_func ()
                        || '): Value (NEW AnimId) = ('
                        || textualize(`NEW.animid')
                        || '): The supplied new StudyId and new AnimId values '
-                       || 'do not refer to an existant BIOGRAPHY row';
+                       || 'do not refer to an existant BIOGRAPHY row'
+            , HINT = 'plh_character_case_hint';
       END IF;
     END IF;
   ELSE  -- Neither studyid nor animid changed

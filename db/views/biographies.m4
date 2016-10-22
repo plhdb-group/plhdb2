@@ -21,6 +21,7 @@
 include(`grants.m4')
 include(`biography_comments.m4')
 include(`globalmacros.m4')
+include(`macros.m4')
 
 CREATE OR REPLACE VIEW biographies
   WITH (security_barrier = on)
@@ -134,7 +135,8 @@ CREATE FUNCTION biographies_insert_func ()
                      || '): Value (MomId) = (' || textualize(`NEW.momid')
                      || '): The supplied MomBId and MomId values do not '
                      || 'refer to the same individual, or the StudyId '
-                     || 'is wrong';
+                     || 'is wrong'
+            , HINT = 'plh_character_case_hint';
       END IF;
     ELSE  -- Only momid specified
       -- Get the mombid that goes with the supplied momid
@@ -153,7 +155,8 @@ CREATE FUNCTION biographies_insert_func ()
                      || '): Value (MomBId) = (' || textualize(`NEW.mombid')
                      || '): Value (MomId) = (' || textualize(`NEW.momid')
                      || '): The supplied MomId and StudyId values do not '
-                     || 'refer to an existant individual';
+                     || 'refer to an existant individual'
+            , HINT = 'plh_character_case_hint';
       END IF;
 
       NEW.mombid := this_mombid;
@@ -312,7 +315,8 @@ CREATE FUNCTION biographies_update_func ()
                        || '): Value (NEW MomId) = (' || textualize(`NEW.momid')
                        || '): The supplied new MomBId + new StudyId values '
                        || 'and the supplied new MomId value '
-                       || 'do not refer to the same individual';
+                       || 'do not refer to the same individual'
+              , HINT = 'plh_character_case_hint';
         END IF;
       END IF;
     ELSE -- mombid did not change
@@ -345,7 +349,8 @@ CREATE FUNCTION biographies_update_func ()
                        || textualize(`NEW.mombid')
                        || '): Value (NEW MomId) = (' || textualize(`NEW.momid')
                        || '): The supplied new MomId and new StudyId values '
-                       || 'do not refer to an existant BIOGRAPHY row';
+                       || 'do not refer to an existant BIOGRAPHY row'
+              , HINT = 'plh_character_case_hint';
         END IF;
 
         NEW.mombid := this_mombid;

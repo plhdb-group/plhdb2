@@ -47,8 +47,8 @@ destroyviews.sql: destroyviews.sh destroyviewtriggers $(COPYRIGHT) $(DEPS)
 
 # Make any *.sql file from it's *.m4 file.
 %.sql: %.m4 $(COPYRIGHTSRC) $(INCLUDE)/*.m4 \
-            ../tables/include/*.m4 $(DEPS)
-	m4 -I $(INCLUDE) -I ../tables/include $< > $@
+            ../tables/include/*.m4 ../triggers/include/*.m4 $(DEPS)
+	m4 -I $(INCLUDE) -I ../tables/include -I ../triggers/include $< > $@
 
 .PHONY: install
 install: makeviews.sql $(DEPS)

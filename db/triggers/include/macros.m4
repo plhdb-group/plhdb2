@@ -35,6 +35,10 @@ include(`constants.m4')
 include(`globalmacros.m4')
 
 
+dnl String used in various error HINTs.
+define(`plh_character_case_hint', 
+       `The database is case sensitive.  Are upper and lower case characters used appropriately within the data supplied?')
+
 dnl Plpgsql fragment for preventing a column from changing.
 dnl
 dnl Syntax: cannot_change(table, column)
