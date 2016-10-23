@@ -192,7 +192,7 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
             AND biography.sex <> 'plh_female';
     IF FOUND THEN
       RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
           , DETAIL = 'Key(BId) = (' || NEW.bid
                      || '): Value (StudyId) = (' || NEW.studyid
                      || '): Value (AnimId) = (' || NEW.animid
@@ -213,7 +213,7 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
           AND biography.studyid <> NEW.studyid;
   IF FOUND THEN
     RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+          MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
         , DETAIL = 'Key(BId) = (' || NEW.bid
                    || '): Value (StudyId) = (' || NEW.studyid
                    || '): Value (AnimId) = (' || NEW.animid
@@ -240,7 +240,7 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
         WHERE biography.mombid = NEW.bid;
       IF FOUND THEN
         RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
             , DETAIL = 'Key(BId) = (' || NEW.bid
                      || '): Value (StudyId) = (' || NEW.studyid
                      || '): Value (AnimId) = (' || NEW.animid
@@ -255,7 +255,7 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
         WHERE fertility.bid = NEW.bid;
       IF FOUND THEN
         RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
             , DETAIL = 'Key(BId) = (' || NEW.bid
                      || '): Value (StudyId) = (' || NEW.studyid
                      || '): Value (AnimId) = (' || NEW.animid
@@ -275,7 +275,7 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
               AND biography.studyid <> NEW.studyid;
       IF FOUND THEN
         RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
             , DETAIL = 'Key(BId) = (' || NEW.bid
                      || '): Value (StudyId) = (' || NEW.studyid
                      || '): Value (AnimId) = (' || NEW.animid
