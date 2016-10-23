@@ -57,7 +57,8 @@ Per individual, fertility intervals may not overlap.
 StartDate must be on or precede StopDate.
 
 Only BIOGRAPHY rows with Sex = ''plh_female'' may have related female
-fertility interval rows.
+fertility interval rows.  This condition is checked upon transaction
+commit.
 
 FERTILITY rows may be related only to those BIOGRAPHY
 rows which have a FALSE MomOnly value.

@@ -35,11 +35,6 @@ CREATE FUNCTION biography_func ()
   LANGUAGE plpgsql
   plh_function_set_search_path
   AS $$
-  DECLARE
-    this_momid biography.animid%TYPE;
-    this_sex biography.sex%TYPE;
-    this_studyid biography.studyid%TYPE;
-
   BEGIN
   -- Function for biography insert and update triggers
   --
@@ -78,49 +73,6 @@ CREATE FUNCTION biography_func ()
     END IF;
   END IF;
 
-  IF NEW.mombid IS NOT NULL THEN
-    -- Mother of this individual must be female.
-    SELECT biography.animid, biography.sex
-      INTO this_momid, this_sex
-      FROM biography
-      WHERE biography.bid = NEW.mombid
-            AND biography.sex <> 'plh_female';
-    IF FOUND THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
-          , DETAIL = 'Key(BId) = (' || NEW.bid
-                     || '): Value (StudyId) = (' || NEW.studyid
-                     || '): Value (AnimId) = (' || NEW.animid
-                     || '): Value (MomBId) = (' || NEW.mombid
-                     || '): Value (BIOGRAPHY.AnimId of mother) = ('
-                     || this_momid
-                     || '): Value (BIOGRAPHY.Sex of mother) = (' || this_sex
-                     || '): The Sex value of a mother must be '
-                     || '''plh_female''.';
-    END IF;
-  END IF;
-
-  -- Mother of this individual must be in same study as offspring.
-  SELECT biography.animid, biography.studyid
-    INTO this_momid, this_studyid
-    FROM biography
-    WHERE biography.bid = NEW.mombid
-          AND biography.studyid <> NEW.studyid;
-  IF FOUND THEN
-    RAISE EXCEPTION integrity_constraint_violation USING
-          MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
-        , DETAIL = 'Key(BId) = (' || NEW.bid
-                   || '): Value (StudyId) = (' || NEW.studyid
-                   || '): Value (AnimId) = (' || NEW.animid
-                   || '): Value (MomBId) = (' || NEW.mombid
-                   || '): Value (BIOGRAPHY.AnimId of mother) = ('
-                   || this_momid
-                   || '): Value (BIOGRAPHY.StudyId of mother) = ('
-                   || this_studyid
-                   || '): The StudyId value of the offspring must match '
-                   || 'that of the mother.';
-  END IF;
-
 
   IF TG_OP = 'UPDATE' THEN
 
@@ -141,60 +93,6 @@ CREATE FUNCTION biography_func ()
                      || '): Rows with MomOnly = TRUE cannot '
                      || 'have a related FEMALEFERTILTIYINTERVAL row';
 
-      END IF;
-    END IF;
-
-    IF NEW.sex <> OLD.sex
-       AND NEW.sex <> 'plh_female' THEN
- 
-     -- Individual cannot have offspring unless female.
-      PERFORM 1
-        FROM biography
-        WHERE biography.mombid = NEW.bid;
-      IF FOUND THEN
-        RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
-            , DETAIL = 'Key(BId) = (' || NEW.bid
-                     || '): Value (StudyId) = (' || NEW.studyid
-                     || '): Value (AnimId) = (' || NEW.animid
-                     || '): Value (Sex) = (' || NEW.sex
-                     || '): Sex must be ''plh_female'' because this '
-                     || 'individual is another''s mother';
-      END IF;
-
-      -- Individual cannot have female fertility intervals unless female.
-      PERFORM 1
-        FROM fertility
-        WHERE fertility.bid = NEW.bid;
-      IF FOUND THEN
-        RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
-            , DETAIL = 'Key(BId) = (' || NEW.bid
-                     || '): Value (StudyId) = (' || NEW.studyid
-                     || '): Value (AnimId) = (' || NEW.animid
-                     || '): Value (Sex) = (' || NEW.sex
-                     || '): Sex must be ''plh_female'' because this '
-                     || 'individual has related FERTILITY '
-                     || 'rows';
-      END IF;
-
-    END IF;
-
-    -- Individual cannot have offspring in a different study.
-    IF NEW.studyid <> OLD.studyid THEN
-      PERFORM 1
-        FROM biography
-        WHERE biography.mombid = NEW.bid
-              AND biography.studyid <> NEW.studyid;
-      IF FOUND THEN
-        RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
-            , DETAIL = 'Key(BId) = (' || NEW.bid
-                     || '): Value (StudyId) = (' || NEW.studyid
-                     || '): Value (AnimId) = (' || NEW.animid
-                     || '): StudyId cannot change because this '
-                     || 'individual is another''s mother; the study '
-                     || 'of the mother and offspring must match';
       END IF;
     END IF;
 
@@ -265,6 +163,10 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
   DECLARE
+    this_studyid biography.studyid%TYPE;
+    this_momid biography.animid%TYPE;
+    this_sex biography.sex%TYPE;
+
     this_fid fertility.fid%TYPE;
     this_startdate fertility.startdate%TYPE;
     this_starttype fertility.starttype%TYPE;
@@ -281,7 +183,109 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
     RETURN NULL;
   END IF;
 
+  IF NEW.mombid IS NOT NULL THEN
+    -- Mother of this individual must be female.
+    SELECT biography.animid, biography.sex
+      INTO this_momid, this_sex
+      FROM biography
+      WHERE biography.bid = NEW.mombid
+            AND biography.sex <> 'plh_female';
+    IF FOUND THEN
+      RAISE EXCEPTION integrity_constraint_violation USING
+            MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+          , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (MomBId) = (' || NEW.mombid
+                     || '): Value (BIOGRAPHY.AnimId of mother) = ('
+                     || this_momid
+                     || '): Value (BIOGRAPHY.Sex of mother) = (' || this_sex
+                     || '): The Sex value of a mother must be '
+                     || '''plh_female''.';
+    END IF;
+  END IF;
+
+  -- Mother of this individual must be in same study as offspring.
+  SELECT biography.animid, biography.studyid
+    INTO this_momid, this_studyid
+    FROM biography
+    WHERE biography.bid = NEW.mombid
+          AND biography.studyid <> NEW.studyid;
+  IF FOUND THEN
+    RAISE EXCEPTION integrity_constraint_violation USING
+          MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+        , DETAIL = 'Key(BId) = (' || NEW.bid
+                   || '): Value (StudyId) = (' || NEW.studyid
+                   || '): Value (AnimId) = (' || NEW.animid
+                   || '): Value (MomBId) = (' || NEW.mombid
+                   || '): Value (BIOGRAPHY.AnimId of mother) = ('
+                   || this_momid
+                   || '): Value (BIOGRAPHY.StudyId of mother) = ('
+                   || this_studyid
+                   || '): The StudyId value of the offspring must match '
+                   || 'that of the mother.';
+  END IF;
+
+
   IF TG_OP = 'UPDATE' THEN
+
+    IF NEW.sex <> OLD.sex
+       AND NEW.sex <> 'plh_female' THEN
+ 
+      -- Individual cannot have offspring unless female.
+      -- (Check is on transaction commit because momid is not validated
+      -- until then.)
+      PERFORM 1
+        FROM biography
+        WHERE biography.mombid = NEW.bid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (Sex) = (' || NEW.sex
+                     || '): Sex must be ''plh_female'' because this '
+                     || 'individual is another''s mother';
+      END IF;
+
+      -- Individual cannot have female fertility intervals unless female.
+      PERFORM 1
+        FROM fertility
+        WHERE fertility.bid = NEW.bid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (Sex) = (' || NEW.sex
+                     || '): Sex must be ''plh_female'' because this '
+                     || 'individual has related FERTILITY '
+                     || 'rows';
+      END IF;
+
+    END IF;
+
+    -- Individual cannot have offspring in a different study.
+    IF NEW.studyid <> OLD.studyid THEN
+      PERFORM 1
+        FROM biography
+        WHERE biography.mombid = NEW.bid
+              AND biography.studyid <> NEW.studyid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): StudyId cannot change because this '
+                     || 'individual is another''s mother; the study '
+                     || 'of the mother and offspring must match';
+      END IF;
+    END IF;
+
+
     -- Initial StartTypes mean StartDate = EntryDate.
     IF NEW.entrydate <> OLD.entrydate THEN
       SELECT ffi.fid,  ffi.startdate,  ffi.starttype

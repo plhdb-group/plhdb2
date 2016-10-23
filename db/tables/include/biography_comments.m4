@@ -102,8 +102,8 @@ may be NULL when the study does not track first born.';
 
 COMMENT ON COLUMN $1.mombid IS
 'The row identifier of the individual''s mother.  This is a
-BIOGRAPHY.BId value.  This value may be NULL when the mother is
-unknown.
+BIOGRAPHY.BId value.  This condition is checked on transaction commit.
+This value may be NULL when the mother is unknown.
 
 TIP: The study''s code for the mother may be found in the MomId
 column of the BIOGRAPHIES view.';

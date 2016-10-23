@@ -93,6 +93,7 @@ CREATE TABLE biography (
  , mombid INTEGER
      CONSTRAINT "MomBId must be a BIOGRAPHY.BId value"
                 REFERENCES biography
+                DEFERRABLE INITIALLY DEFERRED
      CONSTRAINT "The MomBId value cannot be the BId value"
                 CHECK(mombid <> bid)
  , sex CHAR(1) NOT NULL
@@ -187,7 +188,7 @@ identifier.
 Individuals identified as mothers (rows that have a BId value in the
 MomBId column of another BIOGRAPHY row) must have a ''plh_female''
 value for Sex.  Mothers and their offspring must have the same StudyId
-value.
+value.  These conditions are checked upon transaction commit.
 
 TIP: Use the BIOGRAPHIES view to get the mother''s AnimId.
 BIOGRAPHIES is identical to this table but for the additional
