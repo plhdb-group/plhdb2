@@ -254,13 +254,13 @@ CREATE FUNCTION biography_func ()
   END;
 $$;
 
-SELECT 'biography_update_commit_func' AS function;
-CREATE OR REPLACE FUNCTION biography_update_commit_func()
+SELECT 'biography_commit_func' AS function;
+CREATE OR REPLACE FUNCTION biography_commit_func()
   RETURNS trigger
   LANGUAGE plpgsql
   plh_function_set_search_path
   AS $$
-  -- Function for biography update fired upon transaction commit.
+  -- Function for biography insert or update fired upon transaction commit.
   --
   -- GPL_notice(`  --', `2016', `The Meme Factory, Inc.  http://www.meme.com/')
   --
@@ -281,6 +281,7 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
     RETURN NULL;
   END IF;
 
+  IF TG_OP = 'UPDATE' THEN
   -- Initial StartTypes mean StartDate = EntryDate.
   IF NEW.entrydate <> OLD.entrydate THEN
     SELECT ffi.fid,  ffi.startdate,  ffi.starttype
@@ -385,6 +386,7 @@ CREATE OR REPLACE FUNCTION biography_update_commit_func()
                    || 'DepartType must equal FERTILITY.StopType';
     END IF;
   END IF;
+  END IF;
 
   RETURN NULL;
   END;
@@ -397,10 +399,10 @@ CREATE TRIGGER biography_trigger
   ON biography FOR EACH ROW
   EXECUTE PROCEDURE biography_func();
 
-SELECT 'biography_update_commit_trigger' AS trigger;
-CREATE CONSTRAINT TRIGGER biography_update_commit_trigger
-  AFTER UPDATE
+SELECT 'biography_commit_trigger' AS trigger;
+CREATE CONSTRAINT TRIGGER biography_commit_trigger
+  AFTER INSERT OR UPDATE
   ON biography
   DEFERRABLE INITIALLY DEFERRED
   FOR EACH ROW
-  EXECUTE PROCEDURE biography_update_commit_func();
+  EXECUTE PROCEDURE biography_commit_func();

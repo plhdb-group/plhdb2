@@ -28,7 +28,7 @@ DROP FUNCTION start_event_update_func() CASCADE;
 DROP FUNCTION end_event_update_func() CASCADE;
 
 DROP FUNCTION biography_func() CASCADE;
-DROP FUNCTION biography_update_commit_func() CASCADE;
+DROP FUNCTION biography_commit_func() CASCADE;
 
 DROP FUNCTION fertility_func() CASCADE;
 DROP FUNCTION fertility_commit_func() CASCADE;
