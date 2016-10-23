@@ -96,6 +96,27 @@ CREATE FUNCTION biography_func ()
       END IF;
     END IF;
 
+    IF NEW.sex <> OLD.sex
+       AND NEW.sex <> 'plh_female' THEN
+
+      -- Individual cannot have female fertility intervals unless female.
+      PERFORM 1
+        FROM fertility
+        WHERE fertility.bid = NEW.bid;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on ' || TG_OP || ' of BIOGRAPHY'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (Sex) = (' || NEW.sex
+                     || '): Sex must be ''plh_female'' because this '
+                     || 'individual has related FERTILITY '
+                     || 'rows';
+      END IF;
+
+    END IF;
+
     -- Individual cannot have female fertility intervals after
     -- departure date + (departdateerror years).
     IF (NEW.departdate <> OLD.departdate
@@ -247,22 +268,6 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
                      || '): Value (Sex) = (' || NEW.sex
                      || '): Sex must be ''plh_female'' because this '
                      || 'individual is another''s mother';
-      END IF;
-
-      -- Individual cannot have female fertility intervals unless female.
-      PERFORM 1
-        FROM fertility
-        WHERE fertility.bid = NEW.bid;
-      IF FOUND THEN
-        RAISE EXCEPTION integrity_constraint_violation USING
-              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
-            , DETAIL = 'Key(BId) = (' || NEW.bid
-                     || '): Value (StudyId) = (' || NEW.studyid
-                     || '): Value (AnimId) = (' || NEW.animid
-                     || '): Value (Sex) = (' || NEW.sex
-                     || '): Sex must be ''plh_female'' because this '
-                     || 'individual has related FERTILITY '
-                     || 'rows';
       END IF;
 
     END IF;
