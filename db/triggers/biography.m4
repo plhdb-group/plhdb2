@@ -282,110 +282,110 @@ CREATE OR REPLACE FUNCTION biography_commit_func()
   END IF;
 
   IF TG_OP = 'UPDATE' THEN
-  -- Initial StartTypes mean StartDate = EntryDate.
-  IF NEW.entrydate <> OLD.entrydate THEN
-    SELECT ffi.fid,  ffi.startdate,  ffi.starttype
-      INTO this_fid, this_startdate, this_starttype
-      FROM fertility AS ffi
-           JOIN start_event ON (start_event.code = ffi.starttype)
-      WHERE ffi.bid = NEW.bid
-            AND ffi.startdate <> NEW.entrydate
-            AND start_event.initial;
-    IF FOUND THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
-          , DETAIL = 'Key(BId) = (' || NEW.bid
-                   || '): Value (StudyId) = (' || NEW.studyid
-                   || '): Value (AnimId) = (' || NEW.animid
-                   || '): Value (EntryDate) = (' || NEW.entrydate
-                   || '): Key(FERTILITY.FId) = ('
-                   || this_fid
-                   || '): Value(FERTILITY.StartDate) = ('
-                   || this_startdate
-                   || '): Value(FERTILITY.StartType) = ('
-                   || this_starttype
-                   || '): FERTILITY.StartDate must be the '
-                   || 'EntryDate when StartType is an Initial START_EVENT';
+    -- Initial StartTypes mean StartDate = EntryDate.
+    IF NEW.entrydate <> OLD.entrydate THEN
+      SELECT ffi.fid,  ffi.startdate,  ffi.starttype
+        INTO this_fid, this_startdate, this_starttype
+        FROM fertility AS ffi
+             JOIN start_event ON (start_event.code = ffi.starttype)
+        WHERE ffi.bid = NEW.bid
+              AND ffi.startdate <> NEW.entrydate
+              AND start_event.initial;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (EntryDate) = (' || NEW.entrydate
+                     || '): Key(FERTILITY.FId) = ('
+                     || this_fid
+                     || '): Value(FERTILITY.StartDate) = ('
+                     || this_startdate
+                     || '): Value(FERTILITY.StartType) = ('
+                     || this_starttype
+                     || '): FERTILITY.StartDate must be the '
+                     || 'EntryDate when StartType is an Initial START_EVENT';
+      END IF;
     END IF;
-  END IF;
 
 
-  -- Final StopTypes mean StopDate = DepartDate.
-  IF NEW.departdate <> OLD.departdate THEN
-    SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
-      INTO this_fid, this_stopdate, this_stoptype
-      FROM fertility AS ffi
-           JOIN end_event ON (end_event.code = ffi.stoptype)
-      WHERE ffi.bid = NEW.bid
-            AND ffi.stopdate <> NEW.departdate
-            AND end_event.final;
-    IF FOUND THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
-          , DETAIL = 'Key(BId) = (' || NEW.bid
-                   || '): Value (StudyId) = (' || NEW.studyid
-                   || '): Value (AnimId) = (' || NEW.animid
-                   || '): Value (DepartDate) = (' || NEW.departdate
-                   || '): Key(FERTILITY.FId) = ('
-                   || this_fid
-                   || '): Value(FERTILITY.StopDate) = ('
-                   || this_stopdate
-                   || '): Value(FERTILITY.StopType) = ('
-                   || this_stoptype
-                   || '): FERTILITY.StopDate must be the '
-                   || 'DepartDate when StopType is a Final STOP_EVENT';
+    -- Final StopTypes mean StopDate = DepartDate.
+    IF NEW.departdate <> OLD.departdate THEN
+      SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
+        INTO this_fid, this_stopdate, this_stoptype
+        FROM fertility AS ffi
+             JOIN end_event ON (end_event.code = ffi.stoptype)
+        WHERE ffi.bid = NEW.bid
+              AND ffi.stopdate <> NEW.departdate
+              AND end_event.final;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (DepartDate) = (' || NEW.departdate
+                     || '): Key(FERTILITY.FId) = ('
+                     || this_fid
+                     || '): Value(FERTILITY.StopDate) = ('
+                     || this_stopdate
+                     || '): Value(FERTILITY.StopType) = ('
+                     || this_stoptype
+                     || '): FERTILITY.StopDate must be the '
+                     || 'DepartDate when StopType is a Final STOP_EVENT';
+      END IF;
     END IF;
-  END IF;
 
-  -- EntryDate = StartDate requires EntryType = StartType
-  IF NEW.entrytype <> OLD.entrytype
-     OR NEW.entrydate <> OLD.entrydate THEN
-    SELECT ffi.fid,  ffi.startdate,  ffi.starttype
-      INTO this_fid, this_startdate, this_starttype
-      FROM fertility AS ffi
-      WHERE ffi.bid = NEW.bid
-            AND ffi.startdate = NEW.entrydate
-            AND ffi.starttype <> NEW.entrytype;
-    IF FOUND THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
-          , DETAIL = 'Key(BId) = (' || NEW.bid
-                   || '): Value (StudyId) = (' || NEW.studyid
-                   || '): Value (AnimId) = (' || NEW.animid
-                   || '): Value (EntryDate) = (' || NEW.entrydate
-                   || '): Value (EntryType) = (' || NEW.entrytype
-                   || '): Key(FERTILITY.FId) = (' || this_fid
-                   || '): Value(FERTILITY.StartDate) = (' || this_startdate
-                   || '): Value(FERTILITY.StartType) = (' || this_starttype
-                   || '): When FERTILITY.StartDate equals EntryDate then '
-                   || 'EntryType must equal FERTILITY.StartType';
+    -- EntryDate = StartDate requires EntryType = StartType
+    IF NEW.entrytype <> OLD.entrytype
+       OR NEW.entrydate <> OLD.entrydate THEN
+      SELECT ffi.fid,  ffi.startdate,  ffi.starttype
+        INTO this_fid, this_startdate, this_starttype
+        FROM fertility AS ffi
+        WHERE ffi.bid = NEW.bid
+              AND ffi.startdate = NEW.entrydate
+              AND ffi.starttype <> NEW.entrytype;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (EntryDate) = (' || NEW.entrydate
+                     || '): Value (EntryType) = (' || NEW.entrytype
+                     || '): Key(FERTILITY.FId) = (' || this_fid
+                     || '): Value(FERTILITY.StartDate) = (' || this_startdate
+                     || '): Value(FERTILITY.StartType) = (' || this_starttype
+                     || '): When FERTILITY.StartDate equals EntryDate then '
+                     || 'EntryType must equal FERTILITY.StartType';
+      END IF;
     END IF;
-  END IF;
 
-  -- DepartDate = StopDate requires DepartType = StopType
-  IF NEW.departtype <> OLD.departtype
-     OR NEW.departdate <> OLD.departdate THEN
-    SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
-      INTO this_fid, this_stopdate, this_stoptype
-      FROM fertility AS ffi
-      WHERE ffi.bid = NEW.bid
-            AND ffi.stopdate = NEW.departdate
-            AND ffi.stoptype <> NEW.departtype;
-    IF FOUND THEN
-      RAISE EXCEPTION integrity_constraint_violation USING
-            MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
-          , DETAIL = 'Key(BId) = (' || NEW.bid
-                   || '): Value (StudyId) = (' || NEW.studyid
-                   || '): Value (AnimId) = (' || NEW.animid
-                   || '): Value (DepartDate) = (' || NEW.departdate
-                   || '): Value (DepartType) = (' || NEW.departtype
-                   || '): Key(FERTILITY.FId) = (' || this_fid
-                   || '): Value(FERTILITY.StopDate) = (' || this_stopdate
-                   || '): Value(FERTILITY.StopType) = (' || this_stoptype
-                   || '): When FERTILITY.StopDate equals DepartDate then '
-                   || 'DepartType must equal FERTILITY.StopType';
+    -- DepartDate = StopDate requires DepartType = StopType
+    IF NEW.departtype <> OLD.departtype
+       OR NEW.departdate <> OLD.departdate THEN
+      SELECT ffi.fid,  ffi.stopdate,  ffi.stoptype
+        INTO this_fid, this_stopdate, this_stoptype
+        FROM fertility AS ffi
+        WHERE ffi.bid = NEW.bid
+              AND ffi.stopdate = NEW.departdate
+              AND ffi.stoptype <> NEW.departtype;
+      IF FOUND THEN
+        RAISE EXCEPTION integrity_constraint_violation USING
+              MESSAGE = 'Error on BIOGRAPHY ' || TG_OP || ' commit'
+            , DETAIL = 'Key(BId) = (' || NEW.bid
+                     || '): Value (StudyId) = (' || NEW.studyid
+                     || '): Value (AnimId) = (' || NEW.animid
+                     || '): Value (DepartDate) = (' || NEW.departdate
+                     || '): Value (DepartType) = (' || NEW.departtype
+                     || '): Key(FERTILITY.FId) = (' || this_fid
+                     || '): Value(FERTILITY.StopDate) = (' || this_stopdate
+                     || '): Value(FERTILITY.StopType) = (' || this_stoptype
+                     || '): When FERTILITY.StopDate equals DepartDate then '
+                     || 'DepartType must equal FERTILITY.StopType';
+      END IF;
     END IF;
-  END IF;
   END IF;
 
   RETURN NULL;
