@@ -168,8 +168,8 @@ REVOKE CONNECT ON DATABASE $db FROM PUBLIC;
 GRANT CONNECT ON DATABASE $db TO plhdb_managers
                                , plhdb_users;
 
--- We use european date formatting, not us.
-ALTER DATABASE $db SET DATESTYLE='European';
+-- We use us date formatting, not european.
+ALTER DATABASE $db SET DATESTYLE='MDY';
 
 -- Default all times to US/Eastern times.
 ALTER DATABASE $db SET TIMEZONE='US/Eastern';
