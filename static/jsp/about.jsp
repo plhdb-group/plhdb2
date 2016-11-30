@@ -65,7 +65,7 @@
 
 
 
-<a href="/jsp/login.jsp"><img src="/images/inactive_login.jpg" width="66" height="41" alt="Login"  onmouseover="this.src='/images/active_login.jpg'" onmouseout="this.src='/images/inactive_login.jpg'"/></a>
+<a href="/adminer/"><img src="/images/inactive_login.jpg" width="66" height="41" alt="Login"  onmouseover="this.src='/images/active_login.jpg'" onmouseout="this.src='/images/inactive_login.jpg'"/></a>
 
 
 
