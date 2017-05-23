@@ -24,8 +24,10 @@
 ifeq ($(strip $(PLHDB_DB)),)
   export PLHDB_DB := plhdb_copy
 endif
-export ADMINUSER := plhdb_admin
-
+# Also override the admin user.
+ifeq ($(strip $(ADMINUSER)),)
+  export ADMINUSER := plhdb_admin
+endif
 # For invoking psql everywhere.
 PSQL_ARGS = --tuples-only -q \
             -U $(ADMINUSER) -d $(PLHDB_DB)
