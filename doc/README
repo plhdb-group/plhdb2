@@ -200,6 +200,15 @@ functions and the doc/db/functions/ directory in the system's source
 code for further information on the PLHDB functions which enforce
 row-level security.  See the doc/db/views/ directory for examples.
 
+The STUDIES view is an exception to the above general rules about
+row-level security in views.  STUDIES includes the column
+"Latest_Departdate", which is populated by data in the BIOGRAPHY
+table.  Users are thus able to see a small portion of data related to
+studies to which they have not been granted access.  The information
+provided by this column is not sensitive, and the remaining columns in
+STUDIES are from the STUDY table, which has no row-level security
+policies in place.  For both of these reasons, the STUDIES view does
+not include any row-level security.
 
 The Archived PLHDB Version 1 Databases:
 
