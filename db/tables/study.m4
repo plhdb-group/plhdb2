@@ -22,6 +22,7 @@ include(`copyright.m4')
 include(`tablemacros.m4')
 include(`grants.m4')
 include(`constants.m4')
+include(`study_comments.m4')
 
 CREATE TABLE study (
   sid plh_studyid_type PRIMARY KEY
@@ -49,26 +50,6 @@ COMMENT ON TABLE study IS
 observed.  At present, the same taxon and the same site applies to all
 individuals within the study.';
 
-
-COMMENT ON COLUMN study.sid IS
-'Unique row identifier.  May not be ''plh_allstudies'' or NULL.';
-
-COMMENT ON COLUMN study.name IS
-'The name of the study. This may be a descriptive or encoded, must be
-unique if not NULL.';
-
-COMMENT ON COLUMN study.owners IS
-'The owners of the observational data that this study gave rise to.
-This may be a single person, an organization, or a (comma-delimited)
-list of such.';
-
-COMMENT ON COLUMN study.taxonid IS
-'The row identifier of the taxon for the individuals that were or are
-being observed in this study.';
-
-COMMENT ON COLUMN study.siteid IS
-'The row identifer of the site where this study was or is being
-conducted, and hence where the individuals have been observed.';
-
+comment_study_columns(`study')
 
 CREATE UNIQUE INDEX study_name ON study (name);
