@@ -22,6 +22,11 @@ function adminer_object() {
     echo "<p><input type='submit' value='" . lang('Login') . "'>\n";
     }
 
+    function login($login, $password) {
+      # Allow passwordless login
+      return TRUE;
+    }
+
     function name() {
       # Supply custom title
       return 'PLHDB Demo via Adminer';
