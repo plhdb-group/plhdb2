@@ -1,3 +1,4 @@
+dnl Copyright (C) 2018 Jake Gordon <jacob.gordon@duke.edu>
 dnl Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
 dnl
 dnl    This file is part of PLHDB2.
@@ -132,10 +133,8 @@ CREATE TABLE biography (
  , departdateerror DOUBLE PRECISION
      CONSTRAINT "DepartDateError must be >= 0"
                 CHECK(departdateerror >= 0)
-     CONSTRAINT "DepartDateError can be NULL if and only if DepartDate is NULL"
-                CHECK((departdate IS NULL AND departdateerror IS NULL)
-                      OR (departdate IS NOT NULL
-                          AND departdateerror IS NOT NULL)));
+     CONSTRAINT "DepartDateError must be NULL when DepartDate is NULL"
+                CHECK(NOT(departdate IS NULL AND departdateerror IS NOT NULL)));
 
 ALTER TABLE biography ENABLE ROW LEVEL SECURITY;
 
@@ -175,7 +174,6 @@ EntryType can be NULL only when EntryDate is also NULL.
 DepartDate may be NULL only when MomOnly is TRUE.
 DepartType can be NULL only when DepartDate is also NULL.
 DepartDateError must be NULL if DepartDate is NULL.
-DepartDateError must not be NULL if DepartDate is not NULL.
 
 The combination of StudyId and AnimId must be unique.  Because neither
 of these columns may be NULL this combination can, instead of the Bid

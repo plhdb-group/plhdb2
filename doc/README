@@ -267,6 +267,9 @@ e.g. if the computed latest possible departure ends at 9AM that date
 is returned.  Any part of a day at the end of the computed interval is
 considered to be an entire day for purposes of the computation.
 
+When departure date error is NULL, the last depart date is calculated
+as though the error were 0.
+
 This function is used whenever the system computes an individual''s
 latest possible departure date.  It is also available for use in
 queries.

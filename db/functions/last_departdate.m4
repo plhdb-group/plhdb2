@@ -1,3 +1,4 @@
+dnl Copyright (C) 2018 Jake Gordon <jacob.gordon@duke.edu>
 dnl Copyright (C) 2012, 2016 The Meme Factory, Inc., http://www.meme.com/
 dnl
 dnl    This file is part of PLHDB.
@@ -60,7 +61,10 @@ COMMENT ON FUNCTION last_departdate(DATE, DOUBLE PRECISION) IS
 possible departure date.  Fractions of a day are _not_ truncated;
 e.g. if the computed latest possible departure ends at 9AM that date
 is returned.  Any part of a day at the end of the computed interval is
-consiered to be an entire day for purposes of the computation.
+considered to be an entire day for purposes of the computation.
+
+When departure date error is NULL, the last depart date is calculated
+as though the error were 0.
 
 This function is used whenever the system computes an individual''s
 latest possible departure date.  It is also available for use in

@@ -1,3 +1,4 @@
+dnl Copyright (C) 2018 Jake Gordon <jacob.gordon@duke.edu>
 dnl Copyright (C) 2016 The Meme Factory, Inc., http://www.meme.com/
 dnl
 dnl    This file is part of PLHDB.
@@ -121,8 +122,10 @@ CREATE FUNCTION biography_func ()
     -- departure date + (departdateerror years).
     IF (NEW.departdate <> OLD.departdate
         AND NEW.departdate < OLD.departdate)
-       OR (NEW.departdateerror <> OLD.departdateerror
-           AND OLD.departdateerror < NEW.departdateerror) THEN
+       OR (COALESCE(NEW.departdateerror, 0)::double precision
+            <> COALESCE(OLD.departdateerror, 0)::double precision
+           AND COALESCE(OLD.departdateerror, 0)::double precision
+             < COALESCE(NEW.departdateerror, 0)::double precision) THEN
       PERFORM 1
         FROM fertility AS ffi
         WHERE ffi.bid = NEW.bid
@@ -136,7 +139,7 @@ CREATE FUNCTION biography_func ()
                      || '): Value (AnimId) = (' || NEW.animid
                      || '): Value (DepartDate) = (' || NEW.departdate
                      || '): Value (DepartDateError) = ('
-                     || NEW.departdateerror
+                     || COALESCE(NEW.departdateerror::text, 'NULL') 
                      || '): There is a related FERTILITY row '
                      || 'which has a StopDate value after the computed '
                      || 'new last possible departure date; the computed '

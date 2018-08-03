@@ -1,3 +1,4 @@
+dnl Copyright (C) 2018 Jake Gordon <jacob.gordon@duke.edu>
 dnl Copyright (C) 2016 The Meme Factory, Inc., http://www.meme.com/
 dnl
 dnl    This file is part of PLHDB.
@@ -110,7 +111,7 @@ CREATE FUNCTION fertility_func ()
                    || '): Value (BIOGRAPHY.AnimId) = (' || this_animid
                    || '): Value (BIOGRAPHY.DepartDate) = (' || this_departdate
                    || '): Value (BIOGRAPHY.DepartDateError) = ('
-                   || this_departdateerror
+                   || COALESCE(this_departdateerror::text, 'NULL')
                    || '): StopDate cannot follow the DepartDate + '
                    || '(DepartDateError years) of the related BIOGRAPHY '
                    || 'row; the computed last departure date is: '

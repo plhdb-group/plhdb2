@@ -1,3 +1,4 @@
+dnl Copyright (C) 2018 Jake Gordon <jacob.gordon@duke.edu>
 dnl Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
 dnl
 dnl    This file is part of PLHDB.
@@ -64,12 +65,22 @@ dnl The datatype of the study id.  We use this in too many places to
 dnl want to re-type it.
 define(`plh_studyid_type', `VARCHAR(12)')
 
+dnl Use "0" for departdateerror when it's NULL.
+dnl
+dnl Use with care! A NULL departdateerror is very different from a 0.
+dnl This should only be used so that integrity checks that use
+dnl departdateerror don't fail when it's NULL.
+changequote([,])
+define([plh_depdateerror_or_zero],[COALESCE (departdateerror, 0)::double precision])
+changequote(`,')dnl  See above.
+
+
 dnl The expression used to calculate last_departdate().
 dnl Easier to inline that to use a function in a constraint.
 changequote([,])
 define([plh_last_departdate_inline],[
          departdate
-         + CEIL(departdateerror * 'plh_days_in_year'::DOUBLE PRECISION)::INT])
+         + CEIL(plh_depdateerror_or_zero * 'plh_days_in_year'::DOUBLE PRECISION)::INT])
 changequote(`,')dnl  See above.
 
 dnl Turn output back on
