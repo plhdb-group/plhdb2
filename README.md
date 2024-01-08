@@ -29,7 +29,8 @@ Credits
   (Duke University, PI), Karen B Strier (University of Wisconsin-Madison, PI).
 * PLHDB version 1 Database and application programming: Xianhua Liu (NESCent),
   Hilmar Lapp (NESCent).
-* PLHDB version 2: Karl O. Pinc (The Meme Factory, Inc. http://www.meme.com/)
+* PLHDB version 2: Karl O. Pinc (The Meme Factory, Inc.
+  http://www.karlpinc.com/)
 
 How to Cite
 -----------
@@ -50,7 +51,7 @@ the license(s) used by the projects so extended.
 
 >  Primate Life Histories Database  
 >  Copyright (C) 2007-2015 Hilmar Lapp, Xianhua Liu   
->  Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+>  Copyright (C) 2016 The Meme Factory, Inc.  http://www.karlpinc.com/
 >
 >  This program is free software: you can redistribute it and/or modify
 >  it under the terms of the GNU General Public License as published by
