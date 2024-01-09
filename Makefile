@@ -1,4 +1,4 @@
-# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+# Copyright (C) 2016, 2024 The Meme Factory, Inc.  http://www.karlpinc.com/
 #
 #    This file is part of PLHDB2.
 #
@@ -18,8 +18,22 @@
 # Karl O. Pinc <kop@meme.com>
 #
 
+include help.mk
+## ############################################################################
+##                              Website Installation
+##
+## Variables:
+##
+
 # Where the website document root lives
+##    TARGET_WWW         Where the website is installed, usually this is
+##                       the webserver's document root.  Defaults to:
+##                       /var/www/html    (See also, the caution below.)
 TARGET_WWW = /var/www/html
+
+##
+## The following targets may be used:
+##
 
 all:
 
@@ -33,11 +47,16 @@ build_www: www static
 	cp -a adminer/production www/adminer
 	cp -a adminer/demo www/
 
+##   install_www         Install the website's files in the TARGET_WWW dir
+##                       CAUTION: Deletes everything in TARGET_WWW before
+##                       installation.
 .PHONY: install_www
 install_www: build_www
 	rm -rf $(TARGET_WWW)/*
 	cp -a www/* $(TARGET_WWW)/
 
+##   clean               Cleanup generated files, etc., in the checked out git
+##                       repo that are not under revsion control.
 .PHONY: clean
 clean:
 	rm -rf www
