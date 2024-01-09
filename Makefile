@@ -19,7 +19,7 @@
 #
 
 # Where the website document root lives
-TARGET_WWW = /srv/apps/root/var/www/html
+TARGET_WWW = /var/www/html
 
 all:
 
