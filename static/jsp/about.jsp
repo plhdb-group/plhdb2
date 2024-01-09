@@ -107,7 +107,7 @@ for details</p>
 <ul>
 <li>Technologies
 <ul>
-<li>Database: <a href="http://www.postgresql.org/">PostgreSQL 9.5</a></li>
+<li>Database: <a href="http://www.postgresql.org/">PostgreSQL 9.5 (or higher)</a></li>
 <li>Database Interface: <a href="https://www.adminer.org/">Adminer</a></li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
 </ul>
