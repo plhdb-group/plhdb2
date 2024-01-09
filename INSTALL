@@ -1,0 +1,69 @@
+Help On Make Targets
+--------------------
+
+Typing "make" in any directory gets help on the Makefile's targets.
+
+
+Installation From Source
+------------------------
+
+Website Install
++++++++++++++++
+
+# Install adminer and setup demo password
+mkdir /var/www/includes
+cd /var/www/includes
+# Get latest adminer, whatever version that is
+wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php
+# symlink to the name used by the index.php code
+ln -s adminer-4.8.1.php adminer-current
+# Create the demo password
+printf '<?php define("DEMOPASSWORD", "foobar") ?>\n' > demopassword.php
+# (Or, copy includes/demopassword.php and modify it.)
+
+# Install from checked out git repo
+cd $PLHDB_GIT_REPO
+make install_www
+
+Scripts Install
++++++++++++++++
+
+# Install from checked out git repo
+cd $PLHDB_GIT_REPO/BIN
+make install
+
+Database Install
+++++++++++++++++
+
+sudo make cluster
+sudo make backup_dir
+# Do something to start the postgres cluster here.
+sudo make roles
+make databases
+
+# For each of the databases (plhdb, plhdb_test, plhdb_copy, plhdb_test
+# plhdb_demo) do:
+make PLHDB_DB=$dbname install
+
+# Make a person administrative user with something like:
+plhdb-user-add -a plhdb_admin person_admin \
+               "Person's administrator account"
+# The new administrative user can make managers
+# (They should probably make themselves a manager account)
+plhdb-user-add -a person_admin person plhdb_managers \
+               "Person's regular (manager) account for research"
+# The new administrative user can also make study users
+plhdb-user-add -a person_admin person2 plhdb_users \
+               "Person2's regular (read-only) account for research"
+# A manager user must add rows to the PERMISSION table for each
+# study user for each study to which the study user is to have
+# search, insert, edit, or all access.  See: db/README
+
+
+Upgrading Adminer
+-----------------
+
+# To upgrade adminer, get the latest version and update the
+# /var/www/includes/adminer-current symlink.
+# Then restart php fpm.  (Or use the big hammer and reboot.)
+
