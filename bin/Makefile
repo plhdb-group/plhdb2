@@ -1,4 +1,4 @@
-# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+# Copyright (C) 2016, 2024 The Meme Factory, Inc.  http://www.karlpinc.com/
 #
 #    This file is part of PLHDB2.
 #
@@ -18,6 +18,21 @@
 # Karl O. Pinc <kop@meme.com>
 #
 
+include ../help.mk
+## ############################################################################
+##                         Utility Script Installation
+##
+## Variables:
+##
+
+##    INSTALL_DIR        The directory into which the scripts are installed.
+##                       Defaults to: /usr/local/bin
+INSTALL_DIR := /usr/local/bin
+
+##
+## The following targets may be used:
+##
+
 TARGETS := plhdb-user-add
 
 INCLUDE := ../db/include
@@ -26,9 +41,12 @@ DEPS := Makefile
 
 all: $(TARGETS)
 
+##   plhdb-user-add      Construct the plhdb-user-add script
 plhdb-user-add: plhdb-user-add.m4 $(INCLUDE)/*.m4 include/*.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include plhdb-user-add.m4 > plhdb-user-add
 
+##   clean               Cleanup generated files, etc., in the checked out git
+##                       repo that are not under revsion control.
 .PHONY: clean
 clean:
 	rm -rf $(TARGETS)
