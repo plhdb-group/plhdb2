@@ -67,10 +67,10 @@ DEBUG=0
 # Parse command line.
 PG_DATA="$1"/data
 
-OLD_PG_BACKUP_DIR=/srv/apps/root/var/lib/pgsql/9.5/backups/plhdb_cluster
+OLD_PG_BACKUP_DIR=/srv/pg_backups/plhdb_cluster
 PG_BACKUP_DIR=$OLD_PG_BACKUP_DIR.new
-PGB_CONF_DIR=$PG_BACKUP_DIR/data   ;# Unix stuff -- config files and logs
-PGB_DATA_DIR=$PG_BACKUP_DIR/data   ;# Database content
+PGB_CONF_DIR=$PG_BACKUP_DIR/configs  ;# Unix stuff -- config files and logs
+PGB_DATA_DIR=$PG_BACKUP_DIR/data     ;# Database content
 
 # Helper function to get access to the db as admin.
 accessdb()
