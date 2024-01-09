@@ -29,6 +29,10 @@ include ../help.mk
 ##                       Defaults to: /usr/local/bin
 INSTALL_DIR := /usr/local/bin
 
+INSTALLED_SCRIPTS := plhdb-user-add plhdb-archive-db plhdb-copy-plhdb-schema \
+                     plhdb-user-delete plhdb_postgres_backup
+INSTALL_TARGETS := $(patsubst %,$(INSTALL_DIR)/%,$(INSTALLED_SCRIPTS))
+
 ##
 ## The following targets may be used:
 ##
@@ -41,12 +45,22 @@ DEPS := Makefile
 
 all: $(TARGETS)
 
-##   plhdb-user-add      Construct the plhdb-user-add script
-plhdb-user-add: plhdb-user-add.m4 $(INCLUDE)/*.m4 include/*.m4 $(DEPS)
-	m4 -I $(INCLUDE) -I include plhdb-user-add.m4 > plhdb-user-add
+##   install             Build all scripts and install into INSTALL_DIR
+install: $(INSTALL_TARGETS)
 
-##   clean               Cleanup generated files, etc., in the checked out git
-##                       repo that are not under revsion control.
+$(INSTALL_TARGETS): $(TARGETS)
+	cp $(notdir $@) $@
+	chmod a+x $@
+
+##   clean               Cleanup generated files
 .PHONY: clean
 clean:
 	rm -rf $(TARGETS)
+
+##
+## The following targets are lesser used:
+##
+
+##   plhdb-user-add      Construct the plhdb-user-add script
+plhdb-user-add: plhdb-user-add.m4 $(INCLUDE)/*.m4 include/*.m4 $(DEPS)
+	m4 -I $(INCLUDE) -I include plhdb-user-add.m4 > plhdb-user-add
