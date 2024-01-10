@@ -19,6 +19,13 @@
 #
 # Bugs:
 
+include ../help.mk
+## ############################################################################
+##                            Documentation Generation
+##
+## Common targets are:
+##
+
 SOURCE := plhdb_base.dia plhdb_data.dia key.dia plhdb_titlepage.dia
 PDF_TARGETS := $(SOURCE:.dia=.pdf)
 
@@ -26,8 +33,20 @@ TARGETS := $(PDF_TARGETS) plhdb_er_diagrams.pdf
 
 DEPS := Makefile
 
+##   all                 Make all the documentation
 all: plhdb_er_diagrams.pdf
 
+##   clean               Cleanup generated files
+.PHONY: clean
+clean:
+	rm -rf $(TARGETS)
+
+##
+## Lesser used targets are:
+##
+
+##   plhdb_er_diagrams.pdf
+##                       PDF of the PLHDB ER diagrams
 plhdb_er_diagrams.pdf: $(PDF_TARGETS) $(DEPS)
 	pdfunite plhdb_titlepage.pdf key.pdf \
 	         plhdb_base.pdf plhdb_data.pdf \
@@ -35,8 +54,3 @@ plhdb_er_diagrams.pdf: $(PDF_TARGETS) $(DEPS)
 
 %.pdf: %.dia $(DEPS)
 	dia --export=$@ --filter=pdf $<
-
-
-.PHONY: clean
-clean:
-	rm -rf $(TARGETS)
