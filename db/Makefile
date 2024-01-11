@@ -19,53 +19,93 @@
 #
 # Bugs:
 #   Can't test if the cluster exists before making the db.
-#   Can't test if plhdb_postgres_backup is installed.
-#   Grody defaults due to Duke's non-standard setup.
-#   Shouldn't install plhdb_postgres_backup in this file.
 
-# initdb to run.
-INITDB=/usr/pgsql-9.5/bin/initdb
+include ../help.mk
+## ############################################################################
+##                              Cluster Installation
+##
+## Caution: Cluster installation steps must be done as the root user.
+##
+## Variables:
 
-# Where binaries go
-BIN=/srv/apps/root/usr/local/bin
+##     PG_MAJOR_VERSION  The major version number of the PostgreSQL in use.
+##                       Defaults to major version of the psql in use.
+PG_MAJOR_VERSION := $(shell psql --version | cut -d ' ' -f 3 | cut -d . -f 1)
 
-# The directory holding the PG database cluster's home dir
-# It's a good idea for this to be an absolute path.
-#CLUSTER_PARENT=/var/lib
-# Duke is "different"
-CLUSTER_PARENT=/srv/apps/root/var/lib
+##     INIDB             Path to initdb to use.  Defaults to:
+##                       /usr/share/postgresql/$(PG_MAJOR_VERSION)/bin/initdb
+# Why use initdb?  Because pg_createcluster is a Debian thing.
+INITDB := /usr/lib/postgresql/$(PG_MAJOR_VERSION)/bin/initdb
 
-# The directory holding the PG database cluster
-#CLUSTER_DIR=pgsql/data
-CLUSTER_DIR=pgsql/9.5/data
+##     CLUSTER_PARENT    The directory holding the PG database cluster's
+##                       home dir.  It's a good idea for this to be an
+##                       absolute path.  The default is:
+##                       /var/lib/postgresql/$(PG_MAJOR_VERSION)
+##                       (This is the debian default, RHEL uses
+##                       /var/lib/pgsql/...)
+CLUSTER_PARENT := /var/lib/postgresql/$(PG_MAJOR_VERSION)
 
-# The directory where database dumps are kept
-BACKUP_DIR=pgsql/backups
+##     TARGET_CLUSTER    The name of the cluster.  Defaults to: plhdb
+TARGET_CLUSTER := plhdb
+
+CLUSTER_PATH := $(CLUSTER_PARENT)/$(TARGET_CLUSTER)
+
+##     BACKUP_DIR        The directory where database dumps are kept
+BACKUP_DIR=/srv/pg_backups
 
 # The user:group that the PG daemon runs as
 POSTGRES=postgres:postgres
 
 # The chown program (Duke does something "different")
-#CHOWN=chown
-CHOWN=~/chownish
+CHOWN=chown
+
+##
+## The following targets may be used:
+##
 
 all:
 
-cluster_parent: ${CLUSTER_PARENT}
+cluster_parent: $(dir $(CLUSTER_PARENT))
+# This deliberately does nothing, so that if the pg server is not installed
+# or varaiables are wrong then nothing happens.
 
-.PHONY: cluster_dir
-cluster_dir: cluster_parent
-	if [ \! -d ${CLUSTER_DIR} ] ; then \
-	  mkdir -p ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
-	  chmod g=,o= ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
-	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${CLUSTER_DIR} ; \
+##   cluster       Initialize the TARGET_CLUSTER
+cluster: $(CLUSTER_PATH) debianize_cluster
+
+$(CLUSTER_PATH): cluster_parent
+	printf '${INITDB} --data-checksums --locale=C %s %s\n' \
+	       '--no-instructions' \
+               '${CLUSTER_PARENT}/${TARGET_CLUSTER}' \
+	  | su - postgres
+
+.PHONY: debianize_cluster
+debianize_cluster:
+	[ -x /usr/bin/pg_createcluster ] \
+	  && pg_createcluster $(PG_MAJOR_VERSION) $(TARGET_CLUSTER)
+
+##   backup_dir    Create the directory structure where backups are stored
+backup_dir:
+	if [ \! -d ${BACKUP_DIR} ] ; then \
+	  mkdir -p ${BACKUP_DIR} ; \
+	  chmod g=,o= ${BACKUP_DIR} ; \
+	  ${CHOWN} -R ${POSTGRES} ${BACKUP_DIR} ; \
 	fi
+##
+## ############################################################################
+##                              Database Installation
+##
+## Variables:
+##
+##   PLHDB_DB           Name of the database in which to work.  Defaults
+##                      to: plhdb_copy
+##   ADMINUSER          Name of the administrative user to use to connect
+##                      to the database.  Defaults to: plhdb_admin
+##                      Because this is the user that will own all db objects
+##                      it is best to _not_ change the default.
 
-.PHONY: cluster
-cluster: cluster_dir
-	printf '${INITDB} --locale=C ${CLUSTER_PARENT}/${CLUSTER_DIR}' \
-	  | sudo su - postgres
-
+##
+## The following targets may be used:
+##
 
 ##   roles         Make the initial roles PLHDB requires
 .PHONY: roles
@@ -77,23 +117,7 @@ roles: makeroles
 databases: makedatabases
 	sh makedatabases
 
-.PHONY: backup_dir
-backup_dir: cluster_parent
-	if [ \! -d ${BACKUP_DIR} ] ; then \
-	  mkdir -p ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
-	  chmod g=,o= ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
-	  ${CHOWN} -R ${POSTGRES} ${CLUSTER_PARENT}/${BACKUP_DIR} ; \
-	fi
-
-.PHONY: bin_dir
-bin_dir:
-	mkdir -p ${BIN}
-
-.PHONY: install_plhdb_postgres_backup
-install_plhdb_postgres_backup: backup_dir bin_dir
-	cp ../bin/plhdb_postgres_backup ${BIN}
-	chmod a+x ${BIN}/plhdb_postgres_backup
-
+##   install       Install tables and other objects into the PLHDB_DB database
 .PHONY: install
 install:
 	make -C tables install
@@ -102,6 +126,7 @@ install:
 	make -C views install
 	make -C triggers install
 
+##   reinstall     Re-install the tables and other db objects in PLHDB_DB
 .PHONY: reinstall
 reinstall:
 	make -C tables reinstall
@@ -110,6 +135,9 @@ reinstall:
 	make -C views reinstall
 	make -C triggers reinstall
 
+##   reinstallnolock
+##                 Re-install, outside of a transaction, the tables and
+##                 other db objects, in the PLHDB_DB database
 .PHONY: reinstallnolock
 reinstallnolock:
 	make -C tables reinstall
@@ -118,6 +146,8 @@ reinstallnolock:
 	make -C views reinstallnolock
 	make -C triggers reinstallnolock
 
+##   destroy       Drop all tables and other database objects in the PLHDB_DB
+##                 database
 .PHONY: destroy
 destroy:
 	make -C triggers destroy
@@ -126,6 +156,7 @@ destroy:
 	make -C tables destroy
 	make -C functions destroy_other
 
+##   clean         Cleanup generated files
 .PHONY: clean
 clean:
 	make -C tables clean
