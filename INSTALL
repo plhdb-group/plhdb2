@@ -36,9 +36,10 @@ Database Install
 ++++++++++++++++
 
 sudo make cluster
+# See the "examples" dir for PG config/tuning examples
 sudo make backup_dir
 # Do something to start the postgres cluster here.
-sudo make roles
+sudo su postgres -c 'make roles'
 make databases
 
 # For each of the databases (plhdb, plhdb_test, plhdb_copy, plhdb_test

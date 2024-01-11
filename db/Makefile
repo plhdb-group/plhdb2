@@ -108,6 +108,8 @@ backup_dir:
 ##
 
 ##   roles         Make the initial roles PLHDB requires
+##                 This must be run as the 'postgres' user.  One way is
+##                 with: sudo su postgres -c 'make roles'
 .PHONY: roles
 roles: makeroles
 	sh makeroles

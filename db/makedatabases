@@ -24,6 +24,9 @@
 #
 # Remarks:
 #
+# Bugs:
+#   Only uses the default plhdb_admin user password in one case.
+#
 
 # Constants
 
