@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright (C) 2014 The Meme Factory, Inc.  http://www.meme.com/
 # Copyright (C) 2005, 2008, 2011 Karl O. Pinc  <kop@meme.com>
 #
