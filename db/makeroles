@@ -1,0 +1,135 @@
+#!/bin/bash
+# Copyright (C) 2011, 2012, 2015, 2016, 2024 The Meme Factory, Inc.,
+#   http://www.karlpinc.com/
+# Copyright (C) 2003, 2004, 2005, 2008, 2011 Karl O. Pinc
+#
+#    This file is part of PLHDB2.
+#
+#    PLHDB2 is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PLHDB2.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Creates the roles needed to create and use PLHDB databases.
+#
+# Karl O. Pinc <kop@karlpinc.com>
+#
+# Remarks:
+#
+# Creates the postgresql user 'plhdb_admin' who owns all the databases
+# and is a superuser able to create other users but not databases.
+# As pldhdb_admin owns the databases only he can create/drop tables etc.
+# The user posgresql remains and can create users and databases.
+
+# Constants
+
+# Use Unix socket
+export SERVERHOST=/run/postgresql
+
+# SQL generation functions
+
+make_roles_sql () {
+#
+# Make the roles for the cluster
+
+cat <<-EOF
+
+-- Create the plhdb_admin superuser.
+CREATE ROLE plhdb_admin 
+  WITH ENCRYPTED PASSWORD 'foo' LOGIN SUPERUSER;
+-- No password yet, as it's a hassle for the script.
+-- CREATE ROLE plhdb_admin LOGIN SUPERUSER;
+COMMENT ON ROLE plhdb_admin IS
+  'Role (user) used by system build tools to construct system.';
+
+CREATE ROLE demo_user LOGIN;
+COMMENT ON ROLE demo_user IS
+  'Role (user) used when connecting the public at large '
+  'to the demo database.';
+
+--
+-- Make the groups we'll want.
+--
+
+-- The managers group can change things and read things.
+CREATE ROLE plhdb_managers;
+COMMENT ON ROLE plhdb_managers IS
+  'Role (group) who''s members have "system manager" access.';
+
+-- The users group can only view the data, except for study data.
+-- The study data is controlled by the row-level permission system.
+CREATE ROLE plhdb_users;
+COMMENT ON ROLE plhdb_users IS
+  'Role (group) who''s members have "study user" access.';
+
+EOF
+}
+
+#
+# Tell the user what password he needs.
+#
+echo
+echo WARNING: If this goes bad it could destroy your
+echo template1 database.  You might want to press
+echo CTRL-C now if you "don't" have a backup.
+echo
+echo If you blow any of password entries, just re-run
+echo this script and enter the password for the 'part(s)'
+echo you got wrong.
+echo
+echo When prompted for a password please enter the
+echo "password for the database user 'postgres'."
+echo "(With the default pg_hba file you won't need a password"
+echo "for the 'postgres' user, which is bad.)"
+
+#
+# Setup users and groups
+#
+
+#DEBUG# cat <<-EOF
+psql -U postgres -h $SERVERHOST template1 <<-EOF
+
+--
+-- Make the groups we'll want.
+--
+$(make_roles_sql)
+
+EOF
+
+#
+# Now do work as the plhdb_admin user to make the databases.
+#
+
+#
+# Tell the user what password he needs.
+#
+echo
+echo When prompted for a password please enter the
+echo "password for the database user 'plhdb_admin'"
+echo which is now: foo
+
+#
+# Tell the user to secure the system.
+#
+echo The plhdb_admin Postgresql user needs a password
+echo "to login.  Change it (as the postgres user) with the command:"
+echo
+echo '   ' psql -U postgres -h $SERVERHOST -d plhdb '\'
+echo "    " -c '"ALTER ROLE plhdb_admin WITH ENCRYPTED PASSWORD' "'foo';"'"'
+echo
+echo "The demo_user user needs a password, set it (as the postgres) user"
+echo "with the command:"
+echo
+echo '   ' psql -U postgres -h $SERVERHOST -d plhdb '\'
+echo "    " -c '"ALTER ROLE demo_user WITH ENCRYPTED PASSWORD' "'foo';"'"'
+echo
+echo "You will also need to edit the adminer/demo/index.php file after"
+echo "installation and specify the demo user's password therein."

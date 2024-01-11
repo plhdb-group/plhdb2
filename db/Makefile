@@ -1,4 +1,4 @@
-# Copyright (C) 2016 The Meme Factory, Inc.  http://www.meme.com/
+# Copyright (C) 2016, 2024 The Meme Factory, Inc.  http://www.karlpinc.com/
 #
 #    This file is part of PLHDB2.
 #
@@ -67,6 +67,12 @@ cluster: cluster_dir
 	  | sudo su - postgres
 
 
+##   roles         Make the initial roles PLHDB requires
+.PHONY: roles
+roles: makeroles
+	sh makeroles
+
+##   databases     Make the PLHDB databases
 .PHONY: databases
 databases: makedatabases
 	sh makedatabases
