@@ -107,6 +107,7 @@ export A_PASSWD=$(head /dev/urandom | tr -dc A-NP-Za-kmz2-9 | head -c 10)
 if [ -z "$ADMIN" ] ; then
   psql -U $A_ADMINUSER -d plhdb <<EOF
 begin;
+set role plhdb_admin;
 create user $A_USER password '$A_PASSWD';
 alter group $A_GROUP add user $A_USER;
 comment on role $A_USER is '$A_DESCR';
