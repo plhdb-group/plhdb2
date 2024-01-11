@@ -42,7 +42,7 @@ sudo make backup_dir
 sudo su postgres -c 'make roles'
 make databases
 
-# For each of the databases (plhdb, plhdb_test, plhdb_copy, plhdb_test
+# For each of the databases (plhdb, plhdb_test, plhdb_copy,
 # plhdb_demo) do:
 make PLHDB_DB=$dbname install
 
