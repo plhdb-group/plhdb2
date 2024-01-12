@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily, dump the PostgreSQL PLHDB databases into filesystem files
+
+[Timer]
+OnCalendar=*-*-* 6:00
+RandomizedDelaySec=60m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
