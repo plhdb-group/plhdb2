@@ -29,12 +29,13 @@ Scripts Install
 +++++++++++++++
 
 # Install from checked out git repo
-cd $PLHDB_GIT_REPO/BIN
+cd $PLHDB_GIT_REPO/bin
 make install
 
 Database Install
 ++++++++++++++++
 
+cd $PLHDB_GIT_REPO/db
 sudo make cluster
 # See the "examples" dir for PG config/tuning examples
 sudo make backup_dir
