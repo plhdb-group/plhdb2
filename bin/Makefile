@@ -48,10 +48,6 @@ all: $(TARGETS)
 ##   install             Build all scripts and install into INSTALL_DIR
 install: $(INSTALL_TARGETS)
 
-$(INSTALL_TARGETS): $(TARGETS)
-	cp $(notdir $@) $@
-	chmod a+x $@
-
 ##   clean               Cleanup generated files
 .PHONY: clean
 clean:
@@ -64,3 +60,9 @@ clean:
 ##   plhdb-user-add      Construct the plhdb-user-add script
 plhdb-user-add: plhdb-user-add.m4 $(INCLUDE)/*.m4 include/*.m4 $(DEPS)
 	m4 -I $(INCLUDE) -I include plhdb-user-add.m4 > plhdb-user-add
+
+# Helper targets
+.SECONDEXPANSION:
+$(INSTALL_TARGETS): %: $$(notdir %)
+	cp $(notdir $@) $@
+	chmod a+x $@
