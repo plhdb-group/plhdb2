@@ -40,6 +40,8 @@ sudo make cluster
 sudo make backup_dir
 # Do something to start the postgres cluster here.
 sudo su postgres -c 'make roles'
+# At this point it is a good idea to put the plhdb_admin user's
+# password in ~/.pgpass.
 make databases
 
 # For each of the databases (plhdb, plhdb_test, plhdb_copy,
