@@ -65,7 +65,7 @@ PROGRAM=$(basename $0)
 DEBUG=0
 
 # Parse command line.
-PG_DATA="$1"/data
+PG_DATA="$1"
 
 OLD_PG_BACKUP_DIR=/srv/pg_backups/plhdb_cluster
 PG_BACKUP_DIR=$OLD_PG_BACKUP_DIR.new
@@ -115,12 +115,8 @@ rm -rf $PG_BACKUP_DIR
 mkdir -p $PG_BACKUP_DIR $PGB_CONF_DIR $PGB_DATA_DIR
 
 # Backup the posgresql configuration, logs, et-al.
-if [ -e $PG_DATA/pg_log ] ; then
-  PG_LOG=pg_log
-else
-  PG_LOG=
-fi
-for f in $PG_LOG $(find $PG_DATA -maxdepth 1 -type f -o -type l) ; do
+for f in $(find $PG_DATA \
+                -mindepth 1 -maxdepth 1 -type f -o -type l -o -type d) ; do
   f=$(basename $f)
   rsync -Lrpogt $PG_DATA/$f $PGB_CONF_DIR
   if [ "$?" != "0" ] ; then

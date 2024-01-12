@@ -3,6 +3,6 @@ Description=Dump the PostgreSQL PLHDB databases into filesystem files
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/plhdb_postgres_backup /var/lib/postgresql/14/plhdb
+ExecStart=/usr/local/bin/plhdb_postgres_backup /etc/postgresql/14/plhdb
 User=postgres
 Group=postgres
