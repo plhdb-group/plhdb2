@@ -73,7 +73,7 @@ cluster_parent: $(dir $(CLUSTER_PARENT))
 cluster: $(CLUSTER_PATH) debianize_cluster
 
 $(CLUSTER_PATH): cluster_parent
-	printf '${INITDB} --data-checksums --locale=C %s %s\n' \
+	printf '${INITDB} --data-checksums %s %s\n' \
 	       '--no-instructions' \
                '${CLUSTER_PARENT}/${TARGET_CLUSTER}' \
 	  | su - postgres
@@ -81,7 +81,13 @@ $(CLUSTER_PATH): cluster_parent
 .PHONY: debianize_cluster
 debianize_cluster:
 	[ -x /usr/bin/pg_createcluster ] \
-	  && pg_createcluster $(PG_MAJOR_VERSION) $(TARGET_CLUSTER)
+	  && pg_createcluster --lc-collate C --lc-ctype=en_US.UTF-8 \
+	                      --lc-messages en_US.UTF-8 \
+	                      --lc-monetary en_US.UTF-8 \
+	                      --lc-numeric en_US.UTF-8 \
+	                      --lc-time en_US.UTF-8 \
+	                      $(PG_MAJOR_VERSION) $(TARGET_CLUSTER) \
+	                      -- --data-checksums
 
 ##   backup_dir    Create the directory structure where backups are stored
 backup_dir:
