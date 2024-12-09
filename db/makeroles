@@ -50,11 +50,6 @@ CREATE ROLE plhdb_admin
 COMMENT ON ROLE plhdb_admin IS
   'Role (user) used by system build tools to construct system.';
 
-CREATE ROLE demo_user LOGIN;
-COMMENT ON ROLE demo_user IS
-  'Role (user) used when connecting the public at large '
-  'to the demo database.';
-
 --
 -- Make the groups we'll want.
 --
@@ -127,12 +122,3 @@ echo "to login.  Change it (as the postgres user) with the command:"
 echo
 echo '   ' psql -U postgres -h $SERVERHOST -d plhdb '\'
 echo "    " -c '"ALTER ROLE plhdb_admin WITH ENCRYPTED PASSWORD' "'foo';"'"'
-echo
-echo "The demo_user user needs a password, set it (as the postgres) user"
-echo "with the command:"
-echo
-echo '   ' psql -U postgres -h $SERVERHOST -d plhdb '\'
-echo "    " -c '"ALTER ROLE demo_user WITH ENCRYPTED PASSWORD' "'foo';"'"'
-echo
-echo "You will also need to edit the adminer/demo/index.php file after"
-echo "installation and specify the demo user's password therein."
