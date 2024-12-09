@@ -70,6 +70,9 @@ CREATE ROLE plhdb_users;
 COMMENT ON ROLE plhdb_users IS
   'Role (group) who''s members have "study user" access.';
 
+-- Allow the plhdb_admin user to assign the groups to users.
+GRANT plhdb_managers, plhdb_users
+  TO plhdb_admin WITH ADMIN OPTION;
 EOF
 }
 
